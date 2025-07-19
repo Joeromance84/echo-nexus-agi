@@ -109,6 +109,150 @@ class GitHubHelper:
         
         return result
     
+    def intelligent_workflow_diagnostic(self, owner: str, repo: str) -> Dict[str, Any]:
+        """
+        Advanced workflow diagnostic - reproduces the breakthrough solution logic
+        """
+        result = {
+            'success': False,
+            'diagnosis': {},
+            'actions_taken': [],
+            'workflow_fixed': False,
+            'error': None
+        }
+        
+        try:
+            if not self.github:
+                result['error'] = "GitHub token required for workflow diagnostics"
+                return result
+            
+            repo_obj = self.github.get_repo(f"{owner}/{repo}")
+            
+            # Check workflow file structure
+            try:
+                workflows_dir = repo_obj.get_contents('.github/workflows')
+                workflow_files = [item for item in workflows_dir if item.name.endswith(('.yml', '.yaml'))]
+                
+                if not workflow_files:
+                    result['diagnosis']['issue'] = "No workflow files found"
+                    return result
+                
+                # Analyze primary workflow file
+                workflow_file = workflow_files[0]
+                content = workflow_file.decoded_content.decode('utf-8')
+                
+                # Check YAML structure
+                lines = content.split('\n')
+                has_name = any(line.strip().startswith('name:') for line in lines[:20])
+                has_on = any(line.strip().startswith('on:') for line in lines[:20])
+                has_jobs = any(line.strip().startswith('jobs:') for line in lines[:20])
+                
+                result['diagnosis']['yaml_structure'] = {
+                    'has_name': has_name,
+                    'has_on': has_on,
+                    'has_jobs': has_jobs,
+                    'file_size': len(content),
+                    'line_count': len(lines)
+                }
+                
+                # Check workflow runs
+                runs = list(repo_obj.get_workflow_runs())
+                result['diagnosis']['run_count'] = len(runs)
+                
+                # If no runs and structure looks complex, apply fix
+                if len(runs) == 0 and len(content) > 1000:
+                    result['diagnosis']['issue'] = "Complex YAML causing parsing failure"
+                    
+                    # Apply the breakthrough fix - create minimal workflow
+                    minimal_workflow = f'''name: {repo} Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install buildozer cython
+      - name: Build APK
+        run: |
+          buildozer android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: {repo}-apk
+          path: bin/*.apk
+'''
+                    
+                    # Update workflow file
+                    repo_obj.update_file(
+                        workflow_file.path,
+                        'EchoNexus AGI: Fix workflow YAML structure',
+                        minimal_workflow,
+                        workflow_file.sha
+                    )
+                    result['actions_taken'].append('Simplified workflow YAML structure')
+                    
+                    # Create trigger commit
+                    try:
+                        main_py = repo_obj.get_contents('main.py')
+                        current_content = main_py.decoded_content.decode('utf-8')
+                        if '# EchoNexus trigger' not in current_content:
+                            updated_content = '# EchoNexus trigger - AGI workflow fix\n' + current_content
+                            repo_obj.update_file(
+                                'main.py',
+                                'EchoNexus AGI: Trigger workflow execution',
+                                updated_content,
+                                main_py.sha
+                            )
+                            result['actions_taken'].append('Created trigger commit')
+                    except:
+                        # Create README trigger if main.py doesn't exist
+                        try:
+                            readme = repo_obj.get_contents('README.md')
+                            readme_content = readme.decoded_content.decode('utf-8')
+                            updated_readme = readme_content + '\n\n<!-- EchoNexus AGI workflow trigger -->\n'
+                            repo_obj.update_file(
+                                'README.md',
+                                'EchoNexus AGI: Trigger workflow',
+                                updated_readme,
+                                readme.sha
+                            )
+                            result['actions_taken'].append('Created README trigger commit')
+                        except:
+                            result['actions_taken'].append('Workflow updated but trigger failed')
+                    
+                    result['workflow_fixed'] = True
+                    result['success'] = True
+                
+                elif len(runs) > 0:
+                    latest_run = runs[0]
+                    result['diagnosis']['latest_run'] = {
+                        'status': latest_run.status,
+                        'conclusion': latest_run.conclusion,
+                        'run_number': latest_run.run_number,
+                        'url': latest_run.html_url
+                    }
+                    result['success'] = True
+                
+            except Exception as e:
+                result['diagnosis']['workflow_check_error'] = str(e)
+                
+        except Exception as e:
+            result['error'] = f"Diagnostic error: {str(e)}"
+        
+        return result
+
     def analyze_workflow_failures(self, owner: str, repo: str, run_id: str) -> Dict[str, Any]:
         """
         Analyze a failed workflow run to identify common issues

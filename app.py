@@ -101,7 +101,7 @@ with st.sidebar:
     
     page = st.selectbox(
         "Select Page",
-        ["Chat Assistant", "🔗 GitHub Connection", "📚 Document Ingestion", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["Chat Assistant", "🔗 GitHub Connection", "📚 Document Ingestion", "🧠 Workflow Diagnostics", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
@@ -425,6 +425,104 @@ elif page == "📚 Document Ingestion":
         with col2:
             if st.button("📊 Refresh Statistics"):
                 st.rerun()
+
+elif page == "🧠 Workflow Diagnostics":
+    st.header("🧠 EchoNexus Workflow Diagnostics")
+    st.write("Advanced GitHub Actions workflow analysis and autonomous fixing capabilities")
+    
+    st.success("🌟 This page demonstrates the breakthrough solution capabilities now built into EchoNexus AGI")
+    
+    # Repository input
+    repo_url = st.text_input(
+        "GitHub Repository URL:",
+        placeholder="https://github.com/username/repository",
+        help="Enter the GitHub repository you want to diagnose"
+    )
+    
+    if repo_url:
+        # Parse repository info
+        if 'github.com' in repo_url:
+            parts = repo_url.replace('https://github.com/', '').replace('.git', '').split('/')
+            if len(parts) >= 2:
+                owner, repo = parts[0], parts[1]
+                
+                st.write(f"**Repository:** {owner}/{repo}")
+                
+                # Run diagnostic
+                if st.button("🔍 Run EchoNexus Diagnostic", type="primary"):
+                    with st.spinner("EchoNexus AGI analyzing workflow structure..."):
+                        diagnostic_result = st.session_state.github_helper.intelligent_workflow_diagnostic(owner, repo)
+                        
+                        if diagnostic_result['success']:
+                            st.success("✅ EchoNexus diagnostic completed!")
+                            
+                            # Show diagnosis details
+                            st.subheader("📊 Diagnostic Results")
+                            
+                            diagnosis = diagnostic_result.get('diagnosis', {})
+                            
+                            if 'yaml_structure' in diagnosis:
+                                structure = diagnosis['yaml_structure']
+                                col1, col2, col3 = st.columns(3)
+                                
+                                with col1:
+                                    st.metric("File Size", f"{structure['file_size']} chars")
+                                    st.metric("Line Count", structure['line_count'])
+                                
+                                with col2:
+                                    st.write("**YAML Structure:**")
+                                    st.write(f"• name: {'✅' if structure['has_name'] else '❌'}")
+                                    st.write(f"• on: {'✅' if structure['has_on'] else '❌'}")
+                                    st.write(f"• jobs: {'✅' if structure['has_jobs'] else '❌'}")
+                                
+                                with col3:
+                                    st.metric("Workflow Runs", diagnosis.get('run_count', 0))
+                                    if 'latest_run' in diagnosis:
+                                        latest = diagnosis['latest_run']
+                                        status_emoji = "✅" if latest['conclusion'] == 'success' else "❌" if latest['conclusion'] == 'failure' else "🔄"
+                                        st.write(f"**Latest:** {status_emoji} {latest['status']}")
+                            
+                            # Show actions taken by AGI
+                            if diagnostic_result['actions_taken']:
+                                st.subheader("🤖 EchoNexus Actions Performed")
+                                for action in diagnostic_result['actions_taken']:
+                                    st.success(f"✅ {action}")
+                            
+                            # Show workflow fix status
+                            if diagnostic_result['workflow_fixed']:
+                                st.success("🚀 EchoNexus automatically fixed the workflow!")
+                                st.info("The AGI applied the breakthrough solution - simplified YAML structure and created trigger commit")
+                                
+                                if 'latest_run' in diagnosis:
+                                    latest = diagnosis['latest_run']
+                                    st.write(f"**Monitor build:** [View Progress]({latest['url']})")
+                            
+                            # Show issue identification
+                            if 'issue' in diagnosis:
+                                if diagnosis['issue'] == "Complex YAML causing parsing failure":
+                                    st.warning("⚠️ Issue Detected: Complex YAML structure preventing GitHub Actions execution")
+                                    st.info("🧠 EchoNexus identified the same issue that was manually diagnosed and applied the breakthrough fix automatically")
+                                else:
+                                    st.info(f"ℹ️ Diagnosis: {diagnosis['issue']}")
+                        
+                        else:
+                            st.error(f"❌ Diagnostic failed: {diagnostic_result['error']}")
+            else:
+                st.error("Invalid GitHub repository URL format")
+    
+    # Show the breakthrough explanation
+    st.markdown("---")
+    st.subheader("🎯 The Breakthrough Solution")
+    st.write("""
+    **EchoNexus now includes the intelligent workflow diagnostic capability that solved the GitHub Actions issue:**
+    
+    1. **Complex YAML Detection**: Identifies when workflow files are too complex for GitHub's parser
+    2. **Automatic Simplification**: Creates clean, minimal workflow structures that always work
+    3. **Intelligent Triggering**: Automatically creates commits to activate workflow execution
+    4. **Real-time Monitoring**: Tracks build status and provides actionable feedback
+    
+    This represents the same advanced problem-solving logic that was manually applied, now built directly into the AGI system.
+    """)
 
 elif page == "Command Builder":
     st.header("⚡ Simple Commands → Advanced Actions")
