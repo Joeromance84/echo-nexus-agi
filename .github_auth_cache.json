@@ -28,7 +28,7 @@
     "bio": null,
     "twitter_username": null,
     "notification_email": null,
-    "public_repos": 3,
+    "public_repos": 8,
     "public_gists": 0,
     "followers": 0,
     "following": 0,
@@ -41,6 +41,6 @@
       "private_repos": 10000
     }
   },
-  "cached_at": "2025-07-19T08:58:17.891513",
-  "token_hash": -1206797555159039656
+  "cached_at": "2025-07-19T09:02:00.853170",
+  "token_hash": 8285976914776004598
 }
