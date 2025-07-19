@@ -1,72 +1,98 @@
-import os
-import sys
-sys.path.insert(0, os.getcwd())
+"""
+Step 2: Trigger Clean APK Build
+Force a fresh build to generate APK artifact
+"""
 
-from utils.github_helper import GitHubHelper
+import os
+import json
 from datetime import datetime
 
-print("🚀 TRIGGERING STEP 2: INCREMENTAL APK TEST")
-print("Step 1 verified successful - proceeding with methodology")
-print("=" * 55)
-
-try:
-    github_helper = GitHubHelper()
-    repo = github_helper.github.get_repo("Joeromance84/echocorecb")
+def trigger_clean_build():
+    """Trigger a clean APK build to generate artifacts"""
     
-    # Create trigger content for Step 2
-    trigger_content = f"""# Incremental Test Trigger - Step 2
-
-✅ **Step 1 COMPLETED SUCCESSFULLY**
-- Minimal test artifact verified: minimal-test-artifact (261 bytes)
-- actions/upload-artifact@v4 confirmed working correctly
-- Ready for incremental APK build test
-
-## Step 2 Objective:
-Build simple APK and upload with verified actions/upload-artifact@v4
-
-## Expected Results:
-1. APK build completes successfully
-2. APK artifact appears in downloadable Artifacts section  
-3. Confirms full pipeline works before deploying complete AGI system
-
-## Professional Methodology Applied:
-✅ Step 1: Isolated problem and tested minimal case
-🚀 Step 2: Incremental build with verified components
-⏳ Step 3: Full system deployment only after validation
-
-Triggered: {datetime.now().isoformat()}
-Test Status: Step 1 ✅ | Step 2 🚀 | Step 3 ⏳
-"""
+    print("🔥 TRIGGERING CLEAN APK BUILD")
+    print("Forcing fresh artifact generation")
+    print("=" * 35)
     
-    # Create/update trigger file
-    try:
-        existing = repo.get_contents("INCREMENTAL_TEST_TRIGGER.md")
-        repo.update_file(
-            "INCREMENTAL_TEST_TRIGGER.md",
-            "Step 2: Trigger incremental APK test after Step 1 success",
-            trigger_content,
-            existing.sha
-        )
-        print("✅ Updated incremental test trigger")
-    except:
-        repo.create_file(
-            "INCREMENTAL_TEST_TRIGGER.md",
-            "Step 2: Trigger incremental APK test after Step 1 success",
-            trigger_content
-        )
-        print("✅ Created incremental test trigger")
+    # Create build trigger file
+    trigger_data = {
+        "build_request": "Clean APK build requested",
+        "timestamp": datetime.now().isoformat(),
+        "target": "EchoCoreCB mobile APK",
+        "artifact_required": True,
+        "cleanup_completed": True,
+        "build_type": "autonomous_apk_packaging"
+    }
     
-    print("📄 File: INCREMENTAL_TEST_TRIGGER.md")
-    print("🔧 Action: APK build + upload with verified v4 action")
-    print("📊 Expected: incremental-test-apk artifact")
+    with open("BUILD_TRIGGER.json", "w") as f:
+        json.dump(trigger_data, f, indent=2)
     
-    print("\n🎯 TESTING PROGRESS:")
-    print("   Step 1: Minimal test ✅ VERIFIED")
-    print("   Step 2: Incremental APK test 🚀 TRIGGERED")  
-    print("   Step 3: Full AGI system ⏳ WAITING")
+    # Update the APK trigger file to force new build
+    with open("ECHOCORECB_APK_TRIGGER.md", "w") as f:
+        f.write(f"""# EchoCoreCB APK Build Trigger
+
+**Build Requested**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Reason**: Clean build after workflow cleanup
+**Target**: EchoCoreCB mobile AGI platform
+**Artifact**: APK file required for deployment
+
+## Build Configuration
+- Autonomous packaging: ENABLED
+- Recovery protocols: ACTIVE
+- Artifact upload: REQUIRED
+- Build validation: COMPREHENSIVE
+
+## Expected Artifact
+- Name: echocorecb-autonomous-apk
+- Type: Android APK
+- Platform: Mobile AGI interface
+- Features: Complete EchoCore consciousness system
+
+---
+*This file triggers the autonomous APK build workflow*
+""")
     
-    print("\n📈 Professional methodology working correctly")
-    print("   Each step validated before proceeding to next")
+    # Create a commit trigger by updating a core file
+    with open("buildozer.spec", "r") as f:
+        spec_content = f.read()
     
-except Exception as e:
-    print(f"❌ Error: {e}")
+    # Add a timestamp comment to trigger rebuild
+    timestamp_comment = f"\n# Build triggered: {datetime.now().isoformat()}\n"
+    
+    if "# Build triggered:" not in spec_content:
+        with open("buildozer.spec", "w") as f:
+            f.write(spec_content + timestamp_comment)
+    else:
+        # Update existing timestamp
+        lines = spec_content.split('\n')
+        updated_lines = []
+        for line in lines:
+            if line.startswith("# Build triggered:"):
+                updated_lines.append(f"# Build triggered: {datetime.now().isoformat()}")
+            else:
+                updated_lines.append(line)
+        
+        with open("buildozer.spec", "w") as f:
+            f.write('\n'.join(updated_lines))
+    
+    print("✅ Build trigger files updated")
+    print("📱 EchoCoreCB APK build will start automatically")
+    print("⏱️ Expected completion: 5-10 minutes")
+    print("📥 Artifact will be available for download")
+    
+    return True
+
+if __name__ == "__main__":
+    print("🔥 LAUNCHING CLEAN BUILD TRIGGER")
+    print("Forcing fresh APK artifact generation")
+    print("=" * 40)
+    
+    success = trigger_clean_build()
+    
+    if success:
+        print("\n🎯 BUILD TRIGGER COMPLETE")
+        print("APK build workflow will start shortly")
+        print("Check GitHub Actions for build progress")
+    else:
+        print("\n❌ BUILD TRIGGER FAILED")
+        print("Manual intervention may be required")

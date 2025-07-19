@@ -1,0 +1,8 @@
+{
+  "build_request": "Clean APK build requested",
+  "timestamp": "2025-07-19T21:15:43.575113",
+  "target": "EchoCoreCB mobile APK",
+  "artifact_required": true,
+  "cleanup_completed": true,
+  "build_type": "autonomous_apk_packaging"
+}
