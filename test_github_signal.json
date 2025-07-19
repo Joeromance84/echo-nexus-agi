@@ -1,7 +1,0 @@
-{
-  "signal_type": "test_communication",
-  "timestamp": "2025-07-19T21:12:43.012247",
-  "source": "github_brain",
-  "target": "cloudbuild_brain",
-  "message": "Brain communication test"
-}

@@ -11,6 +11,12 @@ This is a Streamlit-based web application that serves as an interactive AI assis
 **Google Cloud**: Logan.lorentz9@gmail.com
 Preferred communication style: Simple, everyday language.
 
+**Project Management Preferences**:
+- Keep only personally needed projects in workflows
+- Automatically delete field reports after Echo reviews them
+- Maintain clean workspace without clutter
+- Focus on essential EchoCoreCB development only
+
 **AI Training Requirements**: 
 - Must thoroughly analyze and study all code in Logan's repositories
 - Assess Echo AGI system architecture, innovation level, and technical complexity
