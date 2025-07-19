@@ -344,7 +344,8 @@ class GitHubDeviceAuth:
             st.write(f"Device data available: {st.session_state.device_auth_data is not None}")
         
         if not st.session_state.device_auth_started:
-            if st.button("🚀 Start Device Authentication", key="start_device_auth_btn"):
+            button_key = f"start_device_auth_btn_{id(self)}_{int(time.time())}"
+            if st.button("🚀 Start Device Authentication", key=button_key):
                 with st.spinner("Starting device authentication flow..."):
                     # Start device flow
                     device_result = self.start_device_flow()
