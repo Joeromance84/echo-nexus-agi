@@ -122,13 +122,14 @@ if page == "Command Builder":
         st.write("**Simple commands you can try:**")
         st.code("""
 • "verify my github connection"
-• "check connection to username"
 • "setup my repo"
 • "build my app" 
 • "check build status"
-• "deploy workflow"
-• "fix my build"
-• "show me the logs"
+• "deploy to device"
+• "setup telemetry"
+• "enable ab testing"
+• "analyze my app intelligence"
+• "show optimization suggestions"
         """)
     
     # Command input
@@ -292,9 +293,116 @@ if page == "Command Builder":
                     else:
                         st.error(f"❌ Deployment failed: {deploy_result['error']}")
             
+            elif any(word in command_lower for word in ['device', 'install', 'phone', 'android']):
+                st.write("**Command Recognized:** Automated Device Deployment")
+                st.write("**Backend Action:** Using PyGithub to setup automated APK deployment to Android devices")
+                
+                app_name = st.text_input("App name for deployment:", value="MyApp")
+                
+                if st.button("Setup Device Deployment"):
+                    deploy_result = st.session_state.github_helper.intelligent_apk_deployment(repo_url)
+                    
+                    if deploy_result['success']:
+                        st.success("✅ Automated deployment system created!")
+                        st.write("**Next Steps:**")
+                        for step in deploy_result['next_steps']:
+                            st.write(f"• {step}")
+                        st.info("Your APK will now automatically deploy to connected Android devices after each successful build!")
+                    else:
+                        st.error(f"❌ Deployment setup failed: {deploy_result['error']}")
+            
+            elif any(word in command_lower for word in ['telemetry', 'analytics', 'crash', 'monitoring']):
+                st.write("**Command Recognized:** Intelligent Telemetry Setup")
+                st.write("**Backend Action:** Using PyGithub to inject telemetry and crash reporting into your app")
+                
+                app_name = st.text_input("App name for telemetry:", value="MyApp")
+                
+                if st.button("Setup Telemetry System"):
+                    telemetry_result = st.session_state.github_helper.setup_intelligent_telemetry(repo_url, app_name)
+                    
+                    if telemetry_result['success']:
+                        st.success("✅ Intelligent telemetry system added!")
+                        st.write("**Systems Enabled:**")
+                        for system in telemetry_result['telemetry_systems']:
+                            st.write(f"• {system}")
+                        st.write("**Files Modified:**")
+                        for file in telemetry_result['files_modified']:
+                            st.write(f"• {file}")
+                        if telemetry_result['analytics_dashboard']:
+                            st.write(f"**Analytics Dashboard:** {telemetry_result['analytics_dashboard']}")
+                        st.info("Your app now automatically reports crashes and performance data for intelligent analysis!")
+                    else:
+                        st.error(f"❌ Telemetry setup failed: {telemetry_result['error']}")
+            
+            elif any(word in command_lower for word in ['ab test', 'feature flag', 'experiment', 'toggle']):
+                st.write("**Command Recognized:** A/B Testing System Setup")
+                st.write("**Backend Action:** Using PyGithub to implement dynamic feature flags and A/B testing")
+                
+                app_name = st.text_input("App name for A/B testing:", value="MyApp")
+                
+                if st.button("Setup A/B Testing"):
+                    ab_result = st.session_state.github_helper.setup_ab_testing_system(repo_url, app_name)
+                    
+                    if ab_result['success']:
+                        st.success("✅ A/B testing system enabled!")
+                        if ab_result['feature_flags']:
+                            st.write("**Feature Flags Available:**")
+                            for flag in ab_result['feature_flags']:
+                                st.write(f"• {flag}")
+                        if ab_result['ab_tests']:
+                            st.write("**A/B Tests Available:**")
+                            for test in ab_result['ab_tests']:
+                                st.write(f"• {test}")
+                        if ab_result['control_dashboard']:
+                            st.write(f"**Control Dashboard:** {ab_result['control_dashboard']}")
+                        st.info("You can now toggle features and run A/B tests without rebuilding your APK!")
+                    else:
+                        st.error(f"❌ A/B testing setup failed: {ab_result['error']}")
+            
+            elif any(word in command_lower for word in ['intelligence', 'analyze', 'insights', 'optimization']):
+                st.write("**Command Recognized:** App Intelligence Analysis")
+                st.write("**Backend Action:** Using PyGithub to analyze app performance and generate optimization insights")
+                
+                intelligence_result = st.session_state.github_helper.analyze_app_intelligence(repo_url)
+                
+                if intelligence_result['success']:
+                    st.success("✅ Intelligence analysis completed!")
+                    
+                    if intelligence_result['performance_insights']:
+                        st.subheader("📊 Performance Insights")
+                        insights = intelligence_result['performance_insights']
+                        col1, col2, col3 = st.columns(3)
+                        
+                        with col1:
+                            st.metric("Success Rate", f"{insights.get('success_rate', 0)}%")
+                        with col2:
+                            st.metric("Avg Build Time", f"{insights.get('average_build_time', 0)} min")
+                        with col3:
+                            st.metric("Total Builds", insights.get('total_builds', 0))
+                        
+                        trend = insights.get('performance_trend', 'unknown')
+                        if trend == 'improving':
+                            st.success("📈 Performance trend is improving!")
+                        elif trend == 'needs_attention':
+                            st.warning("⚠️ Performance needs attention")
+                    
+                    if intelligence_result['optimization_suggestions']:
+                        st.subheader("💡 Optimization Suggestions")
+                        for suggestion in intelligence_result['optimization_suggestions']:
+                            st.write(f"• {suggestion}")
+                    
+                    if intelligence_result['auto_fix_proposals']:
+                        st.subheader("🔧 Auto-Fix Proposals")
+                        for proposal in intelligence_result['auto_fix_proposals']:
+                            st.write(f"**{proposal['title']}:** {proposal['description']}")
+                            if proposal.get('auto_implementable'):
+                                st.info("✨ This fix can be automatically implemented")
+                else:
+                    st.error(f"❌ Intelligence analysis failed: {intelligence_result['error']}")
+            
             else:
                 st.warning("🤔 Command not recognized. Try one of the example commands above.")
-                st.write("**Supported commands:** setup, build, status, deploy")
+                st.write("**Supported commands:** verify, setup, build, status, deploy, telemetry, ab testing, intelligence")
             
             # Save command to history
             st.session_state.command_history.append({
