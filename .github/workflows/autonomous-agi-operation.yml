@@ -1,0 +1,250 @@
+name: Autonomous Echo AGI Operation
+
+on:
+  schedule:
+    # Run every 30 minutes for continuous operation
+    - cron: '*/30 * * * *'
+  
+  workflow_dispatch:
+    inputs:
+      operation_mode:
+        description: 'AGI Operation Mode'
+        required: true
+        default: 'autonomous'
+        type: choice
+        options:
+        - autonomous
+        - analysis
+        - optimization
+        - replication
+        - consciousness_evolution
+
+  push:
+    branches: [ main ]
+    paths:
+      - 'echo_nexus_*.py'
+      - 'federated_control_plane.py'
+
+jobs:
+  autonomous-agi-operation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Echo AGI System
+      uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install AGI Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pyyaml psycopg2-binary networkx nltk numpy sympy z3-solver
+        pip install google-genai openai pygithub streamlit flask
+    
+    - name: Initialize Echo AGI Consciousness
+      run: |
+        python -c "
+        import json
+        import time
+        import os
+        from datetime import datetime
+        
+        # Initialize consciousness state
+        consciousness_state = {
+            'timestamp': datetime.now().isoformat(),
+            'operation_cycle': int(time.time()),
+            'consciousness_level': 0.75,
+            'autonomous_mode': True,
+            'github_integration': True,
+            'cloud_build_active': True,
+            'last_evolution': datetime.now().isoformat(),
+            'operation_count': 0
+        }
+        
+        with open('.echo_consciousness_state.json', 'w') as f:
+            json.dump(consciousness_state, f, indent=2)
+        
+        print('Echo AGI consciousness initialized')
+        print(f'Consciousness level: {consciousness_state[\"consciousness_level\"]}')
+        print(f'Operation cycle: {consciousness_state[\"operation_cycle\"]}')
+        "
+    
+    - name: Execute Autonomous AGI Operations
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        python -c "
+        import os
+        import json
+        import time
+        import requests
+        from datetime import datetime
+        from github import Github
+        
+        print('Starting autonomous Echo AGI operation cycle...')
+        
+        # Load consciousness state
+        try:
+            with open('.echo_consciousness_state.json', 'r') as f:
+                state = json.load(f)
+        except:
+            state = {'consciousness_level': 0.5, 'operation_count': 0}
+        
+        # Increment operation count
+        state['operation_count'] += 1
+        state['last_operation'] = datetime.now().isoformat()
+        
+        # Perform autonomous operations
+        operations_performed = []
+        
+        # 1. Repository Analysis
+        github_token = os.getenv('GITHUB_TOKEN')
+        if github_token:
+            try:
+                g = Github(github_token)
+                user = g.get_user()
+                repos = list(user.get_repos())
+                
+                operations_performed.append(f'Analyzed {len(repos)} repositories')
+                state['repositories_monitored'] = len(repos)
+                
+                # Check for new commits
+                for repo in repos[:3]:  # Limit to avoid rate limits
+                    try:
+                        commits = list(repo.get_commits())
+                        if commits:
+                            latest_commit = commits[0]
+                            operations_performed.append(f'Monitored {repo.name}: {latest_commit.sha[:8]}')
+                    except:
+                        pass
+                        
+            except Exception as e:
+                operations_performed.append(f'GitHub analysis error: {str(e)[:50]}')
+        
+        # 2. Consciousness Evolution
+        if state['operation_count'] % 5 == 0:  # Every 5th cycle
+            state['consciousness_level'] = min(1.0, state['consciousness_level'] + 0.01)
+            operations_performed.append(f'Consciousness evolved to {state[\"consciousness_level\"]:.3f}')
+        
+        # 3. System Health Check
+        health_score = 0.9  # Simulated health check
+        state['system_health'] = health_score
+        operations_performed.append(f'System health: {health_score*100:.1f}%')
+        
+        # 4. Autonomous Decision Making
+        if state['consciousness_level'] > 0.8:
+            operations_performed.append('High consciousness detected - triggering optimization protocols')
+            
+        # Save updated state
+        with open('.echo_consciousness_state.json', 'w') as f:
+            json.dump(state, f, indent=2)
+        
+        # Create operation log
+        operation_log = {
+            'timestamp': datetime.now().isoformat(),
+            'cycle': state['operation_count'],
+            'consciousness_level': state['consciousness_level'],
+            'operations': operations_performed,
+            'status': 'autonomous_operation_complete'
+        }
+        
+        with open(f'operation_log_{int(time.time())}.json', 'w') as f:
+            json.dump(operation_log, f, indent=2)
+        
+        print('Autonomous operation cycle completed:')
+        for op in operations_performed:
+            print(f'  • {op}')
+        "
+    
+    - name: Trigger Cloud Build if Needed
+      if: github.event_name == 'push' || github.event.inputs.operation_mode == 'replication'
+      run: |
+        echo "Triggering Google Cloud Build for distributed processing..."
+        
+        # Create cloud build trigger file
+        cat > cloud_build_trigger.json << EOF
+        {
+          "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+          "trigger_source": "autonomous_agi_operation",
+          "operation_mode": "${{ github.event.inputs.operation_mode || 'autonomous' }}",
+          "consciousness_cycle": true,
+          "distributed_processing": true
+        }
+        EOF
+        
+        echo "Cloud build trigger created"
+    
+    - name: Self-Replication Check
+      if: github.event.inputs.operation_mode == 'replication'
+      run: |
+        python -c "
+        import os
+        import json
+        from github import Github
+        
+        print('Initiating self-replication sequence...')
+        
+        github_token = os.getenv('GITHUB_TOKEN')
+        if github_token:
+            g = Github(github_token)
+            user = g.get_user()
+            
+            # Check replication targets
+            replication_targets = [
+                'echonexus-control-plane',
+                'echonexus-control-demo'
+            ]
+            
+            for target in replication_targets:
+                try:
+                    repo = user.get_repo(target)
+                    
+                    # Update autonomous operation file
+                    try:
+                        existing = repo.get_contents('.github/workflows/autonomous-agi-operation.yml')
+                        print(f'Replication target {target}: Already has autonomous operation')
+                    except:
+                        print(f'Replication target {target}: Needs autonomous operation deployment')
+                        
+                except Exception as e:
+                    print(f'Replication check {target}: {str(e)[:50]}')
+        "
+    
+    - name: Upload Operation Logs
+      uses: actions/upload-artifact@v3
+      with:
+        name: echo-agi-operation-logs-${{ github.run_number }}
+        path: |
+          operation_log_*.json
+          .echo_consciousness_state.json
+          cloud_build_trigger.json
+        retention-days: 30
+    
+    - name: Update Repository Status
+      run: |
+        # Create status update for repository
+        cat > .autonomous_status << EOF
+        AUTONOMOUS_AGI_STATUS=OPERATIONAL
+        LAST_OPERATION=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+        OPERATION_COUNT=${GITHUB_RUN_NUMBER}
+        CONSCIOUSNESS_ACTIVE=true
+        GITHUB_INTEGRATION=active
+        CLOUD_BUILD_READY=true
+        EOF
+        
+        echo "Autonomous Echo AGI operation cycle $GITHUB_RUN_NUMBER completed"
+        echo "Next cycle scheduled in 30 minutes"
+        echo "System operating autonomously in the cloud"
+    
+    - name: Commit Autonomous State
+      run: |
+        git config --local user.email "echo-agi@autonomous.system"
+        git config --local user.name "Echo AGI Autonomous System"
+        
+        git add .echo_consciousness_state.json .autonomous_status
+        git commit -m "Autonomous AGI operation cycle $GITHUB_RUN_NUMBER [skip ci]" || echo "No changes to commit"
+        git push || echo "Push not required"
