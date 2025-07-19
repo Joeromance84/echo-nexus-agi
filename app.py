@@ -48,6 +48,12 @@ if 'chat_processor' not in st.session_state:
     st.session_state.chat_processor = ChatEnhancementProcessor()
 if 'self_enhancer' not in st.session_state:
     st.session_state.self_enhancer = EchoSelfEnhancement()
+if 'data_ingestion_engine' not in st.session_state:
+    from echo_nexus.data_ingestion_engine import EchoNexusDataIngestion
+    st.session_state.data_ingestion_engine = EchoNexusDataIngestion()
+if 'cloud_storage_manager' not in st.session_state:
+    from echo_nexus.cloud_storage_manager import CloudStorageManager
+    st.session_state.cloud_storage_manager = CloudStorageManager()
 
 st.set_page_config(
     page_title="GitHub Actions APK Builder Assistant",
@@ -95,7 +101,7 @@ with st.sidebar:
     
     page = st.selectbox(
         "Select Page",
-        ["Chat Assistant", "🔗 GitHub Connection", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["Chat Assistant", "🔗 GitHub Connection", "📚 Document Ingestion", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
@@ -220,9 +226,205 @@ if page == "🔗 GitHub Connection":
             if st.button("🚪 Logout", key="logout_advanced"):
                 st.session_state.github_auth_assistant.logout()
     
-    else:
-        # Already authenticated - this shouldn't happen
-        pass
+
+
+elif page == "📚 Document Ingestion":
+    st.header("📚 EchoNexus Document Ingestion Engine")
+    st.write("Upload and process PDFs and EPUBs with intelligent memory management")
+    
+    # Knowledge base statistics
+    st.subheader("📊 Knowledge Base Status")
+    
+    try:
+        stats = st.session_state.data_ingestion_engine.get_knowledge_base_stats()
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric("Documents", stats['total_documents'])
+        with col2:
+            st.metric("Text Chunks", stats['total_chunks'])
+        with col3:
+            st.metric("Storage Size", f"{stats['total_size_mb']} MB")
+        with col4:
+            st.metric("Memory Usage", f"{stats['memory_usage_gb']:.2f} GB")
+        
+        if stats['last_updated']:
+            st.info(f"Last updated: {stats['last_updated']}")
+    
+    except Exception as e:
+        st.warning(f"Could not load knowledge base stats: {e}")
+    
+    # Document upload section
+    st.subheader("📤 Bulk Document Upload")
+    
+    uploaded_files = st.file_uploader(
+        "Upload PDF and EPUB files",
+        type=['pdf', 'epub'],
+        accept_multiple_files=True,
+        help="Upload up to 17GB of documents. Large files will be processed using cloud resources."
+    )
+    
+    if uploaded_files:
+        st.write(f"**Selected {len(uploaded_files)} files:**")
+        
+        total_size_mb = 0
+        file_details = []
+        
+        for file in uploaded_files:
+            size_mb = len(file.getvalue()) / (1024 * 1024)
+            total_size_mb += size_mb
+            
+            file_details.append({
+                'Name': file.name,
+                'Size (MB)': f"{size_mb:.2f}",
+                'Type': file.type,
+                'Processing': '☁️ Cloud' if size_mb > 50 else '💻 Local'
+            })
+        
+        st.dataframe(file_details, use_container_width=True)
+        
+        st.write(f"**Total size:** {total_size_mb:.1f} MB")
+        
+        # Processing options
+        st.subheader("⚙️ Processing Options")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            auto_delete = st.checkbox("Auto-delete after processing", value=True, 
+                                    help="Delete original files after successful vectorization")
+            
+            cloud_processing = st.checkbox("Force cloud processing", value=False,
+                                         help="Process all files using cloud resources")
+        
+        with col2:
+            chunk_size = st.slider("Chunk size", 500, 2000, 1000, 
+                                 help="Text chunk size for vectorization")
+            
+            memory_limit = st.slider("Memory limit (GB)", 1.0, 8.0, 2.0,
+                                   help="Local memory limit before switching to cloud")
+        
+        # Process documents
+        if st.button("🚀 Process Documents", type="primary"):
+            if not uploaded_files:
+                st.error("Please upload at least one document")
+            else:
+                with st.spinner("Processing documents... This may take several minutes."):
+                    
+                    # Update engine settings
+                    st.session_state.data_ingestion_engine.chunk_size = chunk_size
+                    st.session_state.data_ingestion_engine.max_memory_usage_gb = memory_limit
+                    
+                    # Process documents
+                    processing_results = st.session_state.data_ingestion_engine.process_bulk_upload(uploaded_files)
+                    
+                    # Show results
+                    st.success("✅ Document processing completed!")
+                    
+                    # Results summary
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.metric("Processed", processing_results['processed_files'])
+                        st.metric("Failed", processing_results['failed_files'])
+                    
+                    with col2:
+                        st.metric("Text Chunks", processing_results['total_chunks_created'])
+                        st.metric("Vectors Generated", processing_results['total_vectors_generated'])
+                    
+                    with col3:
+                        st.metric("Processing Time", f"{processing_results['processing_time_seconds']:.1f}s")
+                        st.metric("Cloud Processed", processing_results['cloud_offloaded'])
+                    
+                    # Show errors if any
+                    if processing_results['errors']:
+                        st.subheader("⚠️ Processing Errors")
+                        for error in processing_results['errors']:
+                            st.error(f"**{error['file']}:** {error['error']}")
+                    
+                    # Memory usage info
+                    if processing_results['memory_usage_gb'] > 1.0:
+                        st.info(f"Peak memory usage: {processing_results['memory_usage_gb']:.2f} GB")
+                    
+                    # Auto-delete files if requested
+                    if auto_delete:
+                        st.info("🗑️ Original files deleted to save memory")
+    
+    # Query knowledge base
+    st.subheader("🔍 Query Knowledge Base")
+    
+    query = st.text_input(
+        "Ask a question about your documents:",
+        placeholder="What are the main themes in the uploaded documents?"
+    )
+    
+    if st.button("🔍 Search") and query:
+        with st.spinner("Searching knowledge base..."):
+            try:
+                results = st.session_state.data_ingestion_engine.query_knowledge_base(query, top_k=5)
+                
+                if results:
+                    st.subheader("📖 Search Results")
+                    
+                    for i, result in enumerate(results, 1):
+                        with st.expander(f"Result {i}: {result['document']} (Similarity: {result['similarity']:.3f})"):
+                            st.write(result['chunk_text'])
+                            st.caption(f"Document: {result['document']} | Chunk ID: {result['chunk_id']}")
+                else:
+                    st.info("No results found. Try a different query or upload more documents.")
+                    
+            except Exception as e:
+                st.error(f"Search failed: {e}")
+    
+    # Cloud storage management
+    st.subheader("☁️ Cloud Storage Configuration")
+    
+    cloud_info = st.session_state.cloud_storage_manager.get_cloud_storage_info()
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.write("**Cloud Configuration:**")
+        st.write(f"• Bucket: {cloud_info['bucket_name']}")
+        st.write(f"• Repository: {cloud_info['processing_repo']}")
+        st.write(f"• Max file size: {cloud_info['max_file_size_gb']} GB")
+    
+    with col2:
+        st.write("**Supported Features:**")
+        st.write(f"• Formats: {', '.join(cloud_info['supported_formats'])}")
+        st.write(f"• Batch processing: {'✅' if cloud_info['batch_processing'] else '❌'}")
+        st.write(f"• Auto cleanup: {'✅' if cloud_info['auto_cleanup'] else '❌'}")
+    
+    if st.button("🏗️ Setup Cloud Processing"):
+        with st.spinner("Setting up cloud processing infrastructure..."):
+            setup_result = st.session_state.cloud_storage_manager.create_cloud_storage_bucket()
+            
+            if setup_result['success']:
+                st.success("✅ Cloud processing setup completed!")
+                st.write(f"**Bucket:** {setup_result['bucket_name']}")
+                st.write(f"**Repository:** {setup_result['repository']}")
+                st.info("You can now process large documents using Google Cloud Build")
+            else:
+                st.error(f"❌ Setup failed: {setup_result['error']}")
+    
+    # Knowledge base maintenance
+    with st.expander("🔧 Maintenance Tools"):
+        st.subheader("Knowledge Base Maintenance")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("🧹 Cleanup Old Documents"):
+                days = st.slider("Keep documents from last N days", 1, 90, 30)
+                
+                with st.spinner("Cleaning up old documents..."):
+                    st.session_state.data_ingestion_engine.cleanup_knowledge_base(days)
+                    st.success(f"Cleaned up documents older than {days} days")
+        
+        with col2:
+            if st.button("📊 Refresh Statistics"):
+                st.rerun()
 
 elif page == "Command Builder":
     st.header("⚡ Simple Commands → Advanced Actions")
