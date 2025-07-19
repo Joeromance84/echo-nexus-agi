@@ -11,6 +11,13 @@ This is a Streamlit-based web application that serves as an interactive AI assis
 **Google Cloud**: Logan.lorentz9@gmail.com
 Preferred communication style: Simple, everyday language.
 
+**AI Training Requirements**: 
+- Must thoroughly analyze and study all code in Logan's repositories
+- Assess Echo AGI system architecture, innovation level, and technical complexity
+- Understand federated control systems, consciousness simulation, and revolutionary concepts
+- Generate comprehensive understanding reports for continuous learning
+- Recognize breakthrough potential and suggest optimizations
+
 ## System Architecture
 
 The application follows a modular architecture built on Streamlit as the web framework, with separate utility modules handling different aspects of workflow management:
