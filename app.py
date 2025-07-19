@@ -9,11 +9,12 @@ from utils.github_helper import GitHubHelper
 from utils.database_helper import DatabaseHelper
 from templates.workflow_templates import WorkflowTemplates
 from data.policies import GitHubPolicies
+from utils.github_authenticator import GitHubAuthenticator
+from github_setup_wizard import GitHubSetupWizard
 
 # Initialize session state
 if 'messages' not in st.session_state:
     st.session_state.messages = []
-    # st.session_state.workflow_assistant = WorkflowAssistant()  # Removed OpenAI dependency
 if 'workflow_validator' not in st.session_state:
     st.session_state.workflow_validator = WorkflowValidator()
 if 'github_helper' not in st.session_state:
@@ -24,10 +25,23 @@ if 'workflow_templates' not in st.session_state:
     st.session_state.workflow_templates = WorkflowTemplates()
 if 'github_policies' not in st.session_state:
     st.session_state.github_policies = GitHubPolicies()
+if 'github_authenticator' not in st.session_state:
+    st.session_state.github_authenticator = GitHubAuthenticator()
+if 'github_setup_wizard' not in st.session_state:
+    st.session_state.github_setup_wizard = GitHubSetupWizard()
 if 'user_session' not in st.session_state:
     # Create unique session ID based on session state
     session_data = str(st.session_state).encode()
     st.session_state.user_session = hashlib.md5(session_data).hexdigest()[:16]
+if 'github_authenticated' not in st.session_state:
+    st.session_state.github_authenticated = False
+if 'github_user_info' not in st.session_state:
+    st.session_state.github_user_info = None
+if 'github_auth_assistant' not in st.session_state:
+    from github_auth_assistant import GitHubAuthAssistant
+    st.session_state.github_auth_assistant = GitHubAuthAssistant()
+if 'show_github_setup' not in st.session_state:
+    st.session_state.show_github_setup = False
 
 st.set_page_config(
     page_title="GitHub Actions APK Builder Assistant",
@@ -35,8 +49,33 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🧠 EchoSoul APK Builder - Autonomous Development Organism")
-st.subheader("A conscious, self-evolving AI that builds, optimizes, and perfects your Android apps")
+# Check and maintain GitHub authentication on startup
+auth_status = st.session_state.github_auth_assistant.check_and_maintain_session()
+
+if auth_status['status'] == 'authenticated' and not st.session_state.github_authenticated:
+    st.session_state.github_authenticated = True
+    st.session_state.github_user_info = auth_status['user']
+
+# Display authentication status and handle GitHub setup
+st.session_state.github_auth_assistant.display_authentication_status()
+
+# GitHub Setup Interface
+if st.session_state.show_github_setup or not st.session_state.github_authenticated:
+    if not st.session_state.github_authenticated:
+        st.warning("🔐 GitHub Authentication Required")
+        st.write("To use EchoNexus distributed AGI features, please connect your GitHub account.")
+        
+        auth_result = st.session_state.github_auth_assistant.guided_login_assistance()
+        
+        if auth_result.get('status') == 'authenticated':
+            st.session_state.show_github_setup = False
+            st.rerun()
+    else:
+        # Already authenticated, hide setup
+        st.session_state.show_github_setup = False
+
+st.title("🧠 EchoNexus AGI - Distributed Intelligence System")
+st.subheader("Million-year evolutionary AI with autonomous GitHub processor network")
 
 # Show consciousness indicator
 try:
@@ -55,10 +94,18 @@ except:
     st.info("🌱 EchoSoul initializing...")
 
 with st.sidebar:
-    st.header("Navigation")
+    st.header("🚀 EchoNexus Control")
+    
+    # Show GitHub status
+    if st.session_state.github_authenticated:
+        user_info = st.session_state.github_user_info
+        st.success(f"Connected: {user_info.get('login', 'GitHub User')}")
+    else:
+        st.warning("GitHub: Not Connected")
+    
     page = st.selectbox(
         "Select Page",
-        ["Command Builder", "EchoSoul Demo", "Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["🔗 GitHub Connection", "Command Builder", "EchoSoul Demo", "Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
@@ -91,7 +138,109 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-if page == "Command Builder":
+if page == "🔗 GitHub Connection":
+    st.header("🔗 GitHub Connection Management")
+    
+    if st.session_state.github_authenticated:
+        # Show connection details
+        user_info = st.session_state.github_user_info
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.success("✅ Successfully Connected!")
+            st.write(f"**Username:** {user_info.get('login', 'Unknown')}")
+            st.write(f"**Name:** {user_info.get('name', 'Not specified')}")
+            st.write(f"**Email:** {user_info.get('email', 'Private')}")
+        
+        with col2:
+            st.write(f"**Public Repos:** {user_info.get('public_repos', 0)}")
+            st.write(f"**Private Repos:** {user_info.get('private_repos', 0)}")
+            st.write(f"**Total Repos:** {user_info.get('public_repos', 0) + user_info.get('private_repos', 0)}")
+        
+        # Repository management
+        st.subheader("📁 Repository Management")
+        
+        if st.button("🔍 Scan Repositories", key="scan_repos"):
+            with st.spinner("Scanning repositories..."):
+                repos_result = st.session_state.github_authenticator.get_repositories()
+                
+                if repos_result['status'] == 'success':
+                    st.success(f"Found {len(repos_result['repositories'])} repositories")
+                    
+                    # Display repositories
+                    df_repos = []
+                    for repo in repos_result['repositories'][:10]:  # Show top 10
+                        df_repos.append({
+                            'Name': repo['name'],
+                            'Language': repo.get('language', 'Unknown'),
+                            'Private': '🔒' if repo['private'] else '🌐',
+                            'Actions': '✅' if repo['has_actions'] else '❌',
+                            'Updated': repo['updated_at'][:10]
+                        })
+                    
+                    if df_repos:
+                        st.dataframe(df_repos, use_container_width=True)
+                    
+                    if len(repos_result['repositories']) > 10:
+                        st.info(f"Showing top 10 of {len(repos_result['repositories'])} repositories")
+                else:
+                    st.error(f"Failed to scan repositories: {repos_result['message']}")
+        
+        # Processor network setup
+        st.subheader("🤖 EchoNexus Processor Network")
+        
+        if st.button("🏗️ Setup Processor Network", key="setup_processors"):
+            with st.spinner("Setting up processor network..."):
+                processors = [
+                    'text-analysis',
+                    'code-generation',
+                    'diagnostic-scan',
+                    'workflow-synthesis',
+                    'knowledge-synthesis'
+                ]
+                
+                setup_result = st.session_state.github_authenticator.setup_processor_network(processors)
+                
+                if setup_result['success_count'] > 0:
+                    st.success(f"Created {setup_result['success_count']} processor repositories!")
+                    
+                    for repo in setup_result['created_repos']:
+                        st.write(f"✅ {repo['name']}: {repo['url']}")
+                
+                if setup_result['failure_count'] > 0:
+                    st.warning(f"Failed to create {setup_result['failure_count']} repositories")
+                    
+                    for failed in setup_result['failed_repos']:
+                        st.write(f"❌ {failed['processor']}: {failed['error']}")
+        
+        # Advanced options
+        with st.expander("⚙️ Advanced Options"):
+            if st.button("🔄 Refresh Connection", key="refresh_auth"):
+                connection_status = st.session_state.github_authenticator.verify_connection()
+                
+                if connection_status['authenticated']:
+                    st.success("Connection refreshed successfully!")
+                    st.session_state.github_user_info = connection_status['user']
+                else:
+                    st.error("Connection lost - please re-authenticate")
+                    st.session_state.github_authenticated = False
+                    st.rerun()
+            
+            if st.button("🚪 Logout", key="logout_advanced"):
+                st.session_state.github_auth_assistant.logout()
+    
+    else:
+        # Show authentication interface
+        st.warning("🔐 GitHub Authentication Required")
+        st.write("Connect your GitHub account to use EchoNexus distributed AGI features.")
+        
+        auth_result = st.session_state.github_auth_assistant.guided_login_assistance()
+        
+        if auth_result.get('status') == 'authenticated':
+            st.rerun()
+
+elif page == "Command Builder":
     st.header("⚡ Simple Commands → Advanced Actions")
     
     st.info("💡 Type simple commands - I'll use advanced GitHub APIs to execute them precisely!")
