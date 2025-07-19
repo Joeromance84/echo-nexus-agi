@@ -1,0 +1,28 @@
+name: Echo APK Builder
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r25b
+      
+      - name: Setup Python & Termux Environment
+        run: |
+          sudo apt-get update && sudo apt-get install -y python3-pip termux-tools
+          python3 -m pip install --upgrade buildozer==1.4.0 python-for-android
+          python3 -m pip install -r requirements.txt
+
+      - name: EchoCore Compile & Package
+        run: |
+          chmod +x ./scripts/echo_apk_builder.sh
+          ./scripts/echo_apk_builder.sh

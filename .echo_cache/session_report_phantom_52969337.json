@@ -1,0 +1,38 @@
+{
+  "session_id": "phantom_52969337",
+  "session_end": "2025-07-19T23:55:51.133413",
+  "total_duration_seconds": 13.614,
+  "total_operations": 5,
+  "phase_breakdown": {
+    "initialization": {
+      "start": 1752969337.5164924,
+      "end": 1752969337.5167794,
+      "duration": 0.00028705596923828125
+    },
+    "signature_verification": {
+      "start": 1752969337.5170393,
+      "end": 1752969337.5183146,
+      "duration": 0.0012753009796142578
+    },
+    "deception_layer": {
+      "start": 1752969337.518603,
+      "end": 1752969347.1216066,
+      "duration": 9.60300350189209
+    },
+    "shadow_build": {
+      "start": 1752969347.1226954,
+      "end": 1752969351.1306236,
+      "duration": 4.007928133010864
+    },
+    "completion": {
+      "start": 1752969351.1312566,
+      "end": 1752969351.1327574,
+      "duration": 0.001500844955444336
+    }
+  },
+  "performance_metrics": {
+    "avg_operation_time": 2.723,
+    "fastest_phase": "initialization",
+    "slowest_phase": "deception_layer"
+  }
+}
