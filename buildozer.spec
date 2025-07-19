@@ -20,7 +20,7 @@ version = 2.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,pygithub,requests,pyyaml,openai,google-genai,networkx,nltk,numpy,psycopg2,streamlit,sympy,z3-solver,spacy,qrcode,flask
+requirements = python3,kivy,pygithub,requests,pyyaml,openai,google-genai,networkx,nltk,numpy,sympy,z3-solver,spacy,qrcode
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
@@ -87,3 +87,6 @@ android.allow_backup = True
 # (str) Path to final binaries, absolute or relative to spec file
 # bin_dir = ./bin
 # Build triggered: 2025-07-19T21:15:43.577947
+
+# Deployment timestamp: 2025-07-19T21:21:50.593340
+# Mobile deployment: 2025-07-19T21:22:51.736035
