@@ -456,6 +456,11 @@ elif page == "🧠 Workflow Diagnostics":
                         if diagnostic_result['success']:
                             st.success("✅ EchoNexus diagnostic completed!")
                             
+                            # Show troubleshooting steps (like a real developer's process)
+                            st.subheader("🔍 Troubleshooting Steps")
+                            for i, step in enumerate(diagnostic_result.get('troubleshooting_steps', []), 1):
+                                st.write(f"{i}. {step}")
+                            
                             # Show diagnosis details
                             st.subheader("📊 Diagnostic Results")
                             
@@ -482,16 +487,28 @@ elif page == "🧠 Workflow Diagnostics":
                                         status_emoji = "✅" if latest['conclusion'] == 'success' else "❌" if latest['conclusion'] == 'failure' else "🔄"
                                         st.write(f"**Latest:** {status_emoji} {latest['status']}")
                             
+                            # Show complexity analysis
+                            if 'yaml_structure' in diagnosis and 'complexity_indicators' in diagnosis['yaml_structure']:
+                                complexity = diagnosis['yaml_structure']['complexity_indicators']
+                                st.subheader("🧮 Complexity Analysis")
+                                col1, col2 = st.columns(2)
+                                with col1:
+                                    st.write(f"• Large file: {'⚠️' if complexity['file_size_large'] else '✅'}")
+                                    st.write(f"• Multiple conditions: {'⚠️' if complexity['multiple_conditions'] else '✅'}")
+                                with col2:
+                                    st.write(f"• Matrix builds: {'⚠️' if complexity['matrix_builds'] else '✅'}")
+                                    st.write(f"• Job dependencies: {'⚠️' if complexity['job_dependencies'] else '✅'}")
+                            
                             # Show actions taken by AGI
                             if diagnostic_result['actions_taken']:
-                                st.subheader("🤖 EchoNexus Actions Performed")
+                                st.subheader("🤖 Actions Performed")
                                 for action in diagnostic_result['actions_taken']:
                                     st.success(f"✅ {action}")
                             
                             # Show workflow fix status
                             if diagnostic_result['workflow_fixed']:
-                                st.success("🚀 EchoNexus automatically fixed the workflow!")
-                                st.info("The AGI applied the breakthrough solution - simplified YAML structure and created trigger commit")
+                                st.success("🚀 Workflow automatically fixed!")
+                                st.info("Applied real-world troubleshooting solution: simplified complex YAML and triggered execution")
                                 
                                 if 'latest_run' in diagnosis:
                                     latest = diagnosis['latest_run']
@@ -499,14 +516,18 @@ elif page == "🧠 Workflow Diagnostics":
                             
                             # Show issue identification
                             if 'issue' in diagnosis:
-                                if diagnosis['issue'] == "Complex YAML causing parsing failure":
-                                    st.warning("⚠️ Issue Detected: Complex YAML structure preventing GitHub Actions execution")
-                                    st.info("🧠 EchoNexus identified the same issue that was manually diagnosed and applied the breakthrough fix automatically")
-                                else:
-                                    st.info(f"ℹ️ Diagnosis: {diagnosis['issue']}")
+                                st.warning(f"⚠️ Issue Identified: {diagnosis['issue']}")
+                                if "Complex YAML" in diagnosis['issue']:
+                                    st.info("🧠 This matches the exact issue pattern from real troubleshooting experience")
                         
                         else:
                             st.error(f"❌ Diagnostic failed: {diagnostic_result['error']}")
+                            
+                            # Show troubleshooting steps even on failure
+                            if diagnostic_result.get('troubleshooting_steps'):
+                                st.subheader("🔍 Troubleshooting Steps Attempted")
+                                for i, step in enumerate(diagnostic_result['troubleshooting_steps'], 1):
+                                    st.write(f"{i}. {step}")
             else:
                 st.error("Invalid GitHub repository URL format")
     

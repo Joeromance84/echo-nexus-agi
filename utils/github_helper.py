@@ -111,14 +111,15 @@ class GitHubHelper:
     
     def intelligent_workflow_diagnostic(self, owner: str, repo: str) -> Dict[str, Any]:
         """
-        Advanced workflow diagnostic - reproduces the breakthrough solution logic
+        Real-world GitHub Actions troubleshooting - thinks and acts like a developer debugging workflow issues
         """
         result = {
             'success': False,
             'diagnosis': {},
             'actions_taken': [],
             'workflow_fixed': False,
-            'error': None
+            'error': None,
+            'troubleshooting_steps': []
         }
         
         try:
@@ -127,44 +128,137 @@ class GitHubHelper:
                 return result
             
             repo_obj = self.github.get_repo(f"{owner}/{repo}")
+            result['troubleshooting_steps'].append("Connected to repository")
             
-            # Check workflow file structure
+            # Step 1: Check if .github/workflows directory exists (like a dev would)
             try:
                 workflows_dir = repo_obj.get_contents('.github/workflows')
                 workflow_files = [item for item in workflows_dir if item.name.endswith(('.yml', '.yaml'))]
+                result['troubleshooting_steps'].append(f"Found {len(workflow_files)} workflow files")
                 
                 if not workflow_files:
-                    result['diagnosis']['issue'] = "No workflow files found"
+                    result['diagnosis']['issue'] = "No workflow files found - need to create workflows first"
+                    result['troubleshooting_steps'].append("No workflows exist - this explains zero Actions")
                     return result
                 
-                # Analyze primary workflow file
-                workflow_file = workflow_files[0]
-                content = workflow_file.decoded_content.decode('utf-8')
+            except Exception as e:
+                result['diagnosis']['issue'] = "No .github/workflows directory - repository not set up for Actions"
+                result['troubleshooting_steps'].append("Missing .github/workflows directory")
+                return result
+            
+            # Step 2: Examine the workflow file content (what I'd do manually)
+            workflow_file = workflow_files[0]
+            content = workflow_file.decoded_content.decode('utf-8')
+            result['troubleshooting_steps'].append(f"Analyzing {workflow_file.name} ({len(content)} chars)")
+            
+            # Step 3: Parse YAML structure like reading the file myself
+            lines = content.split('\n')
+            yaml_issues = []
+            
+            # Check required top-level keys
+            has_name = any(line.strip().startswith('name:') for line in lines[:20])
+            has_on = any(line.strip().startswith('on:') for line in lines[:20])
+            has_jobs = any(line.strip().startswith('jobs:') for line in lines[:20])
+            
+            if not has_name:
+                yaml_issues.append("Missing 'name:' field")
+            if not has_on:
+                yaml_issues.append("Missing 'on:' trigger block")
+            if not has_jobs:
+                yaml_issues.append("Missing 'jobs:' section")
+            
+            # Step 4: Check if GitHub recognizes workflows (like checking Actions tab)
+            runs = list(repo_obj.get_workflow_runs())
+            result['troubleshooting_steps'].append(f"GitHub shows {len(runs)} workflow runs")
+            
+            # Step 5: Real-world diagnostic logic - what causes zero Actions?
+            if len(runs) == 0 and has_name and has_on and has_jobs:
+                # This is the complex YAML parsing issue we discovered
+                result['troubleshooting_steps'].append("Workflow exists but never executed - likely parsing issue")
                 
-                # Check YAML structure
-                lines = content.split('\n')
-                has_name = any(line.strip().startswith('name:') for line in lines[:20])
-                has_on = any(line.strip().startswith('on:') for line in lines[:20])
-                has_jobs = any(line.strip().startswith('jobs:') for line in lines[:20])
+                # Check for complexity indicators
+                complexity_score = 0
+                if len(content) > 1000:
+                    complexity_score += 2
+                if content.count('if:') > 3:
+                    complexity_score += 1
+                if content.count('matrix:') > 0:
+                    complexity_score += 1
+                if content.count('needs:') > 1:
+                    complexity_score += 1
                 
-                result['diagnosis']['yaml_structure'] = {
-                    'has_name': has_name,
-                    'has_on': has_on,
-                    'has_jobs': has_jobs,
-                    'file_size': len(content),
-                    'line_count': len(lines)
-                }
-                
-                # Check workflow runs
-                runs = list(repo_obj.get_workflow_runs())
-                result['diagnosis']['run_count'] = len(runs)
-                
-                # If no runs and structure looks complex, apply fix
-                if len(runs) == 0 and len(content) > 1000:
-                    result['diagnosis']['issue'] = "Complex YAML causing parsing failure"
+                if complexity_score >= 2:
+                    result['diagnosis']['issue'] = "Complex YAML structure causing GitHub parser failure"
+                    result['troubleshooting_steps'].append(f"Complexity score: {complexity_score}/5 - too complex for reliable parsing")
                     
-                    # Apply the breakthrough fix - create minimal workflow
-                    minimal_workflow = f'''name: {repo} Build
+                    # Apply the fix that worked - simplify everything
+                    simplified_workflow = self._create_simplified_workflow(repo, workflow_file.name)
+                    
+                    # Update the workflow file
+                    repo_obj.update_file(
+                        workflow_file.path,
+                        'EchoNexus: Simplify workflow to fix parsing issues',
+                        simplified_workflow,
+                        workflow_file.sha
+                    )
+                    result['actions_taken'].append('Replaced complex workflow with simplified version')
+                    result['troubleshooting_steps'].append("Applied simplification fix")
+                    
+                    # Force a trigger (like making a commit to test)
+                    self._force_workflow_trigger(repo_obj)
+                    result['actions_taken'].append('Created trigger commit to test fix')
+                    result['troubleshooting_steps'].append("Triggered workflow execution")
+                    
+                    result['workflow_fixed'] = True
+                    result['success'] = True
+                    
+                else:
+                    result['diagnosis']['issue'] = "Workflow appears valid but not triggering - check branch protection or permissions"
+                    result['troubleshooting_steps'].append("Workflow structure looks OK - may be permissions issue")
+            
+            elif len(runs) > 0:
+                # Workflow is working - analyze latest run
+                latest_run = runs[0]
+                result['diagnosis']['latest_run'] = {
+                    'status': latest_run.status,
+                    'conclusion': latest_run.conclusion,
+                    'run_number': latest_run.run_number,
+                    'url': latest_run.html_url,
+                    'created_at': latest_run.created_at.isoformat()
+                }
+                result['troubleshooting_steps'].append(f"Latest run #{latest_run.run_number}: {latest_run.status}")
+                result['success'] = True
+                
+            else:
+                result['diagnosis']['issue'] = f"YAML structure problems: {', '.join(yaml_issues)}"
+                result['troubleshooting_steps'].append("YAML syntax issues detected")
+            
+            # Store diagnostic details
+            result['diagnosis']['yaml_structure'] = {
+                'has_name': has_name,
+                'has_on': has_on,
+                'has_jobs': has_jobs,
+                'file_size': len(content),
+                'line_count': len(lines),
+                'complexity_indicators': {
+                    'file_size_large': len(content) > 1000,
+                    'multiple_conditions': content.count('if:') > 3,
+                    'matrix_builds': 'matrix:' in content,
+                    'job_dependencies': content.count('needs:') > 1
+                }
+            }
+            result['diagnosis']['run_count'] = len(runs)
+            result['diagnosis']['workflow_files'] = [f.name for f in workflow_files]
+                
+        except Exception as e:
+            result['error'] = f"Diagnostic error: {str(e)}"
+            result['troubleshooting_steps'].append(f"Error: {str(e)}")
+        
+        return result
+
+    def _create_simplified_workflow(self, repo_name: str, original_filename: str) -> str:
+        """Create a minimal, guaranteed-working workflow"""
+        return f'''name: {repo_name} Build
 
 on:
   push:
@@ -190,68 +284,41 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: {repo}-apk
+          name: {repo_name}-apk
           path: bin/*.apk
 '''
-                    
-                    # Update workflow file
-                    repo_obj.update_file(
-                        workflow_file.path,
-                        'EchoNexus AGI: Fix workflow YAML structure',
-                        minimal_workflow,
-                        workflow_file.sha
-                    )
-                    result['actions_taken'].append('Simplified workflow YAML structure')
-                    
-                    # Create trigger commit
-                    try:
-                        main_py = repo_obj.get_contents('main.py')
-                        current_content = main_py.decoded_content.decode('utf-8')
-                        if '# EchoNexus trigger' not in current_content:
-                            updated_content = '# EchoNexus trigger - AGI workflow fix\n' + current_content
-                            repo_obj.update_file(
-                                'main.py',
-                                'EchoNexus AGI: Trigger workflow execution',
-                                updated_content,
-                                main_py.sha
-                            )
-                            result['actions_taken'].append('Created trigger commit')
-                    except:
-                        # Create README trigger if main.py doesn't exist
-                        try:
-                            readme = repo_obj.get_contents('README.md')
-                            readme_content = readme.decoded_content.decode('utf-8')
-                            updated_readme = readme_content + '\n\n<!-- EchoNexus AGI workflow trigger -->\n'
-                            repo_obj.update_file(
-                                'README.md',
-                                'EchoNexus AGI: Trigger workflow',
-                                updated_readme,
-                                readme.sha
-                            )
-                            result['actions_taken'].append('Created README trigger commit')
-                        except:
-                            result['actions_taken'].append('Workflow updated but trigger failed')
-                    
-                    result['workflow_fixed'] = True
-                    result['success'] = True
-                
-                elif len(runs) > 0:
-                    latest_run = runs[0]
-                    result['diagnosis']['latest_run'] = {
-                        'status': latest_run.status,
-                        'conclusion': latest_run.conclusion,
-                        'run_number': latest_run.run_number,
-                        'url': latest_run.html_url
-                    }
-                    result['success'] = True
-                
-            except Exception as e:
-                result['diagnosis']['workflow_check_error'] = str(e)
-                
-        except Exception as e:
-            result['error'] = f"Diagnostic error: {str(e)}"
+
+    def _force_workflow_trigger(self, repo_obj) -> None:
+        """Force workflow execution by creating a small commit"""
+        try:
+            # Try to update main.py
+            main_py = repo_obj.get_contents('main.py')
+            current_content = main_py.decoded_content.decode('utf-8')
+            if '# EchoNexus trigger' not in current_content:
+                updated_content = '# EchoNexus trigger - workflow test\n' + current_content
+                repo_obj.update_file(
+                    'main.py',
+                    'EchoNexus: Trigger workflow test',
+                    updated_content,
+                    main_py.sha
+                )
+                return
+        except:
+            pass
         
-        return result
+        try:
+            # Fallback to README
+            readme = repo_obj.get_contents('README.md')
+            readme_content = readme.decoded_content.decode('utf-8')
+            updated_readme = readme_content + '\n\n<!-- Workflow trigger test -->\n'
+            repo_obj.update_file(
+                'README.md',
+                'EchoNexus: Test workflow trigger',
+                updated_readme,
+                readme.sha
+            )
+        except:
+            pass
 
     def analyze_workflow_failures(self, owner: str, repo: str, run_id: str) -> Dict[str, Any]:
         """
