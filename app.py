@@ -1,4 +1,6 @@
 import streamlit as st
+from echo_nexus.chat_enhancement_processor import ChatEnhancementProcessor
+from echo_nexus.echo_self_enhancement import EchoSelfEnhancement
 import yaml
 import json
 import os
@@ -42,6 +44,10 @@ if 'github_auth_assistant' not in st.session_state:
     st.session_state.github_auth_assistant = GitHubAuthAssistant()
 if 'show_github_setup' not in st.session_state:
     st.session_state.show_github_setup = False
+if 'chat_processor' not in st.session_state:
+    st.session_state.chat_processor = ChatEnhancementProcessor()
+if 'self_enhancer' not in st.session_state:
+    st.session_state.self_enhancer = EchoSelfEnhancement()
 
 st.set_page_config(
     page_title="GitHub Actions APK Builder Assistant",
@@ -819,6 +825,43 @@ elif page == "Chat Assistant":
         
         with st.chat_message("user"):
             st.write(prompt)
+        
+        # Check for code enhancement in message
+        enhancement_result = st.session_state.chat_processor.process_chat_message(prompt)
+        
+        if enhancement_result['code_detected']:
+            st.info("🧠 Echo: I detected code in your message. Processing for self-enhancement...")
+            
+            if enhancement_result['enhancement_prepared']:
+                st.success("✅ Code validated and prepared for enhancement")
+                
+                # Show enhancement details
+                for validation in enhancement_result['validation_results']:
+                    if validation['valid']:
+                        st.write(f"**Enhancement Type:** {validation['enhancement_type']}")
+                        st.write(f"**Target Module:** {validation['target_module']}")
+                        st.write(f"**Confidence:** {validation['confidence']:.1%}")
+                
+                # Apply enhancement
+                if st.button("🚀 Apply Enhancement", key="apply_enhancement"):
+                    with st.spinner("Applying self-enhancement..."):
+                        enhancement_success = st.session_state.self_enhancer.process_enhancement_cycle()
+                        
+                        if enhancement_success:
+                            st.success("🎯 Echo: Self-enhancement applied successfully! I've grown smarter.")
+                        else:
+                            st.error("❌ Echo: Enhancement failed validation - keeping current capabilities")
+            else:
+                st.warning("⚠️ Echo: Code detected but validation failed")
+                for validation in enhancement_result['validation_results']:
+                    if validation['errors']:
+                        st.write(f"**Errors:** {', '.join(validation['errors'])}")
+        
+        # Provide enhancement guidance
+        elif any(word in prompt.lower() for word in ['enhance', 'improve', 'capability', 'function']):
+            suggestions = st.session_state.chat_processor.get_enhancement_suggestions(prompt)
+            if suggestions:
+                st.info("💡 Enhancement Suggestions: " + " | ".join(suggestions))
         
         # Get current GitHub repositories
         github_token = os.getenv('GITHUB_TOKEN')

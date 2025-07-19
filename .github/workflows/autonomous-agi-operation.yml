@@ -77,6 +77,17 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
+        # Run diagnostic engine to check for APK packager issues
+        if [ -f "echo_nexus/diagnostic_engine.py" ]; then
+          echo "Running Echo diagnostic engine..."
+          python echo_nexus/diagnostic_engine.py
+        fi
+        
+        # Run self-enhancement system
+        if [ -f "echo_nexus/echo_self_enhancement.py" ]; then
+          echo "Checking for self-enhancement opportunities..."
+          python echo_nexus/echo_self_enhancement.py
+        fi
         python -c "
         import os
         import json

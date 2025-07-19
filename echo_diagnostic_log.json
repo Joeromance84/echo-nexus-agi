@@ -1,0 +1,1280 @@
+{
+  "diagnostics": [
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390583043,
+        "run_number": 12,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16390583043",
+        "created_at": "2025-07-19T16:26:58+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16390583043/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16390583043",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:29.403642"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390230223,
+        "run_number": 11,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16390230223",
+        "created_at": "2025-07-19T15:42:14+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16390230223/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16390230223",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:30.782217"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390075116,
+        "run_number": 10,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16390075116",
+        "created_at": "2025-07-19T15:22:24+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16390075116/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16390075116",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:32.229228"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389762319,
+        "run_number": 9,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16389762319",
+        "created_at": "2025-07-19T14:43:28+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16389762319/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16389762319",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:33.685391"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389569613,
+        "run_number": 8,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16389569613",
+        "created_at": "2025-07-19T14:19:57+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16389569613/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16389569613",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:35.068635"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Deploy PowerShell project to Azure Function App",
+        "run_id": 16387301910,
+        "run_number": 18,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301910",
+        "created_at": "2025-07-19T09:27:21+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301910/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301910",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:36.412939"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Deploy PowerShell project to Azure Function App",
+        "run_id": 16387301723,
+        "run_number": 17,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301723",
+        "created_at": "2025-07-19T09:27:20+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301723/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301723",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:37.831864"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Deploy PowerShell project to Azure Function App",
+        "run_id": 16387301587,
+        "run_number": 16,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301587",
+        "created_at": "2025-07-19T09:27:19+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301587/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301587",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:39.251550"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Deploy PowerShell project to Azure Function App",
+        "run_id": 16387254186,
+        "run_number": 15,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254186",
+        "created_at": "2025-07-19T09:21:22+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254186/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387254186",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:40.632796"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Deploy PowerShell project to Azure Function App",
+        "run_id": 16387228492,
+        "run_number": 14,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228492",
+        "created_at": "2025-07-19T09:18:07+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228492/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387228492",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:42.021079"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Django CI",
+        "run_id": 16387301922,
+        "run_number": 22,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301922",
+        "created_at": "2025-07-19T09:27:21+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301922/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301922",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:43.488018"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Django CI",
+        "run_id": 16387301726,
+        "run_number": 21,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301726",
+        "created_at": "2025-07-19T09:27:20+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301726/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301726",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:44.901791"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Django CI",
+        "run_id": 16387301585,
+        "run_number": 20,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301585",
+        "created_at": "2025-07-19T09:27:19+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301585/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301585",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:46.484690"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Django CI",
+        "run_id": 16387254180,
+        "run_number": 19,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254180",
+        "created_at": "2025-07-19T09:21:22+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254180/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387254180",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:47.872431"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Django CI",
+        "run_id": 16387228486,
+        "run_number": 18,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228486",
+        "created_at": "2025-07-19T09:18:07+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228486/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387228486",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:49.331342"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Labeler",
+        "run_id": 16378394443,
+        "run_number": 2,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16378394443",
+        "created_at": "2025-07-18T19:06:27+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16378394443/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16378394443",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:50.788502"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Labeler",
+        "run_id": 16156400404,
+        "run_number": 1,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16156400404",
+        "created_at": "2025-07-08T23:18:24+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16156400404/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16156400404",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:52.285496"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": ".github/workflows/main.yml",
+        "run_id": 16387301837,
+        "run_number": 15,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301837",
+        "created_at": "2025-07-19T09:27:21+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301837/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301837",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:53.701617"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": ".github/workflows/main.yml",
+        "run_id": 16387301668,
+        "run_number": 14,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301668",
+        "created_at": "2025-07-19T09:27:19+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301668/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301668",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:55.133831"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": ".github/workflows/main.yml",
+        "run_id": 16387301514,
+        "run_number": 13,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301514",
+        "created_at": "2025-07-19T09:27:18+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301514/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301514",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:56.523317"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": ".github/workflows/main.yml",
+        "run_id": 16387254103,
+        "run_number": 12,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254103",
+        "created_at": "2025-07-19T09:21:21+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254103/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387254103",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:57.904378"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": ".github/workflows/main.yml",
+        "run_id": 16387228411,
+        "run_number": 11,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228411",
+        "created_at": "2025-07-19T09:18:07+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228411/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387228411",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:32:59.480202"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python application",
+        "run_id": 16387301917,
+        "run_number": 23,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301917",
+        "created_at": "2025-07-19T09:27:21+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301917/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301917",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:00.894444"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python application",
+        "run_id": 16387301722,
+        "run_number": 22,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301722",
+        "created_at": "2025-07-19T09:27:20+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301722/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301722",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:02.383321"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python application",
+        "run_id": 16387301588,
+        "run_number": 21,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301588",
+        "created_at": "2025-07-19T09:27:19+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301588/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301588",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:03.801419"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python application",
+        "run_id": 16387254185,
+        "run_number": 20,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254185",
+        "created_at": "2025-07-19T09:21:22+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254185/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387254185",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:05.225272"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python application",
+        "run_id": 16387228487,
+        "run_number": 19,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228487",
+        "created_at": "2025-07-19T09:18:07+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228487/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387228487",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:06.676960"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python Package using Conda",
+        "run_id": 16387301920,
+        "run_number": 28,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301920",
+        "created_at": "2025-07-19T09:27:21+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301920/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301920",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:08.062597"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python Package using Conda",
+        "run_id": 16387301721,
+        "run_number": 27,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301721",
+        "created_at": "2025-07-19T09:27:20+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301721/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301721",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:09.510088"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python Package using Conda",
+        "run_id": 16387301576,
+        "run_number": 26,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301576",
+        "created_at": "2025-07-19T09:27:18+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387301576/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387301576",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:10.883180"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python Package using Conda",
+        "run_id": 16387254189,
+        "run_number": 25,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254189",
+        "created_at": "2025-07-19T09:21:22+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387254189/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387254189",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:12.305126"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "Echo_AI",
+        "workflow": "Python Package using Conda",
+        "run_id": 16387228484,
+        "run_number": 24,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228484",
+        "created_at": "2025-07-19T09:18:07+00:00",
+        "logs_url": "https://github.com/Joeromance84/Echo_AI/actions/runs/16387228484/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "Echo_AI_16387228484",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:13.719986"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "EchoCore APK Packaging Action",
+        "run_id": 16387225164,
+        "run_number": 3,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387225164",
+        "created_at": "2025-07-19T09:17:41+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387225164/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387225164",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:15.099944"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "EchoCore APK Packaging Action",
+        "run_id": 16387224999,
+        "run_number": 2,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387224999",
+        "created_at": "2025-07-19T09:17:39+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387224999/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387224999",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:16.535605"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "EchoCore APK Packaging Action",
+        "run_id": 16387224767,
+        "run_number": 1,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387224767",
+        "created_at": "2025-07-19T09:17:37+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387224767/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387224767",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:17.970439"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390451824,
+        "run_number": 13,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16390451824",
+        "created_at": "2025-07-19T16:10:18+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16390451824/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16390451824",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:19.373667"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390202870,
+        "run_number": 12,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16390202870",
+        "created_at": "2025-07-19T15:38:34+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16390202870/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16390202870",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:20.757491"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389959677,
+        "run_number": 11,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16389959677",
+        "created_at": "2025-07-19T15:08:34+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16389959677/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16389959677",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:22.228260"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389732321,
+        "run_number": 10,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16389732321",
+        "created_at": "2025-07-19T14:39:41+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16389732321/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16389732321",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:23.647675"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389474309,
+        "run_number": 9,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16389474309",
+        "created_at": "2025-07-19T14:08:14+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16389474309/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16389474309",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:25.128723"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387302406,
+        "run_number": 11,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387302406",
+        "created_at": "2025-07-19T09:27:25+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387302406/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387302406",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:26.534211"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387302219,
+        "run_number": 10,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387302219",
+        "created_at": "2025-07-19T09:27:24+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387302219/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387302219",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:27.934277"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387302073,
+        "run_number": 9,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387302073",
+        "created_at": "2025-07-19T09:27:23+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387302073/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387302073",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:29.387102"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387227675,
+        "run_number": 8,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387227675",
+        "created_at": "2025-07-19T09:18:01+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387227675/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387227675",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:30.799494"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-plane",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387225610,
+        "run_number": 7,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387225610",
+        "created_at": "2025-07-19T09:17:44+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-plane/actions/runs/16387225610/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-plane_16387225610",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:32.158367"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "EchoCore APK Packaging Action",
+        "run_id": 16387226960,
+        "run_number": 3,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387226960",
+        "created_at": "2025-07-19T09:17:55+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387226960/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387226960",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:33.561616"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "EchoCore APK Packaging Action",
+        "run_id": 16387226830,
+        "run_number": 2,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387226830",
+        "created_at": "2025-07-19T09:17:54+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387226830/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387226830",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:35.015488"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "EchoCore APK Packaging Action",
+        "run_id": 16387226460,
+        "run_number": 1,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387226460",
+        "created_at": "2025-07-19T09:17:50+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387226460/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387226460",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:36.470784"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390568665,
+        "run_number": 13,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16390568665",
+        "created_at": "2025-07-19T16:25:11+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16390568665/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16390568665",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:37.845695"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390225953,
+        "run_number": 12,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16390225953",
+        "created_at": "2025-07-19T15:41:41+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16390225953/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16390225953",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:39.289288"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16390058161,
+        "run_number": 11,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16390058161",
+        "created_at": "2025-07-19T15:20:27+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16390058161/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16390058161",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:40.993302"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389757170,
+        "run_number": 10,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16389757170",
+        "created_at": "2025-07-19T14:42:46+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16389757170/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16389757170",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:42.447409"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Autonomous Echo AGI Operation",
+        "run_id": 16389558211,
+        "run_number": 9,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16389558211",
+        "created_at": "2025-07-19T14:18:29+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16389558211/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16389558211",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:43.833667"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387302895,
+        "run_number": 10,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387302895",
+        "created_at": "2025-07-19T09:27:30+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387302895/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387302895",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:45.388360"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387302757,
+        "run_number": 9,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387302757",
+        "created_at": "2025-07-19T09:27:29+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387302757/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387302757",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:46.807224"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387302627,
+        "run_number": 8,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387302627",
+        "created_at": "2025-07-19T09:27:27+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387302627/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387302627",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:48.232052"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387227300,
+        "run_number": 7,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387227300",
+        "created_at": "2025-07-19T09:17:58+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387227300/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387227300",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:49.674832"
+    },
+    {
+      "type": "failure_analysis",
+      "failure_info": {
+        "repo": "echonexus-control-demo",
+        "workflow": "Build EchoCore AGI APK",
+        "run_id": 16387227125,
+        "run_number": 6,
+        "conclusion": "failure",
+        "html_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387227125",
+        "created_at": "2025-07-19T09:17:56+00:00",
+        "logs_url": "https://github.com/Joeromance84/echonexus-control-demo/actions/runs/16387227125/attempts/1"
+      },
+      "analysis": {
+        "failure_id": "echonexus-control-demo_16387227125",
+        "diagnosed_category": "UNKNOWN",
+        "confidence": 0.0,
+        "root_cause": "Unable to determine",
+        "suggested_fix": null,
+        "log_excerpts": []
+      },
+      "timestamp": "2025-07-19T16:33:51.072713"
+    }
+  ]
+}
