@@ -1,0 +1,35 @@
+{
+  "status": "error",
+  "errors": [
+    "Buildozer tool not found. It is not installed or not in the system's PATH. APK packaging will fail."
+  ],
+  "warnings": [
+    "Could not verify GitHub token scopes: 'AuthenticatedUser' object has no attribute 'get_permissions'",
+    "Missing packages: pyyaml, kivy, cython"
+  ],
+  "diagnostics": {
+    "github_auth": true,
+    "github_user": "Joeromance84",
+    "repo_access": true,
+    "repo_count": 10,
+    "github_permissions": false,
+    "python_version": "3.11.10 (main, Sep  7 2024, 01:03:31) [GCC 13.3.0]",
+    "python_executable": "/home/runner/workspace/.pythonlibs/bin/python",
+    "virtual_environment": true,
+    "buildozer_available": true,
+    "buildozer_path": "/home/runner/workspace/.pythonlibs/bin/buildozer",
+    "available_packages": [
+      "requests",
+      "streamlit",
+      "openai"
+    ],
+    "missing_packages": [
+      "pyyaml",
+      "kivy",
+      "cython"
+    ],
+    "file_write_permissions": true,
+    "directory_permissions": true
+  },
+  "timestamp": "2025-07-19T17:43:33.090383"
+}

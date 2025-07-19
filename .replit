@@ -2,7 +2,7 @@ modules = ["python-3.11"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["glibcLocales", "libyaml"]
+packages = ["SDL2", "SDL2_image", "SDL2_mixer", "SDL2_ttf", "glibcLocales", "libcxx", "libyaml", "mtdev", "pkg-config"]
 
 [deployment]
 deploymentTarget = "autoscale"

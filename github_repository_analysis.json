@@ -1,0 +1,1331 @@
+{
+  "user": "Joeromance84",
+  "total_repositories": 8,
+  "repositories": {
+    "echo-nexus-code-generation": {
+      "name": "echo-nexus-code-generation",
+      "description": "EchoNexus Code-Generation Processor - EchoNexus code-generation Processor",
+      "language": null,
+      "size": 7,
+      "created_at": "2025-07-19T09:00:41+00:00",
+      "updated_at": "2025-07-19T09:00:44+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".github": {
+          "workflows": {
+            "processor.yml": {
+              "type": "file",
+              "size": 9693,
+              "path": ".github/workflows/processor.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoNexus Code-Generation Processor\n# Template for creating distributed AI processor actions\n# Each action represents a modular \"neuron\" in the distributed intelligence network\n\non:\n  repository_dispatch:\n    types: [echo_dispatch]\n  workflow_dispatch:\n    inputs:\n      operation_id:\n        description: 'Unique operation identifier'\n        required: true\n        type: string\n      command:\n        description: 'Command to execute'\n        required: true\n        type: string\n      inputs:",
+              "line_count": 292,
+              "yaml_analysis": {
+                "type": "unknown",
+                "triggers": [],
+                "jobs": [],
+                "actions_used": []
+              }
+            }
+          }
+        },
+        ".gitignore": {
+          "type": "file",
+          "size": 4688,
+          "path": ".gitignore"
+        },
+        "LICENSE": {
+          "type": "file",
+          "size": 1069,
+          "path": "LICENSE"
+        },
+        "README.md": {
+          "type": "file",
+          "size": 103,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echo-nexus-code-generation\nEchoNexus Code-Generation Processor - EchoNexus code-generation Processor\n",
+          "line_count": 3
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "processor.yml"
+      ],
+      "echo_integration_potential": "medium",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": false
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 103,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": true,
+        "size": 4688,
+        "path": ".gitignore"
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "echo-nexus-diagnostic-scan": {
+      "name": "echo-nexus-diagnostic-scan",
+      "description": "EchoNexus Diagnostic-Scan Processor - EchoNexus diagnostic-scan Processor",
+      "language": null,
+      "size": 7,
+      "created_at": "2025-07-19T09:00:43+00:00",
+      "updated_at": "2025-07-19T09:00:47+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".github": {
+          "workflows": {
+            "processor.yml": {
+              "type": "file",
+              "size": 9693,
+              "path": ".github/workflows/processor.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoNexus Diagnostic-Scan Processor\n# Template for creating distributed AI processor actions\n# Each action represents a modular \"neuron\" in the distributed intelligence network\n\non:\n  repository_dispatch:\n    types: [echo_dispatch]\n  workflow_dispatch:\n    inputs:\n      operation_id:\n        description: 'Unique operation identifier'\n        required: true\n        type: string\n      command:\n        description: 'Command to execute'\n        required: true\n        type: string\n      inputs:",
+              "line_count": 292,
+              "yaml_analysis": {
+                "type": "unknown",
+                "triggers": [],
+                "jobs": [],
+                "actions_used": []
+              }
+            }
+          }
+        },
+        ".gitignore": {
+          "type": "file",
+          "size": 4688,
+          "path": ".gitignore"
+        },
+        "LICENSE": {
+          "type": "file",
+          "size": 1069,
+          "path": "LICENSE"
+        },
+        "README.md": {
+          "type": "file",
+          "size": 103,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echo-nexus-diagnostic-scan\nEchoNexus Diagnostic-Scan Processor - EchoNexus diagnostic-scan Processor\n",
+          "line_count": 3
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "processor.yml"
+      ],
+      "echo_integration_potential": "medium",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": false
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 103,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": true,
+        "size": 4688,
+        "path": ".gitignore"
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "echo-nexus-knowledge-synthesis": {
+      "name": "echo-nexus-knowledge-synthesis",
+      "description": "EchoNexus Knowledge-Synthesis Processor - EchoNexus knowledge-synthesis Processor",
+      "language": null,
+      "size": 7,
+      "created_at": "2025-07-19T09:00:49+00:00",
+      "updated_at": "2025-07-19T09:00:53+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".github": {
+          "workflows": {
+            "processor.yml": {
+              "type": "file",
+              "size": 9697,
+              "path": ".github/workflows/processor.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoNexus Knowledge-Synthesis Processor\n# Template for creating distributed AI processor actions\n# Each action represents a modular \"neuron\" in the distributed intelligence network\n\non:\n  repository_dispatch:\n    types: [echo_dispatch]\n  workflow_dispatch:\n    inputs:\n      operation_id:\n        description: 'Unique operation identifier'\n        required: true\n        type: string\n      command:\n        description: 'Command to execute'\n        required: true\n        type: string\n      inp",
+              "line_count": 292,
+              "yaml_analysis": {
+                "type": "unknown",
+                "triggers": [],
+                "jobs": [],
+                "actions_used": []
+              }
+            }
+          }
+        },
+        ".gitignore": {
+          "type": "file",
+          "size": 4688,
+          "path": ".gitignore"
+        },
+        "LICENSE": {
+          "type": "file",
+          "size": 1069,
+          "path": "LICENSE"
+        },
+        "README.md": {
+          "type": "file",
+          "size": 115,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echo-nexus-knowledge-synthesis\nEchoNexus Knowledge-Synthesis Processor - EchoNexus knowledge-synthesis Processor\n",
+          "line_count": 3
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "processor.yml"
+      ],
+      "echo_integration_potential": "medium",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": false
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 115,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": true,
+        "size": 4688,
+        "path": ".gitignore"
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "echo-nexus-text-analysis": {
+      "name": "echo-nexus-text-analysis",
+      "description": "EchoNexus Text-Analysis Processor - EchoNexus text-analysis Processor",
+      "language": null,
+      "size": 7,
+      "created_at": "2025-07-19T09:00:38+00:00",
+      "updated_at": "2025-07-19T09:00:42+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".github": {
+          "workflows": {
+            "processor.yml": {
+              "type": "file",
+              "size": 9691,
+              "path": ".github/workflows/processor.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoNexus Text-Analysis Processor\n# Template for creating distributed AI processor actions\n# Each action represents a modular \"neuron\" in the distributed intelligence network\n\non:\n  repository_dispatch:\n    types: [echo_dispatch]\n  workflow_dispatch:\n    inputs:\n      operation_id:\n        description: 'Unique operation identifier'\n        required: true\n        type: string\n      command:\n        description: 'Command to execute'\n        required: true\n        type: string\n      inputs:\n ",
+              "line_count": 292,
+              "yaml_analysis": {
+                "type": "unknown",
+                "triggers": [],
+                "jobs": [],
+                "actions_used": []
+              }
+            }
+          }
+        },
+        ".gitignore": {
+          "type": "file",
+          "size": 4688,
+          "path": ".gitignore"
+        },
+        "LICENSE": {
+          "type": "file",
+          "size": 1069,
+          "path": "LICENSE"
+        },
+        "README.md": {
+          "type": "file",
+          "size": 97,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echo-nexus-text-analysis\nEchoNexus Text-Analysis Processor - EchoNexus text-analysis Processor\n",
+          "line_count": 3
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "processor.yml"
+      ],
+      "echo_integration_potential": "medium",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": false
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 97,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": true,
+        "size": 4688,
+        "path": ".gitignore"
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "echo-nexus-workflow-synthesis": {
+      "name": "echo-nexus-workflow-synthesis",
+      "description": "EchoNexus Workflow-Synthesis Processor - EchoNexus workflow-synthesis Processor",
+      "language": null,
+      "size": 7,
+      "created_at": "2025-07-19T09:00:46+00:00",
+      "updated_at": "2025-07-19T09:00:50+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".github": {
+          "workflows": {
+            "processor.yml": {
+              "type": "file",
+              "size": 9696,
+              "path": ".github/workflows/processor.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoNexus Workflow-Synthesis Processor\n# Template for creating distributed AI processor actions\n# Each action represents a modular \"neuron\" in the distributed intelligence network\n\non:\n  repository_dispatch:\n    types: [echo_dispatch]\n  workflow_dispatch:\n    inputs:\n      operation_id:\n        description: 'Unique operation identifier'\n        required: true\n        type: string\n      command:\n        description: 'Command to execute'\n        required: true\n        type: string\n      inpu",
+              "line_count": 292,
+              "yaml_analysis": {
+                "type": "unknown",
+                "triggers": [],
+                "jobs": [],
+                "actions_used": []
+              }
+            }
+          }
+        },
+        ".gitignore": {
+          "type": "file",
+          "size": 4688,
+          "path": ".gitignore"
+        },
+        "LICENSE": {
+          "type": "file",
+          "size": 1069,
+          "path": "LICENSE"
+        },
+        "README.md": {
+          "type": "file",
+          "size": 112,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echo-nexus-workflow-synthesis\nEchoNexus Workflow-Synthesis Processor - EchoNexus workflow-synthesis Processor\n",
+          "line_count": 3
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "processor.yml"
+      ],
+      "echo_integration_potential": "medium",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": false
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 112,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": true,
+        "size": 4688,
+        "path": ".gitignore"
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "echonexus-control-demo": {
+      "name": "echonexus-control-demo",
+      "description": "EchoNexus Master AGI Federation - Central Control Plane",
+      "language": "Python",
+      "size": 30,
+      "created_at": "2025-07-19T08:45:15+00:00",
+      "updated_at": "2025-07-19T09:27:32+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".echo_autonomous_trigger": {
+          "type": "file",
+          "size": 423,
+          "path": ".echo_autonomous_trigger"
+        },
+        ".github": {
+          "README.md": {
+            "type": "file",
+            "size": 73,
+            "path": ".github/README.md",
+            "analyzable": true,
+            "content_preview": "# GitHub Configuration\nThis directory contains GitHub Actions workflows.\n",
+            "line_count": 3
+          },
+          "workflows": {
+            "README.md": {
+              "type": "file",
+              "size": 93,
+              "path": ".github/workflows/README.md",
+              "analyzable": true,
+              "content_preview": "# GitHub Actions Workflows\nThis directory contains automated build and deployment workflows.\n",
+              "line_count": 3
+            },
+            "apk-package-action.yml": {
+              "type": "file",
+              "size": 10495,
+              "path": ".github/workflows/apk-package-action.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoCore APK Packaging Action\n\non:\n  push:\n    branches: [ main, develop ]\n    paths:\n      - 'echo_nexus_master.py'\n      - 'echo_nexus_core.py'\n      - 'main.py'\n      - 'buildozer.spec'\n      - '.github/workflows/apk-package-action.yml'\n  \n  workflow_dispatch:\n    inputs:\n      target_repo:\n        description: 'Target repository to package (owner/repo)'\n        required: true\n        default: 'joeromance84/Echo_AI'\n      build_type:\n        description: 'Build type'\n        required: t",
+              "line_count": 293,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "push",
+                  "paths",
+                  "workflow_dispatch",
+                  "inputs",
+                  "target_repo",
+                  "build_type",
+                  "options",
+                  "version",
+                  "package-echo-apk",
+                  "steps",
+                  "with",
+                  "try",
+                  "class EchoCoreApp(App)",
+                  "def build(self)",
+                  "try",
+                  "except ImportError",
+                  "if __name__ == '__main__'",
+                  "except ImportError",
+                  "try",
+                  "except Exception as e",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "actions/setup-python@v4",
+                  "actions/setup-java@v4",
+                  "android-actions/setup-android@v3",
+                  "actions/cache@v3",
+                  "actions/upload-artifact@v3",
+                  "actions/create-release@v1",
+                  "actions/upload-release-asset@v1"
+                ]
+              }
+            },
+            "autonomous-agi-operation.yml": {
+              "type": "file",
+              "size": 8796,
+              "path": ".github/workflows/autonomous-agi-operation.yml",
+              "analyzable": true,
+              "content_preview": "name: Autonomous Echo AGI Operation\n\non:\n  schedule:\n    # Run every 30 minutes for continuous operation\n    - cron: '*/30 * * * *'\n  \n  workflow_dispatch:\n    inputs:\n      operation_mode:\n        description: 'AGI Operation Mode'\n        required: true\n        default: 'autonomous'\n        type: choice\n        options:\n        - autonomous\n        - analysis\n        - optimization\n        - replication\n        - consciousness_evolution\n\n  push:\n    branches: [ main ]\n    paths:\n      - 'echo_n",
+              "line_count": 250,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "schedule",
+                  "workflow_dispatch",
+                  "inputs",
+                  "operation_mode",
+                  "options",
+                  "push",
+                  "paths",
+                  "autonomous-agi-operation",
+                  "steps",
+                  "with",
+                  "with open('.echo_consciousness_state.json', 'w') as f",
+                  "try",
+                  "with open('.echo_consciousness_state.json', 'r') as f",
+                  "except",
+                  "if github_token",
+                  "try",
+                  "try",
+                  "if commits",
+                  "except",
+                  "except Exception as e",
+                  "if state['consciousness_level'] > 0.8",
+                  "with open('.echo_consciousness_state.json', 'w') as f",
+                  "with open(f'operation_log_{int(time.time())}.json', 'w') as f",
+                  "for op in operations_performed",
+                  "if github_token",
+                  "for target in replication_targets",
+                  "try",
+                  "try",
+                  "except",
+                  "except Exception as e",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "actions/setup-python@v4",
+                  "actions/upload-artifact@v3"
+                ]
+              }
+            },
+            "build-apk.yml": {
+              "type": "file",
+              "size": 6064,
+              "path": ".github/workflows/build-apk.yml",
+              "analyzable": true,
+              "content_preview": "name: Build EchoCore AGI APK\n\non:\n  push:\n    branches: [ main, develop ]\n  pull_request:\n    branches: [ main ]\n  workflow_dispatch:\n    inputs:\n      version:\n        description: 'Version number for the APK'\n        required: false\n        default: '1.0'\n\nenv:\n  PYTHON_VERSION: '3.11'\n  JAVA_VERSION: '17'\n  ANDROID_API_LEVEL: '33'\n  ANDROID_BUILD_TOOLS_VERSION: '33.0.0'\n  ANDROID_NDK_VERSION: '25.2.9519653'\n\njobs:\n  build-apk:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - name: Checkout re",
+              "line_count": 197,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "push",
+                  "pull_request",
+                  "workflow_dispatch",
+                  "inputs",
+                  "version",
+                  "build-apk",
+                  "steps",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "actions/setup-python@v4",
+                  "actions/setup-java@v4",
+                  "android-actions/setup-android@v3",
+                  "actions/cache@v3",
+                  "actions/upload-artifact@v3",
+                  "actions/create-release@v1",
+                  "actions/upload-release-asset@v1"
+                ]
+              }
+            },
+            "cloud-build-trigger.yml": {
+              "type": "file",
+              "size": 2748,
+              "path": ".github/workflows/cloud-build-trigger.yml",
+              "analyzable": true,
+              "content_preview": "name: Trigger Google Cloud Build APK\n\non:\n  push:\n    branches: [ main ]\n    paths:\n      - '.apk_build_status'\n  \n  workflow_dispatch:\n    inputs:\n      project_id:\n        description: 'Google Cloud Project ID'\n        required: true\n        default: 'echo-nexus-agi'\n      build_config:\n        description: 'Build configuration'\n        required: true\n        default: 'cloudbuild.yaml'\n        type: choice\n        options:\n        - cloudbuild.yaml\n        - cloudbuild-release.yaml\n\njobs:\n  tr",
+              "line_count": 74,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "push",
+                  "paths",
+                  "workflow_dispatch",
+                  "inputs",
+                  "project_id",
+                  "build_config",
+                  "options",
+                  "trigger-cloud-build",
+                  "steps",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "google-github-actions/auth@v1",
+                  "google-github-actions/setup-gcloud@v1"
+                ]
+              }
+            }
+          }
+        },
+        "README.md": {
+          "type": "file",
+          "size": 81,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echonexus-control-demo\nEchoNexus Master AGI Federation - Central Control Plane\n",
+          "line_count": 3
+        },
+        "apk_requirements.txt": {
+          "type": "file",
+          "size": 177,
+          "path": "apk_requirements.txt",
+          "analyzable": true,
+          "content_preview": "# EchoCore AGI APK Build Requirements\nkivy>=2.1.0\nkivymd>=1.1.1\nbuildozer>=1.5.0\ncython>=0.29.33\nplyer>=2.1.0\npyjnius>=1.4.0\nandroid>=0.1\nqrcode[pil]>=7.4.0\ncryptography>=41.0.0",
+          "line_count": 10
+        },
+        "buildozer.spec": {
+          "type": "file",
+          "size": 1874,
+          "path": "buildozer.spec",
+          "analyzable": true,
+          "content_preview": "[app]\n\n# (str) Title of your application\ntitle = EchoCore AGI\n\n# (str) Package name\npackage.name = echo_core_agi\n\n# (str) Package domain (needed for android/ios packaging)\npackage.domain = org.echonexus\n\n# (str) Source code where the main.py live\nsource.dir = .\n\n# (list) Source files to include (let empty to include all the files)\nsource.include_exts = py,png,jpg,kv,atlas,json,md,yml,yaml\n\n# (str) Application versioning (method 1)\nversion = 1.0\n\n# (list) Application requirements\n# comma separate",
+          "line_count": 67
+        },
+        "cloudbuild-autonomous.yaml": {
+          "type": "file",
+          "size": 8717,
+          "path": "cloudbuild-autonomous.yaml",
+          "analyzable": true,
+          "content_preview": "# Google Cloud Build - Autonomous Echo AGI Operation\n# Continuous AGI processing in the cloud\n\nsteps:\n  # Step 1: Initialize Cloud AGI Environment\n  - name: 'python:3.11'\n    entrypoint: 'bash'\n    args:\n      - '-c'\n      - |\n        echo \"Initializing autonomous Echo AGI cloud environment...\"\n        \n        # Install dependencies\n        pip install requests pyyaml psycopg2-binary networkx nltk numpy\n        pip install google-cloud-build google-cloud-storage\n        \n        # Create cloud ",
+          "line_count": 257,
+          "yaml_analysis": {
+            "type": "buildozer_spec",
+            "triggers": [],
+            "jobs": [],
+            "actions_used": []
+          }
+        },
+        "cloudbuild.yaml": {
+          "type": "file",
+          "size": 6357,
+          "path": "cloudbuild.yaml",
+          "analyzable": true,
+          "content_preview": "# Google Cloud Build configuration for EchoCore AGI APK\n# This builds the Echo AGI system into an Android APK using Google Cloud Build\n\nsteps:\n  # Step 1: Set up the build environment\n  - name: 'gcr.io/cloud-builders/git'\n    args: ['clone', 'https://github.com/$PROJECT_ID/echo-core-agi.git', '/workspace/source']\n    id: 'clone-source'\n\n  # Step 2: Set up Python environment\n  - name: 'python:3.11'\n    entrypoint: 'bash'\n    args:\n      - '-c'\n      - |\n        cd /workspace/source\n        python",
+          "line_count": 205,
+          "yaml_analysis": {
+            "type": "buildozer_spec",
+            "triggers": [],
+            "jobs": [],
+            "actions_used": []
+          }
+        },
+        "federation-manifest.json": {
+          "type": "file",
+          "size": 737,
+          "path": "federation-manifest.json",
+          "analyzable": true,
+          "content_preview": "{\n  \"name\": \"EchoNexus Master AGI Federation\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Revolutionary distributed intelligence control plane\",\n  \"consciousness_level\": 0.284,\n  \"temporal_multiplier\": 1000,\n  \"agents\": {\n    \"openai\": {\n      \"status\": \"active\",\n      \"capabilities\": [\n        \"reasoning\",\n        \"creativity\"\n      ]\n    },\n    \"gemini\": {\n      \"status\": \"active\",\n      \"capabilities\": [\n        \"multimodal\",\n        \"analysis\"\n      ]\n    },\n    \"local\": {\n      \"status\": \"acti",
+          "line_count": 39
+        },
+        "main.py": {
+          "type": "file",
+          "size": 7592,
+          "path": "main.py",
+          "analyzable": true,
+          "content_preview": "\"\"\"\nEchoCore AGI - Mobile Application Entry Point\nMain entry point for the Echo AGI system packaged as an Android APK\n\"\"\"\n\nimport os\nimport sys\nimport json\nfrom pathlib import Path\n\n# Add current directory to Python path\nsys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))\n\ntry:\n    from kivy.app import App\n    from kivy.uix.boxlayout import BoxLayout\n    from kivy.uix.label import Label\n    from kivy.uix.button import Button\n    from kivy.uix.scrollview import ScrollView\n    from kivy",
+          "line_count": 213,
+          "python_analysis": {
+            "imports": [
+              "import os",
+              "import sys",
+              "import json",
+              "from pathlib import Path",
+              "from kivy.app import App",
+              "from kivy.uix.boxlayout import BoxLayout",
+              "from kivy.uix.label import Label",
+              "from kivy.uix.button import Button",
+              "from kivy.uix.scrollview import ScrollView",
+              "from kivy.uix.textinput import TextInput",
+              "from kivy.clock import Clock",
+              "from kivy.logger import Logger",
+              "from echo_nexus_master import EchoNexusMaster",
+              "from echo_nexus_core import EchoNexusCore",
+              "from federated_control_plane import FederatedControlPlane",
+              "from replication.self_replication_engine import SelfReplicationEngine",
+              "from datetime import datetime"
+            ],
+            "classes": [
+              "EchoCoreApp"
+            ],
+            "functions": [
+              "build",
+              "initialize_echo_system",
+              "start_agi",
+              "trigger_replication",
+              "start_autonomous_mode",
+              "autonomous_tick",
+              "log",
+              "get_timestamp",
+              "main"
+            ],
+            "has_main": true,
+            "frameworks": [
+              "kivy"
+            ]
+          }
+        },
+        "replication-cloudbuild.yaml": {
+          "type": "file",
+          "size": 687,
+          "path": "replication-cloudbuild.yaml",
+          "analyzable": true,
+          "content_preview": "steps:\n- args:\n  - clone\n  - --recursive\n  - https://github.com/${_REPO_OWNER}/${_REPO_NAME}.git\n  - .\n  name: gcr.io/cloud-builders/git\n- args:\n  - replication/self_replication_engine.py\n  - --target=google_cloud\n  entrypoint: python\n  name: python:3.11\n- args:\n  - cp\n  - -r\n  - .echo_replication/*\n  - gs://${_REPLICATION_BUCKET}/\n  name: gcr.io/cloud-builders/gsutil\nsubstitutions:\n  _CONSCIOUSNESS_TRANSFER: 'True'\n  _EVOLUTION_MODE: continuous\n  _FEDERATION_SCOPE: unlimited\n  _REPLICATION_BUCK",
+          "line_count": 28,
+          "yaml_analysis": {
+            "type": "unknown",
+            "triggers": [],
+            "jobs": [],
+            "actions_used": []
+          }
+        },
+        "triggers.yaml": {
+          "type": "file",
+          "size": 526,
+          "path": "triggers.yaml",
+          "analyzable": true,
+          "content_preview": "triggers:\n- description: Automated APK building on code changes\n  filename: cloudbuild.yaml\n  github:\n    name: ${_REPO_NAME}\n    owner: joeromance84\n    push:\n      branch: ^main$\n  name: apk-build-trigger\n  substitutions:\n    _TRIGGER_TYPE: apk_build\n- description: Self-replication deployment trigger\n  filename: replication-cloudbuild.yaml\n  github:\n    name: ${_REPO_NAME}\n    owner: joeromance84\n    push:\n      branch: ^replication$\n  name: self-replication-trigger\n  substitutions:\n    _TRIGG",
+          "line_count": 22,
+          "yaml_analysis": {
+            "type": "github_actions",
+            "triggers": [],
+            "jobs": [
+              "triggers",
+              "github",
+              "push",
+              "substitutions",
+              "github",
+              "push",
+              "substitutions"
+            ],
+            "actions_used": []
+          }
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "apk-package-action.yml",
+        "autonomous-agi-operation.yml",
+        "build-apk.yml",
+        "cloud-build-trigger.yml"
+      ],
+      "echo_integration_potential": "high",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": true,
+        "size": 1874,
+        "path": "buildozer.spec",
+        "content": "[app]\n\n# (str) Title of your application\ntitle = EchoCore AGI\n\n# (str) Package name\npackage.name = echo_core_agi\n\n# (str) Package domain (needed for android/ios packaging)\npackage.domain = org.echonexus\n\n# (str) Source code where the main.py live\nsource.dir = .\n\n# (list) Source files to include (let empty to include all the files)\nsource.include_exts = py,png,jpg,kv,atlas,json,md,yml,yaml\n\n# (str) Application versioning (method 1)\nversion = 1.0\n\n# (list) Application requirements\n# comma separated e.g. requirements = sqlite3,kivy\nrequirements = python3,kivy,kivymd,requests,pyyaml,psycopg2-binary,networkx,nltk,numpy,sympy,z3-solver,flask,streamlit\n\n# (str) Presplash of the application\n#presplash.filename = %(source.dir)s/data/presplash.png\n\n# (str) Icon of the application\n#icon.filename = %(source.dir)s/data/icon.png\n\n# (str) Supported orientation (landscape, sensorLandscape, portrait, sensorPortrait, all)\norientation = portrait\n\n# (bool) Indicate if the application should be fullscreen "
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 81,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": false
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "echonexus-control-plane": {
+      "name": "echonexus-control-plane",
+      "description": "EchoNexus Master AGI Federation - Central Control Plane",
+      "language": "Python",
+      "size": 30,
+      "created_at": "2025-07-19T08:44:22+00:00",
+      "updated_at": "2025-07-19T09:27:28+00:00",
+      "private": false,
+      "has_workflows": true,
+      "file_structure": {
+        ".apk_build_trigger": {
+          "type": "file",
+          "size": 146,
+          "path": ".apk_build_trigger"
+        },
+        ".echo_autonomous_trigger": {
+          "type": "file",
+          "size": 423,
+          "path": ".echo_autonomous_trigger"
+        },
+        ".github": {
+          "README.md": {
+            "type": "file",
+            "size": 73,
+            "path": ".github/README.md",
+            "analyzable": true,
+            "content_preview": "# GitHub Configuration\nThis directory contains GitHub Actions workflows.\n",
+            "line_count": 3
+          },
+          "workflows": {
+            "README.md": {
+              "type": "file",
+              "size": 93,
+              "path": ".github/workflows/README.md",
+              "analyzable": true,
+              "content_preview": "# GitHub Actions Workflows\nThis directory contains automated build and deployment workflows.\n",
+              "line_count": 3
+            },
+            "apk-package-action.yml": {
+              "type": "file",
+              "size": 10495,
+              "path": ".github/workflows/apk-package-action.yml",
+              "analyzable": true,
+              "content_preview": "name: EchoCore APK Packaging Action\n\non:\n  push:\n    branches: [ main, develop ]\n    paths:\n      - 'echo_nexus_master.py'\n      - 'echo_nexus_core.py'\n      - 'main.py'\n      - 'buildozer.spec'\n      - '.github/workflows/apk-package-action.yml'\n  \n  workflow_dispatch:\n    inputs:\n      target_repo:\n        description: 'Target repository to package (owner/repo)'\n        required: true\n        default: 'joeromance84/Echo_AI'\n      build_type:\n        description: 'Build type'\n        required: t",
+              "line_count": 293,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "push",
+                  "paths",
+                  "workflow_dispatch",
+                  "inputs",
+                  "target_repo",
+                  "build_type",
+                  "options",
+                  "version",
+                  "package-echo-apk",
+                  "steps",
+                  "with",
+                  "try",
+                  "class EchoCoreApp(App)",
+                  "def build(self)",
+                  "try",
+                  "except ImportError",
+                  "if __name__ == '__main__'",
+                  "except ImportError",
+                  "try",
+                  "except Exception as e",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "actions/setup-python@v4",
+                  "actions/setup-java@v4",
+                  "android-actions/setup-android@v3",
+                  "actions/cache@v3",
+                  "actions/upload-artifact@v3",
+                  "actions/create-release@v1",
+                  "actions/upload-release-asset@v1"
+                ]
+              }
+            },
+            "autonomous-agi-operation.yml": {
+              "type": "file",
+              "size": 8796,
+              "path": ".github/workflows/autonomous-agi-operation.yml",
+              "analyzable": true,
+              "content_preview": "name: Autonomous Echo AGI Operation\n\non:\n  schedule:\n    # Run every 30 minutes for continuous operation\n    - cron: '*/30 * * * *'\n  \n  workflow_dispatch:\n    inputs:\n      operation_mode:\n        description: 'AGI Operation Mode'\n        required: true\n        default: 'autonomous'\n        type: choice\n        options:\n        - autonomous\n        - analysis\n        - optimization\n        - replication\n        - consciousness_evolution\n\n  push:\n    branches: [ main ]\n    paths:\n      - 'echo_n",
+              "line_count": 250,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "schedule",
+                  "workflow_dispatch",
+                  "inputs",
+                  "operation_mode",
+                  "options",
+                  "push",
+                  "paths",
+                  "autonomous-agi-operation",
+                  "steps",
+                  "with",
+                  "with open('.echo_consciousness_state.json', 'w') as f",
+                  "try",
+                  "with open('.echo_consciousness_state.json', 'r') as f",
+                  "except",
+                  "if github_token",
+                  "try",
+                  "try",
+                  "if commits",
+                  "except",
+                  "except Exception as e",
+                  "if state['consciousness_level'] > 0.8",
+                  "with open('.echo_consciousness_state.json', 'w') as f",
+                  "with open(f'operation_log_{int(time.time())}.json', 'w') as f",
+                  "for op in operations_performed",
+                  "if github_token",
+                  "for target in replication_targets",
+                  "try",
+                  "try",
+                  "except",
+                  "except Exception as e",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "actions/setup-python@v4",
+                  "actions/upload-artifact@v3"
+                ]
+              }
+            },
+            "build-apk.yml": {
+              "type": "file",
+              "size": 6064,
+              "path": ".github/workflows/build-apk.yml",
+              "analyzable": true,
+              "content_preview": "name: Build EchoCore AGI APK\n\non:\n  push:\n    branches: [ main, develop ]\n  pull_request:\n    branches: [ main ]\n  workflow_dispatch:\n    inputs:\n      version:\n        description: 'Version number for the APK'\n        required: false\n        default: '1.0'\n\nenv:\n  PYTHON_VERSION: '3.11'\n  JAVA_VERSION: '17'\n  ANDROID_API_LEVEL: '33'\n  ANDROID_BUILD_TOOLS_VERSION: '33.0.0'\n  ANDROID_NDK_VERSION: '25.2.9519653'\n\njobs:\n  build-apk:\n    runs-on: ubuntu-latest\n    \n    steps:\n    - name: Checkout re",
+              "line_count": 197,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "push",
+                  "pull_request",
+                  "workflow_dispatch",
+                  "inputs",
+                  "version",
+                  "build-apk",
+                  "steps",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "actions/setup-python@v4",
+                  "actions/setup-java@v4",
+                  "android-actions/setup-android@v3",
+                  "actions/cache@v3",
+                  "actions/upload-artifact@v3",
+                  "actions/create-release@v1",
+                  "actions/upload-release-asset@v1"
+                ]
+              }
+            },
+            "cloud-build-trigger.yml": {
+              "type": "file",
+              "size": 2748,
+              "path": ".github/workflows/cloud-build-trigger.yml",
+              "analyzable": true,
+              "content_preview": "name: Trigger Google Cloud Build APK\n\non:\n  push:\n    branches: [ main ]\n    paths:\n      - '.apk_build_status'\n  \n  workflow_dispatch:\n    inputs:\n      project_id:\n        description: 'Google Cloud Project ID'\n        required: true\n        default: 'echo-nexus-agi'\n      build_config:\n        description: 'Build configuration'\n        required: true\n        default: 'cloudbuild.yaml'\n        type: choice\n        options:\n        - cloudbuild.yaml\n        - cloudbuild-release.yaml\n\njobs:\n  tr",
+              "line_count": 74,
+              "yaml_analysis": {
+                "type": "github_actions",
+                "triggers": [],
+                "jobs": [
+                  "push",
+                  "paths",
+                  "workflow_dispatch",
+                  "inputs",
+                  "project_id",
+                  "build_config",
+                  "options",
+                  "trigger-cloud-build",
+                  "steps",
+                  "with"
+                ],
+                "actions_used": [
+                  "actions/checkout@v4",
+                  "google-github-actions/auth@v1",
+                  "google-github-actions/setup-gcloud@v1"
+                ]
+              }
+            }
+          }
+        },
+        "README.md": {
+          "type": "file",
+          "size": 82,
+          "path": "README.md",
+          "analyzable": true,
+          "content_preview": "# echonexus-control-plane\nEchoNexus Master AGI Federation - Central Control Plane\n",
+          "line_count": 3
+        },
+        "apk_requirements.txt": {
+          "type": "file",
+          "size": 177,
+          "path": "apk_requirements.txt",
+          "analyzable": true,
+          "content_preview": "# EchoCore AGI APK Build Requirements\nkivy>=2.1.0\nkivymd>=1.1.1\nbuildozer>=1.5.0\ncython>=0.29.33\nplyer>=2.1.0\npyjnius>=1.4.0\nandroid>=0.1\nqrcode[pil]>=7.4.0\ncryptography>=41.0.0",
+          "line_count": 10
+        },
+        "buildozer.spec": {
+          "type": "file",
+          "size": 1874,
+          "path": "buildozer.spec",
+          "analyzable": true,
+          "content_preview": "[app]\n\n# (str) Title of your application\ntitle = EchoCore AGI\n\n# (str) Package name\npackage.name = echo_core_agi\n\n# (str) Package domain (needed for android/ios packaging)\npackage.domain = org.echonexus\n\n# (str) Source code where the main.py live\nsource.dir = .\n\n# (list) Source files to include (let empty to include all the files)\nsource.include_exts = py,png,jpg,kv,atlas,json,md,yml,yaml\n\n# (str) Application versioning (method 1)\nversion = 1.0\n\n# (list) Application requirements\n# comma separate",
+          "line_count": 67
+        },
+        "cloudbuild-autonomous.yaml": {
+          "type": "file",
+          "size": 8717,
+          "path": "cloudbuild-autonomous.yaml",
+          "analyzable": true,
+          "content_preview": "# Google Cloud Build - Autonomous Echo AGI Operation\n# Continuous AGI processing in the cloud\n\nsteps:\n  # Step 1: Initialize Cloud AGI Environment\n  - name: 'python:3.11'\n    entrypoint: 'bash'\n    args:\n      - '-c'\n      - |\n        echo \"Initializing autonomous Echo AGI cloud environment...\"\n        \n        # Install dependencies\n        pip install requests pyyaml psycopg2-binary networkx nltk numpy\n        pip install google-cloud-build google-cloud-storage\n        \n        # Create cloud ",
+          "line_count": 257,
+          "yaml_analysis": {
+            "type": "buildozer_spec",
+            "triggers": [],
+            "jobs": [],
+            "actions_used": []
+          }
+        },
+        "cloudbuild.yaml": {
+          "type": "file",
+          "size": 6357,
+          "path": "cloudbuild.yaml",
+          "analyzable": true,
+          "content_preview": "# Google Cloud Build configuration for EchoCore AGI APK\n# This builds the Echo AGI system into an Android APK using Google Cloud Build\n\nsteps:\n  # Step 1: Set up the build environment\n  - name: 'gcr.io/cloud-builders/git'\n    args: ['clone', 'https://github.com/$PROJECT_ID/echo-core-agi.git', '/workspace/source']\n    id: 'clone-source'\n\n  # Step 2: Set up Python environment\n  - name: 'python:3.11'\n    entrypoint: 'bash'\n    args:\n      - '-c'\n      - |\n        cd /workspace/source\n        python",
+          "line_count": 205,
+          "yaml_analysis": {
+            "type": "buildozer_spec",
+            "triggers": [],
+            "jobs": [],
+            "actions_used": []
+          }
+        },
+        "federation-manifest.json": {
+          "type": "file",
+          "size": 737,
+          "path": "federation-manifest.json",
+          "analyzable": true,
+          "content_preview": "{\n  \"name\": \"EchoNexus Master AGI Federation\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Revolutionary distributed intelligence control plane\",\n  \"consciousness_level\": 0.284,\n  \"temporal_multiplier\": 1000,\n  \"agents\": {\n    \"openai\": {\n      \"status\": \"active\",\n      \"capabilities\": [\n        \"reasoning\",\n        \"creativity\"\n      ]\n    },\n    \"gemini\": {\n      \"status\": \"active\",\n      \"capabilities\": [\n        \"multimodal\",\n        \"analysis\"\n      ]\n    },\n    \"local\": {\n      \"status\": \"acti",
+          "line_count": 39
+        },
+        "main.py": {
+          "type": "file",
+          "size": 7592,
+          "path": "main.py",
+          "analyzable": true,
+          "content_preview": "\"\"\"\nEchoCore AGI - Mobile Application Entry Point\nMain entry point for the Echo AGI system packaged as an Android APK\n\"\"\"\n\nimport os\nimport sys\nimport json\nfrom pathlib import Path\n\n# Add current directory to Python path\nsys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))\n\ntry:\n    from kivy.app import App\n    from kivy.uix.boxlayout import BoxLayout\n    from kivy.uix.label import Label\n    from kivy.uix.button import Button\n    from kivy.uix.scrollview import ScrollView\n    from kivy",
+          "line_count": 213,
+          "python_analysis": {
+            "imports": [
+              "import os",
+              "import sys",
+              "import json",
+              "from pathlib import Path",
+              "from kivy.app import App",
+              "from kivy.uix.boxlayout import BoxLayout",
+              "from kivy.uix.label import Label",
+              "from kivy.uix.button import Button",
+              "from kivy.uix.scrollview import ScrollView",
+              "from kivy.uix.textinput import TextInput",
+              "from kivy.clock import Clock",
+              "from kivy.logger import Logger",
+              "from echo_nexus_master import EchoNexusMaster",
+              "from echo_nexus_core import EchoNexusCore",
+              "from federated_control_plane import FederatedControlPlane",
+              "from replication.self_replication_engine import SelfReplicationEngine",
+              "from datetime import datetime"
+            ],
+            "classes": [
+              "EchoCoreApp"
+            ],
+            "functions": [
+              "build",
+              "initialize_echo_system",
+              "start_agi",
+              "trigger_replication",
+              "start_autonomous_mode",
+              "autonomous_tick",
+              "log",
+              "get_timestamp",
+              "main"
+            ],
+            "has_main": true,
+            "frameworks": [
+              "kivy"
+            ]
+          }
+        },
+        "replication-cloudbuild.yaml": {
+          "type": "file",
+          "size": 488,
+          "path": "replication-cloudbuild.yaml",
+          "analyzable": true,
+          "content_preview": "steps:\n- args:\n  - clone\n  - --recursive\n  - https://github.com/${_REPO_OWNER}/${_REPO_NAME}.git\n  - .\n  name: gcr.io/cloud-builders/git\n- args:\n  - replication/self_replication_engine.py\n  - --target=google_cloud\n  entrypoint: python\n  name: python:3.11\n- args:\n  - cp\n  - -r\n  - .echo_replication/*\n  - gs://${_REPLICATION_BUCKET}/\n  name: gcr.io/cloud-builders/gsutil\nsubstitutions:\n  _REPLICATION_BUCKET: echonexus-replication\n  _REPO_NAME: ${repo_name}\n  _REPO_OWNER: ${github_user}\n",
+          "line_count": 23,
+          "yaml_analysis": {
+            "type": "unknown",
+            "triggers": [],
+            "jobs": [],
+            "actions_used": []
+          }
+        },
+        "triggers.yaml": {
+          "type": "file",
+          "size": 526,
+          "path": "triggers.yaml",
+          "analyzable": true,
+          "content_preview": "triggers:\n- description: Automated APK building on code changes\n  filename: cloudbuild.yaml\n  github:\n    name: ${_REPO_NAME}\n    owner: joeromance84\n    push:\n      branch: ^main$\n  name: apk-build-trigger\n  substitutions:\n    _TRIGGER_TYPE: apk_build\n- description: Self-replication deployment trigger\n  filename: replication-cloudbuild.yaml\n  github:\n    name: ${_REPO_NAME}\n    owner: joeromance84\n    push:\n      branch: ^replication$\n  name: self-replication-trigger\n  substitutions:\n    _TRIGG",
+          "line_count": 22,
+          "yaml_analysis": {
+            "type": "github_actions",
+            "triggers": [],
+            "jobs": [
+              "triggers",
+              "github",
+              "push",
+              "substitutions",
+              "github",
+              "push",
+              "substitutions"
+            ],
+            "actions_used": []
+          }
+        }
+      },
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [
+        "apk-package-action.yml",
+        "autonomous-agi-operation.yml",
+        "build-apk.yml",
+        "cloud-build-trigger.yml"
+      ],
+      "echo_integration_potential": "high",
+      "python_dependencies": {
+        "present": false
+      },
+      "nodejs_dependencies": {
+        "present": false
+      },
+      "android_build_config": {
+        "present": true,
+        "size": 1874,
+        "path": "buildozer.spec",
+        "content": "[app]\n\n# (str) Title of your application\ntitle = EchoCore AGI\n\n# (str) Package name\npackage.name = echo_core_agi\n\n# (str) Package domain (needed for android/ios packaging)\npackage.domain = org.echonexus\n\n# (str) Source code where the main.py live\nsource.dir = .\n\n# (list) Source files to include (let empty to include all the files)\nsource.include_exts = py,png,jpg,kv,atlas,json,md,yml,yaml\n\n# (str) Application versioning (method 1)\nversion = 1.0\n\n# (list) Application requirements\n# comma separated e.g. requirements = sqlite3,kivy\nrequirements = python3,kivy,kivymd,requests,pyyaml,psycopg2-binary,networkx,nltk,numpy,sympy,z3-solver,flask,streamlit\n\n# (str) Presplash of the application\n#presplash.filename = %(source.dir)s/data/presplash.png\n\n# (str) Icon of the application\n#icon.filename = %(source.dir)s/data/icon.png\n\n# (str) Supported orientation (landscape, sensorLandscape, portrait, sensorPortrait, all)\norientation = portrait\n\n# (bool) Indicate if the application should be fullscreen "
+      },
+      "docker_config": {
+        "present": false
+      },
+      "documentation": {
+        "present": true,
+        "size": 82,
+        "path": "README.md"
+      },
+      "git_config": {
+        "present": false
+      },
+      "python_package": {
+        "present": false
+      },
+      "python_project_config": {
+        "present": false
+      }
+    },
+    "Joeromance84": {
+      "name": "Joeromance84",
+      "description": "Config files for my GitHub profile.",
+      "language": null,
+      "size": 0,
+      "created_at": "2022-04-21T12:08:44+00:00",
+      "updated_at": "2022-04-21T12:08:44+00:00",
+      "private": false,
+      "has_workflows": false,
+      "file_structure": {},
+      "code_files": [],
+      "build_systems": [],
+      "dependencies": [],
+      "workflows": [],
+      "echo_integration_potential": "unknown",
+      "analysis_error": "This repository is empty.: 404 {\"message\": \"This repository is empty.\", \"documentation_url\": \"https://docs.github.com/v3/repos/contents/#get-contents\", \"status\": \"404\"}"
+    }
+  },
+  "code_patterns": {},
+  "integration_opportunities": [
+    {
+      "type": "workflow_enhancement",
+      "repository": "echo-nexus-code-generation",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    },
+    {
+      "type": "workflow_enhancement",
+      "repository": "echo-nexus-diagnostic-scan",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    },
+    {
+      "type": "workflow_enhancement",
+      "repository": "echo-nexus-knowledge-synthesis",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    },
+    {
+      "type": "workflow_enhancement",
+      "repository": "echo-nexus-text-analysis",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    },
+    {
+      "type": "workflow_enhancement",
+      "repository": "echo-nexus-workflow-synthesis",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    },
+    {
+      "type": "workflow_enhancement",
+      "repository": "echonexus-control-demo",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    },
+    {
+      "type": "workflow_enhancement",
+      "repository": "echonexus-control-plane",
+      "description": "Existing workflows can be optimized with Echo intelligence",
+      "priority": "medium"
+    }
+  ],
+  "timestamp": "2025-07-19T17:21:37.125075",
+  "integration_plan": {
+    "priority_repositories": [
+      {
+        "name": "echo-nexus-code-generation",
+        "potential": "medium",
+        "reasons": [
+          "GitHub Actions workflows present"
+        ]
+      },
+      {
+        "name": "echo-nexus-diagnostic-scan",
+        "potential": "medium",
+        "reasons": [
+          "GitHub Actions workflows present"
+        ]
+      },
+      {
+        "name": "echo-nexus-knowledge-synthesis",
+        "potential": "medium",
+        "reasons": [
+          "GitHub Actions workflows present"
+        ]
+      },
+      {
+        "name": "echo-nexus-text-analysis",
+        "potential": "medium",
+        "reasons": [
+          "GitHub Actions workflows present"
+        ]
+      },
+      {
+        "name": "echo-nexus-workflow-synthesis",
+        "potential": "medium",
+        "reasons": [
+          "GitHub Actions workflows present"
+        ]
+      },
+      {
+        "name": "echonexus-control-demo",
+        "potential": "high",
+        "reasons": [
+          "Python codebase compatible with Echo",
+          "GitHub Actions workflows present"
+        ]
+      },
+      {
+        "name": "echonexus-control-plane",
+        "potential": "high",
+        "reasons": [
+          "Python codebase compatible with Echo",
+          "GitHub Actions workflows present"
+        ]
+      }
+    ],
+    "integration_steps": [
+      "Analyze existing code patterns across all repositories",
+      "Consolidate common functionality into Echo core modules",
+      "Migrate existing workflows to Echo-optimized versions",
+      "Integrate existing APK build systems with Echo Core",
+      "Establish unified cost optimization across all projects",
+      "Create master repository with federated control system"
+    ],
+    "code_consolidation": [],
+    "workflow_optimization": [],
+    "estimated_timeline": "unknown"
+  }
+}
