@@ -1,0 +1,1 @@
+# Echo Nexus Core - The World-Changing Development Intelligence System

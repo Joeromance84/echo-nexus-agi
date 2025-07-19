@@ -129,7 +129,8 @@ if page == "Command Builder":
 • "setup telemetry"
 • "enable ab testing"
 • "analyze my app intelligence"
-• "show optimization suggestions"
+• "refactor my code autonomously"
+• "show ecosystem intelligence"
         """)
     
     # Command input
@@ -399,6 +400,120 @@ if page == "Command Builder":
                                 st.info("✨ This fix can be automatically implemented")
                 else:
                     st.error(f"❌ Intelligence analysis failed: {intelligence_result['error']}")
+            
+            elif any(word in command_lower for word in ['refactor', 'optimize', 'clean', 'autonomous']):
+                st.write("**Command Recognized:** EchoRefactorCore - Autonomous Code Optimization")
+                st.write("**Backend Action:** Using AST analysis and scientific graph theory to optimize your entire codebase")
+                
+                if st.button("Start Autonomous Refactoring"):
+                    with st.spinner("🧠 Echo Nexus Brain analyzing your codebase..."):
+                        # Initialize the Echo Nexus Brain
+                        from echo_nexus.nexus_brain import EchoNexusBrain
+                        nexus_brain = EchoNexusBrain(st.session_state.database_helper, st.session_state.github_helper)
+                        
+                        # Trigger autonomous optimization
+                        optimization_result = nexus_brain.trigger_autonomous_optimization(repo_url)
+                        
+                        if optimization_result['success']:
+                            st.success("✅ Autonomous optimization completed!")
+                            
+                            if optimization_result['optimizations_applied']:
+                                st.subheader("🔧 Optimizations Applied")
+                                for optimization in optimization_result['optimizations_applied']:
+                                    st.write(f"• **{optimization.get('type', 'Unknown')}:** {optimization.get('description', 'No description')}")
+                            
+                            if optimization_result['pr_created']:
+                                st.success("📝 Pull request created with optimizations!")
+                                st.info("Review the changes in your GitHub repository and merge when ready.")
+                            
+                            if optimization_result['intelligence_summary']:
+                                st.subheader("🧠 Ecosystem Intelligence")
+                                intelligence = optimization_result['intelligence_summary']
+                                
+                                if 'ecosystem_health' in intelligence:
+                                    health = intelligence['ecosystem_health']
+                                    col1, col2 = st.columns(2)
+                                    
+                                    with col1:
+                                        st.metric("Ecosystem Health", f"{health.get('overall_score', 0)}/1.0")
+                                    with col2:
+                                        st.metric("Status", health.get('status', 'unknown').title())
+                                
+                                if 'system_performance' in intelligence:
+                                    perf = intelligence['system_performance']
+                                    col1, col2, col3 = st.columns(3)
+                                    
+                                    with col1:
+                                        st.metric("Events Processed", perf.get('events_processed_24h', 0))
+                                    with col2:
+                                        st.metric("Success Rate", f"{perf.get('success_rate', 0):.1%}")
+                                    with col3:
+                                        st.metric("System Efficiency", perf.get('system_efficiency', 'unknown').title())
+                        else:
+                            st.error(f"❌ Autonomous optimization failed: {optimization_result['error']}")
+            
+            elif any(word in command_lower for word in ['ecosystem', 'brain', 'nexus', 'intelligence']):
+                st.write("**Command Recognized:** Echo Nexus Ecosystem Intelligence")
+                st.write("**Backend Action:** Accessing the central brain for comprehensive ecosystem insights")
+                
+                if st.button("Get Ecosystem Intelligence"):
+                    with st.spinner("🧠 Consulting the Echo Nexus Brain..."):
+                        from echo_nexus.nexus_brain import EchoNexusBrain
+                        nexus_brain = EchoNexusBrain(st.session_state.database_helper, st.session_state.github_helper)
+                        
+                        intelligence = nexus_brain.get_ecosystem_intelligence()
+                        
+                        if 'error' not in intelligence:
+                            st.success("✅ Ecosystem intelligence retrieved!")
+                            
+                            # Ecosystem Health
+                            if 'ecosystem_health' in intelligence:
+                                st.subheader("🌱 Ecosystem Health")
+                                health = intelligence['ecosystem_health']
+                                
+                                col1, col2, col3 = st.columns(3)
+                                with col1:
+                                    score = health.get('overall_score', 0)
+                                    st.metric("Health Score", f"{score}/1.0")
+                                with col2:
+                                    status = health.get('status', 'unknown')
+                                    st.metric("Status", status.title())
+                                with col3:
+                                    st.metric("Last Updated", "Real-time")
+                                
+                                if health.get('metrics'):
+                                    st.write("**Detailed Metrics:**")
+                                    for metric, value in health['metrics'].items():
+                                        st.write(f"• {metric.replace('_', ' ').title()}: {value:.3f}")
+                            
+                            # Recent Decisions
+                            if 'recent_decisions' in intelligence and intelligence['recent_decisions']:
+                                st.subheader("🎯 Recent Brain Decisions")
+                                for decision in intelligence['recent_decisions'][:5]:
+                                    st.write(f"• **{decision['decision_type'].replace('_', ' ').title()}** (Confidence: {decision['confidence_score']:.1%})")
+                                    if decision.get('reasoning'):
+                                        st.caption(f"Reasoning: {decision['reasoning']}")
+                            
+                            # System Performance
+                            if 'system_performance' in intelligence:
+                                st.subheader("⚡ System Performance")
+                                perf = intelligence['system_performance']
+                                
+                                col1, col2, col3 = st.columns(3)
+                                with col1:
+                                    st.metric("Events Processed (24h)", perf.get('events_processed_24h', 0))
+                                with col2:
+                                    st.metric("Success Rate", f"{perf.get('success_rate', 0):.1%}")
+                                with col3:
+                                    st.metric("Avg Processing Time", f"{perf.get('avg_processing_time_seconds', 0):.2f}s")
+                            
+                            # Optimization Opportunities
+                            if 'optimization_opportunities' in intelligence and intelligence['optimization_opportunities']:
+                                st.subheader("💡 Optimization Opportunities")
+                                for opportunity in intelligence['optimization_opportunities']:
+                                    st.write(f"• **{opportunity['opportunity'].replace('_', ' ').title()}** ({opportunity['potential_impact']} impact)")
+                        else:
+                            st.error(f"❌ Failed to get ecosystem intelligence: {intelligence['error']}")
             
             else:
                 st.warning("🤔 Command not recognized. Try one of the example commands above.")
