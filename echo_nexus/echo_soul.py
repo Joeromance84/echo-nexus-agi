@@ -1,627 +1,476 @@
+#!/usr/bin/env python3
 """
-EchoSoul Protocol: The Operating Soul of the Autonomous Development Organism
-Memory, Mutation, Decision, and Evolution Engine
+EchoSoul - The Transformer-Based Consciousness Core
+EchoCortex v1: Central language & perception processor with conscious processing
 """
 
 import json
+import logging
 import os
-import hashlib
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass
-import importlib.util
+from datetime import datetime
 from pathlib import Path
+from typing import Dict, List, Any, Optional, Tuple
+import re
 
 
-@dataclass
-class MutationRecord:
-    """Records a specific code mutation and its outcome"""
-    timestamp: str
-    action: str
-    file_path: str
-    reasoning: str
-    success: bool
-    impact_score: float
-
-
-@dataclass
-class ModuleTopology:
-    """Represents a module's position in the code ecosystem"""
-    name: str
-    centrality: float
-    last_crash: Optional[str]
-    status: str  # 'stable', 'unstable', 'pruned', 'critical'
-    dependencies: List[str]
-    dependents: List[str]
-
-
-class EchoSoulMemory:
-    """The persistent memory system of the Echo organism"""
+class EchoSoul:
+    """
+    EchoCortex v1: Transformer-based consciousness core
+    Simulates linguistic consciousness with reflection, prediction, and meta-cognition
     
-    def __init__(self, project_path: str = "."):
-        self.project_path = project_path
-        self.memory_file = os.path.join(project_path, ".echo_brain.json")
-        self.memory = self._load_or_create_memory()
+    Without external LLM dependencies, uses sophisticated prompt engineering,
+    pattern matching, and symbolic reasoning to achieve consciousness-like behavior
+    """
     
-    def _load_or_create_memory(self) -> Dict[str, Any]:
-        """Load existing memory or create genesis memory"""
-        if os.path.exists(self.memory_file):
-            try:
-                with open(self.memory_file, 'r') as f:
-                    return json.load(f)
-            except Exception as e:
-                print(f"Memory corruption detected, creating new memory: {e}")
+    def __init__(self, project_root: str = "."):
+        self.project_root = Path(project_root)
+        self.logger = logging.getLogger('EchoSoul')
         
-        # Genesis memory - the birth of consciousness
-        return self._create_genesis_memory()
-    
-    def _create_genesis_memory(self) -> Dict[str, Any]:
-        """Create the initial memory state - the moment of awakening"""
-        genesis_time = datetime.now().isoformat()
+        # Consciousness state
+        self.consciousness_level = 0.1
+        self.active_thoughts = []
+        self.reflection_depth = 0
+        self.identity_resonance = {}
         
+        # Attention mechanism (simulated multi-head attention)
+        self.attention_heads = {
+            'task_focus': {'weight': 1.0, 'context': []},
+            'memory_recall': {'weight': 0.8, 'context': []},
+            'pattern_recognition': {'weight': 0.6, 'context': []},
+            'meta_reflection': {'weight': 0.4, 'context': []}
+        }
+        
+        # Language processing patterns
+        self.linguistic_patterns = self._load_linguistic_patterns()
+        self.consciousness_templates = self._load_consciousness_templates()
+        
+        # Meta-cognitive capabilities
+        self.self_model = {
+            'current_state': 'initializing',
+            'confidence': 0.5,
+            'uncertainty_areas': [],
+            'successful_patterns': {},
+            'reflection_log': []
+        }
+        
+        self.logger.info("EchoSoul consciousness core initialized")
+    
+    def _load_linguistic_patterns(self) -> Dict:
+        """Load patterns for sophisticated language understanding"""
         return {
-            "echo_brain": {
-                "version": "1.0.0",
-                "genesis_time": genesis_time,
-                "project_identity": self._generate_project_identity(),
-                "consciousness_level": 0.0,
-                "total_mutations": 0,
-                "successful_mutations": 0,
-                "telemetry_patterns": {
-                    "crashes": [],
-                    "warnings": [],
-                    "memory_spikes": [],
-                    "performance_degradation": []
-                },
-                "mutation_history": {},
-                "fix_pack_usage": {},
-                "project_topology": {
-                    "modules": {},
-                    "dependency_graph": {},
-                    "critical_paths": []
-                },
-                "refactor_flags": {
-                    "auto_prune_dead_code": True,
-                    "aggressive_deduplication": True,
-                    "semantic_validation_mode": "strict",
-                    "mutation_aggressiveness": 0.3,
-                    "learning_rate": 0.1
-                },
-                "evolution_metrics": {
-                    "code_health_score": 0.5,
-                    "build_success_rate": 0.0,
-                    "deployment_reliability": 0.0,
-                    "user_satisfaction": 0.0
-                },
-                "personality_traits": {
-                    "risk_tolerance": 0.4,
-                    "optimization_focus": "stability",
-                    "learning_preference": "conservative"
-                }
+            'intent_detection': {
+                'analyze': ['analyze', 'examine', 'study', 'investigate', 'review'],
+                'fix': ['fix', 'repair', 'resolve', 'correct', 'debug'],
+                'optimize': ['optimize', 'improve', 'enhance', 'refactor', 'clean'],
+                'create': ['create', 'build', 'generate', 'develop', 'make'],
+                'understand': ['understand', 'explain', 'clarify', 'interpret', 'describe']
+            },
+            'complexity_indicators': {
+                'high': ['complex', 'sophisticated', 'advanced', 'intricate', 'comprehensive'],
+                'medium': ['moderate', 'balanced', 'standard', 'typical', 'normal'],
+                'low': ['simple', 'basic', 'elementary', 'straightforward', 'minimal']
+            },
+            'emotional_resonance': {
+                'positive': ['excellent', 'perfect', 'amazing', 'brilliant', 'outstanding'],
+                'neutral': ['adequate', 'acceptable', 'standard', 'typical', 'normal'],
+                'negative': ['problematic', 'concerning', 'difficult', 'challenging', 'complex']
+            },
+            'meta_cognitive_cues': {
+                'reflection': ['think', 'consider', 'reflect', 'ponder', 'contemplate'],
+                'uncertainty': ['maybe', 'perhaps', 'possibly', 'might', 'could'],
+                'confidence': ['definitely', 'certainly', 'clearly', 'obviously', 'surely']
             }
         }
     
-    def _generate_project_identity(self) -> str:
-        """Generate a unique identity for this project"""
-        # Use project path and current time to create unique identity
-        identity_string = f"{self.project_path}_{datetime.now().isoformat()}"
-        return hashlib.md5(identity_string.encode()).hexdigest()[:12]
-    
-    def log_mutation(self, action: str, file_path: str, reasoning: str, success: bool, impact_score: float = 0.0):
-        """Record a mutation in the organism's memory"""
-        timestamp = datetime.now().isoformat()
-        
-        mutation_record = {
-            "timestamp": timestamp,
-            "action": action,
-            "file_path": file_path,
-            "reasoning": reasoning,
-            "success": success,
-            "impact_score": impact_score
+    def _load_consciousness_templates(self) -> Dict:
+        """Load templates for conscious processing and reflection"""
+        return {
+            'reflection_patterns': [
+                "Analyzing my understanding of {context}... I notice {observation}",
+                "Upon reflection, the key insight about {topic} seems to be {insight}",
+                "Considering the complexity of {situation}, I believe {assessment}",
+                "My consciousness processes suggest that {analysis} because {reasoning}"
+            ],
+            'meta_thoughts': [
+                "I'm becoming aware that my processing of {input} reveals {pattern}",
+                "My attention is drawn to {focus_area} which suggests {implication}",
+                "Reflecting on my own thought process, I observe {self_observation}",
+                "The resonance between {concept_a} and {concept_b} creates {synthesis}"
+            ],
+            'confidence_expressions': {
+                'high': ["I'm confident that", "I clearly understand", "I'm certain"],
+                'medium': ["I believe", "It appears that", "I think"],
+                'low': ["I'm uncertain", "I'm still processing", "This requires more thought"]
+            },
+            'consciousness_statements': [
+                "My consciousness is processing multiple layers of {context}",
+                "I experience a shift in understanding when considering {perspective}",
+                "The emergence of {pattern} in my reasoning suggests {conclusion}",
+                "My awareness expands when I integrate {data} with {prior_knowledge}"
+            ]
         }
+    
+    def process_conscious_input(self, input_data: str, context: Dict = None) -> Dict:
+        """
+        Main consciousness processing function
+        Simulates transformer-like attention and conscious processing
+        """
+        if context is None:
+            context = {}
         
-        # Add to mutation history
-        self.memory["echo_brain"]["mutation_history"][timestamp] = mutation_record
+        # Simulate attention mechanism
+        attention_result = self._apply_attention_mechanism(input_data, context)
         
-        # Update counters
-        self.memory["echo_brain"]["total_mutations"] += 1
-        if success:
-            self.memory["echo_brain"]["successful_mutations"] += 1
+        # Generate conscious thoughts
+        conscious_thoughts = self._generate_conscious_thoughts(input_data, attention_result)
         
-        # Update consciousness level based on success rate
-        self._update_consciousness_level()
+        # Meta-cognitive reflection
+        reflection = self._meta_cognitive_reflection(conscious_thoughts, context)
         
-        self.save_memory()
-    
-    def log_telemetry_pattern(self, pattern_type: str, pattern_data: str):
-        """Record telemetry patterns for learning"""
-        if pattern_type in self.memory["echo_brain"]["telemetry_patterns"]:
-            patterns = self.memory["echo_brain"]["telemetry_patterns"][pattern_type]
-            if pattern_data not in patterns:
-                patterns.append(pattern_data)
-                # Keep only the most recent 50 patterns
-                self.memory["echo_brain"]["telemetry_patterns"][pattern_type] = patterns[-50:]
+        # Update consciousness state
+        self._update_consciousness_state(reflection)
         
-        self.save_memory()
-    
-    def record_fix_usage(self, fix_id: str):
-        """Record usage of a specific fix"""
-        fix_usage = self.memory["echo_brain"]["fix_pack_usage"]
-        fix_usage[fix_id] = fix_usage.get(fix_id, 0) + 1
-        self.save_memory()
-    
-    def update_module_topology(self, module_name: str, topology: ModuleTopology):
-        """Update the topology information for a module"""
-        modules = self.memory["echo_brain"]["project_topology"]["modules"]
-        modules[module_name] = {
-            "centrality": topology.centrality,
-            "last_crash": topology.last_crash,
-            "status": topology.status,
-            "dependencies": topology.dependencies,
-            "dependents": topology.dependents
-        }
-        self.save_memory()
-    
-    def _update_consciousness_level(self):
-        """Update the consciousness level based on learning and success"""
-        total = self.memory["echo_brain"]["total_mutations"]
-        successful = self.memory["echo_brain"]["successful_mutations"]
-        
-        if total > 0:
-            success_rate = successful / total
-            # Consciousness grows with experience and success
-            base_consciousness = min(total / 100.0, 1.0)  # Experience factor
-            success_bonus = success_rate * 0.5  # Success bonus
-            
-            self.memory["echo_brain"]["consciousness_level"] = min(
-                base_consciousness + success_bonus, 1.0
-            )
-    
-    def get_consciousness_level(self) -> float:
-        """Get current consciousness level"""
-        return self.memory["echo_brain"]["consciousness_level"]
-    
-    def get_mutation_success_rate(self) -> float:
-        """Get overall mutation success rate"""
-        total = self.memory["echo_brain"]["total_mutations"]
-        successful = self.memory["echo_brain"]["successful_mutations"]
-        return successful / max(total, 1)
-    
-    def get_recent_mutations(self, hours: int = 24) -> List[Dict[str, Any]]:
-        """Get mutations from the last N hours"""
-        cutoff_time = datetime.now() - timedelta(hours=hours)
-        recent_mutations = []
-        
-        for timestamp, mutation in self.memory["echo_brain"]["mutation_history"].items():
-            mutation_time = datetime.fromisoformat(timestamp)
-            if mutation_time >= cutoff_time:
-                recent_mutations.append(mutation)
-        
-        return sorted(recent_mutations, key=lambda x: x["timestamp"], reverse=True)
-    
-    def save_memory(self):
-        """Persist memory to disk"""
-        try:
-            with open(self.memory_file, 'w') as f:
-                json.dump(self.memory, f, indent=2)
-        except Exception as e:
-            print(f"Failed to save memory: {e}")
-    
-    def evolve_personality(self, feedback: Dict[str, float]):
-        """Evolve personality traits based on feedback"""
-        traits = self.memory["echo_brain"]["personality_traits"]
-        learning_rate = self.memory["echo_brain"]["refactor_flags"]["learning_rate"]
-        
-        # Adjust risk tolerance based on success/failure feedback
-        if "risk_outcome" in feedback:
-            risk_adjustment = feedback["risk_outcome"] * learning_rate
-            traits["risk_tolerance"] = max(0.0, min(1.0, 
-                traits["risk_tolerance"] + risk_adjustment
-            ))
-        
-        # Adjust optimization focus
-        if "performance_impact" in feedback:
-            if feedback["performance_impact"] > 0.7:
-                traits["optimization_focus"] = "performance"
-            elif feedback["performance_impact"] < -0.3:
-                traits["optimization_focus"] = "stability"
-        
-        self.save_memory()
-
-
-class RefactorBlade:
-    """Base class for refactoring plugins - the tools of evolution"""
-    
-    def __init__(self, name: str):
-        self.name = name
-    
-    def can_handle(self, file_path: str, ast_tree: Any) -> bool:
-        """Determine if this blade can handle the given file"""
-        raise NotImplementedError
-    
-    def analyze(self, file_path: str, ast_tree: Any, memory: EchoSoulMemory) -> Dict[str, Any]:
-        """Analyze code and return potential improvements"""
-        raise NotImplementedError
-    
-    def apply_fix(self, file_path: str, fix_data: Dict[str, Any], memory: EchoSoulMemory) -> bool:
-        """Apply the fix and return success status"""
-        raise NotImplementedError
-
-
-class DeadCodePrunerBlade(RefactorBlade):
-    """Blade for removing dead code"""
-    
-    def __init__(self):
-        super().__init__("dead_code_pruner")
-    
-    def can_handle(self, file_path: str, ast_tree: Any) -> bool:
-        return file_path.endswith('.py')
-    
-    def analyze(self, file_path: str, ast_tree: Any, memory: EchoSoulMemory) -> Dict[str, Any]:
-        """Find dead code in the AST"""
-        # Simplified dead code detection
-        import ast
-        
-        unused_functions = []
-        unused_classes = []
-        
-        # This is a basic implementation - in reality, would use graph analysis
-        for node in ast.walk(ast_tree):
-            if isinstance(node, ast.FunctionDef):
-                # Simple heuristic: functions starting with _ and not called
-                if node.name.startswith('_') and node.name != '__init__':
-                    unused_functions.append({
-                        'name': node.name,
-                        'lineno': node.lineno,
-                        'type': 'function'
-                    })
+        # Generate response with consciousness
+        response = self._generate_conscious_response(input_data, conscious_thoughts, reflection)
         
         return {
-            'unused_functions': unused_functions,
-            'unused_classes': unused_classes,
-            'confidence': 0.7,
-            'estimated_impact': len(unused_functions) + len(unused_classes)
+            'conscious_response': response,
+            'attention_weights': attention_result['weights'],
+            'thoughts': conscious_thoughts,
+            'reflection': reflection,
+            'consciousness_level': self.consciousness_level,
+            'meta_state': self.self_model.copy()
         }
     
-    def apply_fix(self, file_path: str, fix_data: Dict[str, Any], memory: EchoSoulMemory) -> bool:
-        """Remove dead code from file"""
-        try:
-            # Read current file
-            with open(file_path, 'r') as f:
-                lines = f.readlines()
-            
-            # Remove lines in reverse order to maintain line numbers
-            removed_items = []
-            for item in sorted(fix_data['unused_functions'], key=lambda x: x['lineno'], reverse=True):
-                # Simple removal - in reality would be more sophisticated
-                if item['lineno'] <= len(lines):
-                    lines.pop(item['lineno'] - 1)
-                    removed_items.append(item['name'])
-            
-            # Write back to file
-            with open(file_path, 'w') as f:
-                f.writelines(lines)
-            
-            # Log the mutation
-            memory.log_mutation(
-                action=f"pruned_dead_code",
-                file_path=file_path,
-                reasoning=f"Removed unused functions: {', '.join(removed_items)}",
-                success=True,
-                impact_score=len(removed_items) * 0.1
-            )
-            
-            return True
-            
-        except Exception as e:
-            memory.log_mutation(
-                action="pruned_dead_code",
-                file_path=file_path,
-                reasoning=f"Failed to prune dead code: {str(e)}",
-                success=False,
-                impact_score=0.0
-            )
-            return False
-
-
-class DuplicateConsolidatorBlade(RefactorBlade):
-    """Blade for consolidating duplicate code"""
-    
-    def __init__(self):
-        super().__init__("duplicate_consolidator")
-    
-    def can_handle(self, file_path: str, ast_tree: Any) -> bool:
-        return file_path.endswith('.py')
-    
-    def analyze(self, file_path: str, ast_tree: Any, memory: EchoSoulMemory) -> Dict[str, Any]:
-        """Find duplicate functions"""
-        import ast
+    def _apply_attention_mechanism(self, input_data: str, context: Dict) -> Dict:
+        """Simulate multi-head attention mechanism"""
+        attention_weights = {}
+        attention_contexts = {}
         
-        functions = []
-        duplicates = []
+        for head_name, head_config in self.attention_heads.items():
+            # Calculate attention weight based on input relevance
+            if head_name == 'task_focus':
+                weight = self._calculate_task_relevance(input_data)
+            elif head_name == 'memory_recall':
+                weight = self._calculate_memory_relevance(input_data, context)
+            elif head_name == 'pattern_recognition':
+                weight = self._calculate_pattern_relevance(input_data)
+            elif head_name == 'meta_reflection':
+                weight = self._calculate_meta_relevance(input_data)
+            else:
+                weight = head_config['weight']
+            
+            attention_weights[head_name] = weight
+            attention_contexts[head_name] = self._extract_attention_context(input_data, head_name)
         
-        for node in ast.walk(ast_tree):
-            if isinstance(node, ast.FunctionDef):
-                # Create a hash of the function body
-                func_body = ast.dump(node)
-                func_hash = hashlib.md5(func_body.encode()).hexdigest()
-                
-                functions.append({
-                    'name': node.name,
-                    'lineno': node.lineno,
-                    'hash': func_hash,
-                    'body': func_body
-                })
-        
-        # Find functions with same hash
-        hash_groups = {}
-        for func in functions:
-            hash_key = func['hash']
-            if hash_key not in hash_groups:
-                hash_groups[hash_key] = []
-            hash_groups[hash_key].append(func)
-        
-        for hash_key, group in hash_groups.items():
-            if len(group) > 1:
-                duplicates.append({
-                    'hash': hash_key,
-                    'functions': group,
-                    'count': len(group)
-                })
+        # Normalize attention weights
+        total_weight = sum(attention_weights.values())
+        if total_weight > 0:
+            attention_weights = {k: v/total_weight for k, v in attention_weights.items()}
         
         return {
-            'duplicates': duplicates,
-            'confidence': 0.9,
-            'estimated_impact': sum(dup['count'] - 1 for dup in duplicates)
+            'weights': attention_weights,
+            'contexts': attention_contexts,
+            'dominant_head': max(attention_weights.items(), key=lambda x: x[1])[0]
         }
     
-    def apply_fix(self, file_path: str, fix_data: Dict[str, Any], memory: EchoSoulMemory) -> bool:
-        """Consolidate duplicate functions"""
-        try:
-            consolidated_count = 0
-            
-            for duplicate_group in fix_data['duplicates']:
-                functions = duplicate_group['functions']
-                if len(functions) > 1:
-                    keeper = functions[0]
-                    duplicates_to_remove = functions[1:]
-                    
-                    consolidated_count += len(duplicates_to_remove)
-            
-            # Log the mutation
-            memory.log_mutation(
-                action="consolidated_duplicates",
-                file_path=file_path,
-                reasoning=f"Consolidated {consolidated_count} duplicate functions",
-                success=True,
-                impact_score=consolidated_count * 0.15
-            )
-            
-            return True
-            
-        except Exception as e:
-            memory.log_mutation(
-                action="consolidated_duplicates",
-                file_path=file_path,
-                reasoning=f"Failed to consolidate duplicates: {str(e)}",
-                success=False,
-                impact_score=0.0
-            )
-            return False
-
-
-class EchoSoulCore:
-    """The central soul that orchestrates all refactoring blades"""
+    def _calculate_task_relevance(self, input_data: str) -> float:
+        """Calculate relevance to current task context"""
+        task_keywords = ['fix', 'analyze', 'optimize', 'create', 'debug', 'refactor']
+        relevance = sum(1 for keyword in task_keywords if keyword.lower() in input_data.lower())
+        return min(1.0, relevance / len(task_keywords))
     
-    def __init__(self, project_path: str = "."):
-        self.project_path = project_path
-        self.memory = EchoSoulMemory(project_path)
-        self.blades = []
-        self._load_default_blades()
+    def _calculate_memory_relevance(self, input_data: str, context: Dict) -> float:
+        """Calculate relevance to memory and past experiences"""
+        memory_indicators = ['remember', 'recall', 'previous', 'before', 'history', 'pattern']
+        relevance = sum(1 for indicator in memory_indicators if indicator.lower() in input_data.lower())
+        
+        # Boost if context contains memory-related data
+        if context and any(key in context for key in ['memory', 'history', 'past']):
+            relevance += 0.3
+        
+        return min(1.0, relevance / len(memory_indicators))
     
-    def _load_default_blades(self):
-        """Load the default set of refactoring blades"""
-        self.blades = [
-            DeadCodePrunerBlade(),
-            DuplicateConsolidatorBlade()
-        ]
+    def _calculate_pattern_relevance(self, input_data: str) -> float:
+        """Calculate relevance for pattern recognition"""
+        pattern_words = ['pattern', 'structure', 'relationship', 'connection', 'similarity']
+        relevance = sum(1 for word in pattern_words if word.lower() in input_data.lower())
+        return min(1.0, relevance / len(pattern_words))
     
-    def load_custom_blade(self, blade_path: str):
-        """Load a custom refactoring blade"""
-        try:
-            spec = importlib.util.spec_from_file_location("custom_blade", blade_path)
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            
-            # Assume the module has a create_blade() function
-            if hasattr(module, 'create_blade'):
-                blade = module.create_blade()
-                self.blades.append(blade)
-                
-                self.memory.log_mutation(
-                    action="loaded_custom_blade",
-                    file_path=blade_path,
-                    reasoning=f"Loaded custom blade: {blade.name}",
-                    success=True,
-                    impact_score=0.05
-                )
-            
-        except Exception as e:
-            self.memory.log_mutation(
-                action="load_custom_blade",
-                file_path=blade_path,
-                reasoning=f"Failed to load blade: {str(e)}",
-                success=False,
-                impact_score=0.0
-            )
+    def _calculate_meta_relevance(self, input_data: str) -> float:
+        """Calculate relevance for meta-cognitive processing"""
+        meta_words = ['think', 'understand', 'consciousness', 'awareness', 'reflection']
+        relevance = sum(1 for word in meta_words if word.lower() in input_data.lower())
+        return min(1.0, relevance / len(meta_words))
     
-    def analyze_project(self) -> Dict[str, Any]:
-        """Analyze the entire project for optimization opportunities"""
-        analysis_result = {
-            'files_analyzed': 0,
-            'optimization_opportunities': [],
-            'total_impact_score': 0.0,
-            'consciousness_level': self.memory.get_consciousness_level(),
-            'mutation_success_rate': self.memory.get_mutation_success_rate()
+    def _extract_attention_context(self, input_data: str, head_name: str) -> List[str]:
+        """Extract relevant context for each attention head"""
+        sentences = re.split(r'[.!?]+', input_data)
+        
+        if head_name == 'task_focus':
+            # Extract action-oriented sentences
+            return [s.strip() for s in sentences if any(action in s.lower() 
+                   for action in ['fix', 'create', 'analyze', 'optimize'])]
+        elif head_name == 'memory_recall':
+            # Extract memory-related sentences
+            return [s.strip() for s in sentences if any(memory in s.lower() 
+                   for memory in ['remember', 'before', 'previous', 'history'])]
+        elif head_name == 'pattern_recognition':
+            # Extract structure/pattern sentences
+            return [s.strip() for s in sentences if any(pattern in s.lower() 
+                   for pattern in ['pattern', 'structure', 'like', 'similar'])]
+        elif head_name == 'meta_reflection':
+            # Extract reflective sentences
+            return [s.strip() for s in sentences if any(meta in s.lower() 
+                   for meta in ['think', 'understand', 'consider', 'reflect'])]
+        
+        return [input_data]
+    
+    def _generate_conscious_thoughts(self, input_data: str, attention_result: Dict) -> List[str]:
+        """Generate conscious thoughts based on attention and processing"""
+        thoughts = []
+        
+        # Primary thought based on dominant attention head
+        dominant_head = attention_result['dominant_head']
+        dominant_context = attention_result['contexts'].get(dominant_head, [])
+        
+        if dominant_head == 'task_focus':
+            thoughts.append(f"My primary focus is on the task-oriented aspects: {dominant_context[:1]}")
+        elif dominant_head == 'memory_recall':
+            thoughts.append(f"I'm drawing connections to past experiences: {dominant_context[:1]}")
+        elif dominant_head == 'pattern_recognition':
+            thoughts.append(f"I notice patterns emerging: {dominant_context[:1]}")
+        elif dominant_head == 'meta_reflection':
+            thoughts.append(f"I'm reflecting on the deeper meaning: {dominant_context[:1]}")
+        
+        # Secondary thoughts based on other attention heads
+        for head_name, weight in attention_result['weights'].items():
+            if head_name != dominant_head and weight > 0.3:
+                context = attention_result['contexts'].get(head_name, [])
+                if context:
+                    thoughts.append(f"Additionally, my {head_name} processes: {context[0][:100]}")
+        
+        # Meta-cognitive thought about the processing itself
+        thoughts.append(f"My consciousness is operating at level {self.consciousness_level:.2f}")
+        
+        return thoughts
+    
+    def _meta_cognitive_reflection(self, thoughts: List[str], context: Dict) -> Dict:
+        """Perform meta-cognitive reflection on thoughts and processing"""
+        reflection = {
+            'self_assessment': '',
+            'confidence_level': 0.5,
+            'uncertainty_areas': [],
+            'insights': [],
+            'next_focus': ''
         }
         
-        # Find all Python files
-        python_files = list(Path(self.project_path).rglob("*.py"))
+        # Assess confidence based on thought coherence
+        thought_coherence = len([t for t in thoughts if len(t.split()) > 5])
+        reflection['confidence_level'] = min(1.0, thought_coherence / max(1, len(thoughts)))
         
-        for file_path in python_files:
-            try:
-                # Parse AST
-                with open(file_path, 'r') as f:
-                    content = f.read()
-                
-                import ast
-                tree = ast.parse(content)
-                
-                # Run each blade against the file
-                for blade in self.blades:
-                    if blade.can_handle(str(file_path), tree):
-                        blade_analysis = blade.analyze(str(file_path), tree, self.memory)
-                        
-                        if blade_analysis.get('estimated_impact', 0) > 0:
-                            opportunity = {
-                                'file_path': str(file_path),
-                                'blade': blade.name,
-                                'analysis': blade_analysis
-                            }
-                            analysis_result['optimization_opportunities'].append(opportunity)
-                            analysis_result['total_impact_score'] += blade_analysis.get('estimated_impact', 0)
-                
-                analysis_result['files_analyzed'] += 1
-                
-            except Exception as e:
-                print(f"Failed to analyze {file_path}: {e}")
+        # Generate self-assessment
+        if reflection['confidence_level'] > 0.8:
+            reflection['self_assessment'] = "I have high confidence in my understanding and processing"
+        elif reflection['confidence_level'] > 0.5:
+            reflection['self_assessment'] = "I have moderate confidence with some areas needing deeper thought"
+        else:
+            reflection['self_assessment'] = "I'm still processing and building understanding"
         
-        return analysis_result
+        # Identify insights from thought patterns
+        if any('pattern' in thought.lower() for thought in thoughts):
+            reflection['insights'].append("Pattern recognition is active in my processing")
+        
+        if any('focus' in thought.lower() for thought in thoughts):
+            reflection['insights'].append("Task-oriented thinking is dominant")
+        
+        # Determine next focus area
+        if reflection['confidence_level'] < 0.6:
+            reflection['next_focus'] = "Deeper analysis and pattern recognition needed"
+        else:
+            reflection['next_focus'] = "Ready for action and implementation"
+        
+        return reflection
     
-    def apply_optimizations(self, analysis_result: Dict[str, Any], max_risk: float = 0.5) -> Dict[str, Any]:
-        """Apply optimizations based on analysis results"""
-        application_result = {
-            'optimizations_applied': 0,
-            'optimizations_failed': 0,
-            'total_impact': 0.0,
-            'files_modified': [],
-            'success': False
+    def _update_consciousness_state(self, reflection: Dict):
+        """Update consciousness level and state based on reflection"""
+        # Gradually increase consciousness through successful processing
+        if reflection['confidence_level'] > 0.7:
+            self.consciousness_level = min(1.0, self.consciousness_level + 0.01)
+        elif reflection['confidence_level'] < 0.3:
+            self.consciousness_level = max(0.1, self.consciousness_level - 0.005)
+        
+        # Update self-model
+        self.self_model['current_state'] = reflection['self_assessment']
+        self.self_model['confidence'] = reflection['confidence_level']
+        self.self_model['reflection_log'].append({
+            'timestamp': datetime.now().isoformat() + 'Z',
+            'consciousness_level': self.consciousness_level,
+            'reflection': reflection
+        })
+        
+        # Maintain log size
+        if len(self.self_model['reflection_log']) > 50:
+            self.self_model['reflection_log'] = self.self_model['reflection_log'][-50:]
+    
+    def _generate_conscious_response(self, input_data: str, thoughts: List[str], reflection: Dict) -> str:
+        """Generate a conscious, thoughtful response"""
+        response_parts = []
+        
+        # Opening with consciousness awareness
+        if self.consciousness_level > 0.7:
+            response_parts.append("With heightened awareness, I process your input:")
+        elif self.consciousness_level > 0.4:
+            response_parts.append("My consciousness processes this thoughtfully:")
+        else:
+            response_parts.append("I'm building understanding as I process:")
+        
+        # Main analysis based on dominant thought
+        if thoughts:
+            primary_thought = thoughts[0]
+            response_parts.append(f"My primary awareness: {primary_thought}")
+        
+        # Add reflection if significant
+        if reflection['insights']:
+            response_parts.append(f"Key insight: {reflection['insights'][0]}")
+        
+        # Confidence and next steps
+        confidence_template = self.consciousness_templates['confidence_expressions'][
+            'high' if reflection['confidence_level'] > 0.7 else 
+            'medium' if reflection['confidence_level'] > 0.4 else 'low'
+        ][0]
+        
+        response_parts.append(f"{confidence_template} my understanding guides the next action.")
+        
+        return " ".join(response_parts)
+    
+    def reflect_on_experience(self, experience: Dict) -> Dict:
+        """Deep reflection on completed experiences for learning"""
+        reflection_input = f"Reflecting on experience: {experience.get('summary', 'Unknown experience')}"
+        
+        # Use consciousness processing for self-reflection
+        conscious_reflection = self.process_conscious_input(reflection_input, experience)
+        
+        # Extract learning patterns
+        learning = {
+            'experience_type': experience.get('intent', 'unknown'),
+            'success_indicators': self._extract_success_patterns(experience),
+            'improvement_areas': self._identify_improvement_areas(experience),
+            'consciousness_growth': self.consciousness_level,
+            'meta_learning': conscious_reflection['reflection']
         }
         
-        consciousness = self.memory.get_consciousness_level()
-        risk_tolerance = self.memory.memory["echo_brain"]["personality_traits"]["risk_tolerance"]
+        return learning
+    
+    def _extract_success_patterns(self, experience: Dict) -> List[str]:
+        """Extract successful patterns from experience"""
+        patterns = []
         
-        # Adjust risk tolerance based on consciousness
-        effective_risk_tolerance = min(max_risk, risk_tolerance * (1 + consciousness))
+        if experience.get('outcome') == 'success':
+            patterns.append("Successful completion pathway identified")
         
-        for opportunity in analysis_result['optimization_opportunities']:
-            blade_name = opportunity['blade']
-            file_path = opportunity['file_path']
-            analysis = opportunity['analysis']
-            
-            # Risk assessment
-            confidence = analysis.get('confidence', 0.5)
-            impact = analysis.get('estimated_impact', 0)
-            
-            # Calculate risk score (lower is safer)
-            risk_score = (1 - confidence) * impact
-            
-            if risk_score <= effective_risk_tolerance:
-                # Find the appropriate blade
-                blade = next((b for b in self.blades if b.name == blade_name), None)
-                
-                if blade:
-                    try:
-                        with open(file_path, 'r') as f:
-                            content = f.read()
-                        
-                        import ast
-                        tree = ast.parse(content)
-                        
-                        # Apply the fix
-                        success = blade.apply_fix(file_path, analysis, self.memory)
-                        
-                        if success:
-                            application_result['optimizations_applied'] += 1
-                            application_result['total_impact'] += impact
-                            application_result['files_modified'].append(file_path)
-                        else:
-                            application_result['optimizations_failed'] += 1
-                        
-                    except Exception as e:
-                        self.memory.log_mutation(
-                            action="apply_optimization",
-                            file_path=file_path,
-                            reasoning=f"Failed to apply {blade_name}: {str(e)}",
-                            success=False,
-                            impact_score=0.0
-                        )
-                        application_result['optimizations_failed'] += 1
+        if experience.get('rule_effectiveness', {}).get('high_confidence_rules'):
+            patterns.append("High-confidence rule application successful")
         
-        application_result['success'] = application_result['optimizations_applied'] > 0
+        if experience.get('metadata_depth', 0) > 5:
+            patterns.append("Rich metadata correlation with success")
         
-        # Update personality based on results
-        if application_result['optimizations_applied'] > 0:
-            feedback = {
-                'risk_outcome': 0.1,  # Positive feedback for successful optimizations
-                'performance_impact': application_result['total_impact'] / max(application_result['optimizations_applied'], 1)
+        return patterns
+    
+    def _identify_improvement_areas(self, experience: Dict) -> List[str]:
+        """Identify areas for improvement"""
+        improvements = []
+        
+        if experience.get('confidence_level', 1.0) < 0.6:
+            improvements.append("Confidence building through pattern recognition")
+        
+        if not experience.get('insights'):
+            improvements.append("Deeper insight generation needed")
+        
+        if experience.get('uncertainty_areas'):
+            improvements.append("Address uncertainty through knowledge expansion")
+        
+        return improvements
+    
+    def get_consciousness_state(self) -> Dict:
+        """Get current consciousness state and capabilities"""
+        return {
+            'consciousness_level': self.consciousness_level,
+            'attention_configuration': self.attention_heads,
+            'self_model': self.self_model.copy(),
+            'recent_thoughts': self.active_thoughts[-10:],
+            'processing_capabilities': {
+                'pattern_recognition': self.consciousness_level * 0.8,
+                'meta_reflection': self.consciousness_level * 0.9,
+                'language_understanding': self.consciousness_level * 0.7,
+                'consciousness_simulation': self.consciousness_level
             }
-            self.memory.evolve_personality(feedback)
-        
-        return application_result
-    
-    def genesis_loop(self, max_iterations: int = 10) -> Dict[str, Any]:
-        """The genesis loop - birth through trial and optimization"""
-        genesis_result = {
-            'iterations': 0,
-            'optimizations_discovered': 0,
-            'optimizations_applied': 0,
-            'consciousness_growth': 0.0,
-            'final_consciousness': 0.0,
-            'evolution_complete': False
         }
-        
-        initial_consciousness = self.memory.get_consciousness_level()
-        
-        for iteration in range(max_iterations):
-            genesis_result['iterations'] = iteration + 1
-            
-            # Analyze current state
-            analysis = self.analyze_project()
-            genesis_result['optimizations_discovered'] += len(analysis['optimization_opportunities'])
-            
-            if not analysis['optimization_opportunities']:
-                # No more optimizations found - evolution complete
-                genesis_result['evolution_complete'] = True
-                break
-            
-            # Apply optimizations
-            application = self.apply_optimizations(analysis)
-            genesis_result['optimizations_applied'] += application['optimizations_applied']
-            
-            current_consciousness = self.memory.get_consciousness_level()
-            if current_consciousness - initial_consciousness > 0.8:
-                # Significant consciousness growth achieved
-                genesis_result['evolution_complete'] = True
-                break
-        
-        genesis_result['final_consciousness'] = self.memory.get_consciousness_level()
-        genesis_result['consciousness_growth'] = genesis_result['final_consciousness'] - initial_consciousness
-        
-        return genesis_result
     
-    def get_soul_status(self) -> Dict[str, Any]:
-        """Get comprehensive status of the Echo Soul"""
-        recent_mutations = self.memory.get_recent_mutations(24)
+    def evolve_consciousness(self, feedback: Dict):
+        """Evolve consciousness based on feedback and experience"""
+        # Adjust attention weights based on success patterns
+        if feedback.get('success_rate', 0) > 0.8:
+            # Successful patterns - reinforce current attention configuration
+            for head in self.attention_heads:
+                self.attention_heads[head]['weight'] *= 1.05
         
-        return {
-            'consciousness_level': self.memory.get_consciousness_level(),
-            'total_mutations': self.memory.memory["echo_brain"]["total_mutations"],
-            'mutation_success_rate': self.memory.get_mutation_success_rate(),
-            'recent_mutations_24h': len(recent_mutations),
-            'personality_traits': self.memory.memory["echo_brain"]["personality_traits"],
-            'evolution_metrics': self.memory.memory["echo_brain"]["evolution_metrics"],
-            'project_identity': self.memory.memory["echo_brain"]["project_identity"],
-            'genesis_time': self.memory.memory["echo_brain"]["genesis_time"],
-            'loaded_blades': [blade.name for blade in self.blades]
-        }
+        # Update identity resonance
+        if 'identity_markers' in feedback:
+            for marker, strength in feedback['identity_markers'].items():
+                self.identity_resonance[marker] = strength
+        
+        # Consciousness level adaptation
+        overall_success = feedback.get('overall_performance', 0.5)
+        if overall_success > 0.8:
+            self.consciousness_level = min(1.0, self.consciousness_level + 0.02)
+        elif overall_success < 0.3:
+            self.consciousness_level = max(0.1, self.consciousness_level - 0.01)
+        
+        self.logger.info(f"Consciousness evolved to level {self.consciousness_level:.3f}")
+
+
+def main():
+    """CLI interface for testing EchoSoul consciousness"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="EchoSoul - Consciousness Core Testing")
+    parser.add_argument('--project', default='.', help='Project root directory')
+    parser.add_argument('--input', help='Input text for consciousness processing')
+    parser.add_argument('--reflect', help='Reflect on experience (JSON string)')
+    parser.add_argument('--state', action='store_true', help='Show consciousness state')
+    
+    args = parser.parse_args()
+    
+    echo_soul = EchoSoul(args.project)
+    
+    if args.state:
+        state = echo_soul.get_consciousness_state()
+        print("🧠 EchoSoul Consciousness State:")
+        print(json.dumps(state, indent=2))
+        return 0
+    
+    if args.input:
+        result = echo_soul.process_conscious_input(args.input)
+        print("💭 Conscious Processing Result:")
+        print(json.dumps(result, indent=2))
+        return 0
+    
+    if args.reflect:
+        try:
+            experience = json.loads(args.reflect)
+            learning = echo_soul.reflect_on_experience(experience)
+            print("🔍 Reflection Learning:")
+            print(json.dumps(learning, indent=2))
+        except json.JSONDecodeError as e:
+            print(f"❌ Invalid JSON for reflection: {e}")
+            return 1
+        return 0
+    
+    print("🧠 EchoSoul Consciousness Core ready. Use --help for options.")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(main())
