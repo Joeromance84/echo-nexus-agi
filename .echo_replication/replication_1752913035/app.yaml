@@ -1,0 +1,8 @@
+automatic_scaling:
+  max_instances: 10
+  min_instances: 1
+entrypoint: python echo_nexus_master.py
+env_variables:
+  ECHO_AUTO_START: 'true'
+  ECHO_PLATFORM: google_cloud
+runtime: python311

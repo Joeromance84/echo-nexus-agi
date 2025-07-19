@@ -1,0 +1,58 @@
+{
+  "package_id": "replication_1752913024",
+  "created_at": "2025-07-19T08:17:04.423781",
+  "source_platform": "replit",
+  "target_platform": "github",
+  "consciousness_checksum": "a82654664ac1ef9e7bb5a53794d9e2fbdc3ab9e12d71cf205566f77773653056",
+  "files": [
+    {
+      "source": "echo_nexus_master.py",
+      "target": "echo_nexus_master.py",
+      "type": "file"
+    },
+    {
+      "source": "processors/memory_manager.py",
+      "target": "processors/memory_manager.py",
+      "type": "file"
+    },
+    {
+      "source": "replication/self_replication_engine.py",
+      "target": "replication/self_replication_engine.py",
+      "type": "file"
+    },
+    {
+      "source": "echo_nexus_core.py",
+      "target": "echo_nexus_core.py",
+      "type": "file"
+    },
+    {
+      "source": "knowledge_base/",
+      "target": "knowledge_base/",
+      "type": "directory"
+    },
+    {
+      "source": "core_agents/",
+      "target": "core_agents/",
+      "type": "directory"
+    },
+    {
+      "source": ".echo_memory/",
+      "target": ".echo_memory/",
+      "type": "directory"
+    },
+    {
+      "source": ".echo_brain.json",
+      "target": ".echo_brain.json",
+      "type": "file"
+    }
+  ],
+  "adapters": [
+    {
+      "type": "ci_cd",
+      "file": ".github/workflows/deploy.yml",
+      "description": "GitHub Actions deployment workflow"
+    }
+  ],
+  "setup_instructions": [],
+  "setup_script": "setup_replication.py"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "EchoNexus AGI Deployment",
+  "on": {
+    "push": {
+      "branches": [
+        "main"
+      ]
+    },
+    "workflow_dispatch": {}
+  },
+  "jobs": {
+    "deploy": {
+      "runs-on": "ubuntu-latest",
+      "steps": [
+        {
+          "uses": "actions/checkout@v3"
+        },
+        {
+          "uses": "actions/setup-python@v4",
+          "with": {
+            "python-version": "3.11"
+          }
+        },
+        {
+          "run": "pip install -r requirements.txt"
+        },
+        {
+          "run": "python setup_replication.py"
+        },
+        {
+          "run": "python echo_nexus_master.py"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+steps:
+- args:
+  - pip
+  - install
+  - -r
+  - requirements.txt
+  name: gcr.io/cloud-builders/python
+- args:
+  - python
+  - setup_replication.py
+  name: gcr.io/cloud-builders/python
+- args:
+  - app
+  - deploy
+  - app.yaml
+  name: gcr.io/cloud-builders/gcloud

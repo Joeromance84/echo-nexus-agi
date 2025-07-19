@@ -1,0 +1,68 @@
+[
+  {
+    "timestamp": "2025-07-19T05:35:16.129797",
+    "event_type": "memory_stored",
+    "event_data": {
+      "memory_id": "baa0260c5f23c8ae",
+      "memory_type": "procedural",
+      "importance": 0.8,
+      "content_summary": "Learned how to optimize Python code using vectorization"
+    },
+    "memory_statistics": {
+      "total_memories": 1,
+      "memories_by_type": {
+        "episodic": 1,
+        "procedural": 1,
+        "semantic": 1,
+        "working": 0
+      },
+      "average_importance": 0.8,
+      "last_compression": null,
+      "search_operations": 0
+    }
+  },
+  {
+    "timestamp": "2025-07-19T05:35:16.129890",
+    "event_type": "memory_stored",
+    "event_data": {
+      "memory_id": "5ab5ee4aa608012c",
+      "memory_type": "episodic",
+      "importance": 0.6,
+      "content_summary": "User asked about machine learning algorithms"
+    },
+    "memory_statistics": {
+      "total_memories": 2,
+      "memories_by_type": {
+        "episodic": 1,
+        "procedural": 1,
+        "semantic": 1,
+        "working": 0
+      },
+      "average_importance": 0.7,
+      "last_compression": null,
+      "search_operations": 0
+    }
+  },
+  {
+    "timestamp": "2025-07-19T05:35:16.129985",
+    "event_type": "memory_stored",
+    "event_data": {
+      "memory_id": "f59c3ea992cc4bec",
+      "memory_type": "semantic",
+      "importance": 0.7,
+      "content_summary": "Neural networks are computational models inspired by biological networks"
+    },
+    "memory_statistics": {
+      "total_memories": 3,
+      "memories_by_type": {
+        "episodic": 1,
+        "procedural": 1,
+        "semantic": 1,
+        "working": 0
+      },
+      "average_importance": 0.6999999999999998,
+      "last_compression": null,
+      "search_operations": 0
+    }
+  }
+]

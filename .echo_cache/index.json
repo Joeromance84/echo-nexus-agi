@@ -1,0 +1,16 @@
+{
+  "24e1377492e6ccb4": {
+    "key": "24e1377492e6ccb4",
+    "content": ".echo_cache/artifacts/24e1377492e6ccb4.json",
+    "created_at": "2025-07-19 08:16:43.858155",
+    "expires_at": "2025-07-26 08:16:43.858145",
+    "access_count": 0,
+    "size_bytes": 540,
+    "tags": [
+      "ci_cd",
+      "pipeline",
+      "mobile-game-demo"
+    ],
+    "platform_source": "federation"
+  }
+}
