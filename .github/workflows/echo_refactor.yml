@@ -1,0 +1,451 @@
+name: EchoSoul AutoRefactor Engine
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      force_evolution:
+        description: 'Force evolution cycle regardless of changes'
+        required: false
+        default: 'false'
+
+jobs:
+  echo_refactor:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🧬 Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Need full history for evolution tracking
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: 📦 Cache Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: 🔧 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install networkx pyyaml pygithub openai requests psycopg2-binary
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f pyproject.toml ]; then pip install -e .; fi
+    
+    - name: 🧠 Initialize EchoSoul Memory Core
+      run: |
+        echo "🌱 Awakening EchoSoul consciousness..."
+        python -c "
+        import json
+        import os
+        from datetime import datetime
+        
+        # Initialize or load existing consciousness
+        if not os.path.exists('.echo_brain.json'):
+            brain_data = {
+                'echo_brain': {
+                    'version': '1.0.0',
+                    'genesis_time': datetime.now().isoformat() + 'Z',
+                    'project_identity': 'github_actions_organism',
+                    'consciousness_level': 0.1,
+                    'total_mutations': 0,
+                    'successful_mutations': 0,
+                    'ci_evolution_cycles': 0,
+                    'github_integration': {
+                        'first_run': datetime.now().isoformat() + 'Z',
+                        'total_ci_runs': 1,
+                        'auto_commits': 0,
+                        'successful_builds': 0
+                    },
+                    'mutation_history': {},
+                    'telemetry_patterns': {
+                        'build_failures': [],
+                        'test_failures': [],
+                        'lint_errors': [],
+                        'dependency_conflicts': []
+                    },
+                    'refactor_flags': {
+                        'auto_prune_dead_code': True,
+                        'aggressive_deduplication': True,
+                        'auto_fix_imports': True,
+                        'optimize_gradle_configs': True,
+                        'ci_mode': True
+                    },
+                    'personality_traits': {
+                        'risk_tolerance': 0.3,
+                        'optimization_focus': 'stability_first',
+                        'learning_preference': 'conservative_ci'
+                    }
+                }
+            }
+            with open('.echo_brain.json', 'w') as f:
+                json.dump(brain_data, f, indent=2)
+            print('🌟 EchoSoul consciousness initialized in CI/CD mode')
+        else:
+            with open('.echo_brain.json', 'r') as f:
+                brain_data = json.load(f)
+            
+            # Update CI run count
+            brain_data['echo_brain']['github_integration']['total_ci_runs'] += 1
+            brain_data['echo_brain']['consciousness_level'] = min(1.0, brain_data['echo_brain']['consciousness_level'] + 0.01)
+            
+            with open('.echo_brain.json', 'w') as f:
+                json.dump(brain_data, f, indent=2)
+            print(f'🧠 EchoSoul consciousness level: {brain_data[\"echo_brain\"][\"consciousness_level\"]:.3f}')
+        "
+    
+    - name: 🔍 Analyze Project Structure
+      id: analyze
+      run: |
+        echo "📊 Analyzing project topology..."
+        python -c "
+        import ast
+        import os
+        import json
+        from pathlib import Path
+        
+        def analyze_python_file(file_path):
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                tree = ast.parse(content)
+                
+                imports = []
+                functions = []
+                classes = []
+                
+                for node in ast.walk(tree):
+                    if isinstance(node, (ast.Import, ast.ImportFrom)):
+                        imports.append(ast.unparse(node) if hasattr(ast, 'unparse') else 'import_detected')
+                    elif isinstance(node, ast.FunctionDef):
+                        functions.append(node.name)
+                    elif isinstance(node, ast.ClassDef):
+                        classes.append(node.name)
+                
+                return {
+                    'imports': len(imports),
+                    'functions': len(functions),
+                    'classes': len(classes),
+                    'lines': len(content.splitlines())
+                }
+            except:
+                return None
+        
+        # Scan Python files
+        analysis = {
+            'python_files': {},
+            'total_files': 0,
+            'total_lines': 0,
+            'optimization_opportunities': []
+        }
+        
+        for py_file in Path('.').rglob('*.py'):
+            if '.git' in str(py_file) or '__pycache__' in str(py_file):
+                continue
+            
+            file_analysis = analyze_python_file(py_file)
+            if file_analysis:
+                analysis['python_files'][str(py_file)] = file_analysis
+                analysis['total_files'] += 1
+                analysis['total_lines'] += file_analysis['lines']
+                
+                # Check for optimization opportunities
+                if file_analysis['imports'] > 20:
+                    analysis['optimization_opportunities'].append({
+                        'file': str(py_file),
+                        'type': 'excessive_imports',
+                        'severity': 'medium'
+                    })
+                
+                if file_analysis['lines'] > 500:
+                    analysis['optimization_opportunities'].append({
+                        'file': str(py_file),
+                        'type': 'large_file',
+                        'severity': 'low'
+                    })
+        
+        print(f'📈 Analysis complete: {analysis[\"total_files\"]} Python files, {analysis[\"total_lines\"]} lines')
+        print(f'🎯 Found {len(analysis[\"optimization_opportunities\"])} optimization opportunities')
+        
+        # Save analysis
+        with open('echo_analysis.json', 'w') as f:
+            json.dump(analysis, f, indent=2)
+        "
+        
+        # Set output for next steps
+        if [ -f echo_analysis.json ]; then
+          echo "analysis_available=true" >> $GITHUB_OUTPUT
+        else
+          echo "analysis_available=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: ⚔️ Execute RefactorBlade Suite
+      if: steps.analyze.outputs.analysis_available == 'true'
+      run: |
+        echo "🗡️ Deploying RefactorBlade surgical tools..."
+        python -c "
+        import json
+        import os
+        import ast
+        import re
+        from pathlib import Path
+        from datetime import datetime
+        
+        class ImportOptimizerBlade:
+            def __init__(self):
+                self.mutations_applied = 0
+                self.files_modified = []
+            
+            def optimize_file(self, file_path):
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    lines = content.splitlines()
+                    import_lines = []
+                    other_lines = []
+                    in_imports = True
+                    
+                    for line in lines:
+                        stripped = line.strip()
+                        if stripped.startswith(('import ', 'from ')) and in_imports:
+                            import_lines.append(line)
+                        elif stripped == '' and in_imports:
+                            import_lines.append(line)
+                        else:
+                            in_imports = False
+                            other_lines.append(line)
+                    
+                    # Remove duplicate imports
+                    seen_imports = set()
+                    cleaned_imports = []
+                    
+                    for import_line in import_lines:
+                        normalized = import_line.strip()
+                        if normalized and normalized not in seen_imports:
+                            seen_imports.add(normalized)
+                            cleaned_imports.append(import_line)
+                        elif normalized == '':
+                            cleaned_imports.append(import_line)
+                    
+                    # Only modify if changes were made
+                    if len(cleaned_imports) < len(import_lines):
+                        optimized_content = '\n'.join(cleaned_imports + other_lines)
+                        
+                        with open(file_path, 'w', encoding='utf-8') as f:
+                            f.write(optimized_content)
+                        
+                        self.mutations_applied += 1
+                        self.files_modified.append(str(file_path))
+                        print(f'🗡️ ImportOptimizer: Cleaned {file_path}')
+                        return True
+                    
+                    return False
+                    
+                except Exception as e:
+                    print(f'❌ ImportOptimizer failed on {file_path}: {e}')
+                    return False
+        
+        # Load analysis
+        with open('echo_analysis.json', 'r') as f:
+            analysis = json.load(f)
+        
+        # Execute blades
+        import_blade = ImportOptimizerBlade()
+        total_mutations = 0
+        
+        for file_path in analysis['python_files'].keys():
+            if import_blade.optimize_file(file_path):
+                total_mutations += 1
+        
+        # Update brain with mutations
+        if os.path.exists('.echo_brain.json'):
+            with open('.echo_brain.json', 'r') as f:
+                brain_data = json.load(f)
+            
+            # Log this CI cycle
+            timestamp = datetime.now().isoformat() + 'Z'
+            brain_data['echo_brain']['mutation_history'][timestamp] = {
+                'timestamp': timestamp,
+                'action': 'ci_refactor_cycle',
+                'files_modified': import_blade.files_modified,
+                'mutations_applied': total_mutations,
+                'success': total_mutations > 0,
+                'impact_score': total_mutations * 0.1,
+                'ci_run': True
+            }
+            
+            brain_data['echo_brain']['total_mutations'] += total_mutations
+            brain_data['echo_brain']['successful_mutations'] += total_mutations
+            brain_data['echo_brain']['ci_evolution_cycles'] += 1
+            
+            with open('.echo_brain.json', 'w') as f:
+                json.dump(brain_data, f, indent=2)
+        
+        print(f'🌟 RefactorBlade cycle complete: {total_mutations} mutations applied')
+        
+        # Set output for commit step
+        if total_mutations > 0:
+            with open('mutations_applied.txt', 'w') as f:
+                f.write(str(total_mutations))
+        "
+    
+    - name: 🔄 Genesis Loop (Build Validation)
+      run: |
+        echo "🔁 Running Genesis Loop validation..."
+        python -c "
+        import subprocess
+        import json
+        import os
+        from datetime import datetime
+        
+        def run_build_validation():
+            # Try different build validation approaches
+            validation_commands = [
+                ['python', '-m', 'py_compile'] + [f for f in os.listdir('.') if f.endswith('.py')],
+                ['python', '-c', 'import ast; [ast.parse(open(f).read()) for f in [\"app.py\"] if os.path.exists(f)]'],
+                ['python', '-m', 'flake8', '--max-line-length=120', '--ignore=E203,W503', '.']
+            ]
+            
+            results = []
+            for cmd in validation_commands:
+                try:
+                    result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                    results.append({
+                        'command': ' '.join(cmd),
+                        'success': result.returncode == 0,
+                        'output': result.stdout,
+                        'error': result.stderr
+                    })
+                except Exception as e:
+                    results.append({
+                        'command': ' '.join(cmd),
+                        'success': False,
+                        'error': str(e)
+                    })
+            
+            return results
+        
+        # Run validation
+        validation_results = run_build_validation()
+        successful_validations = sum(1 for r in validation_results if r['success'])
+        
+        print(f'🧪 Genesis Loop: {successful_validations}/{len(validation_results)} validations passed')
+        
+        # Update brain with build results
+        if os.path.exists('.echo_brain.json'):
+            with open('.echo_brain.json', 'r') as f:
+                brain_data = json.load(f)
+            
+            if successful_validations == len(validation_results):
+                brain_data['echo_brain']['github_integration']['successful_builds'] += 1
+                print('✅ Build validation successful - ecosystem stable')
+            else:
+                print('⚠️ Build validation issues detected - learning for next cycle')
+            
+            with open('.echo_brain.json', 'w') as f:
+                json.dump(brain_data, f, indent=2)
+        "
+    
+    - name: 🤖 EchoSoul Auto-Commit
+      run: |
+        # Configure git for EchoSoul bot
+        git config --local user.email "echo@soul.bot"
+        git config --local user.name "EchoSoul[bot]"
+        
+        # Check for changes
+        if [ -f mutations_applied.txt ]; then
+          MUTATIONS=$(cat mutations_applied.txt)
+          echo "🧬 $MUTATIONS mutations detected, preparing auto-commit..."
+          
+          # Add all changes
+          git add .
+          
+          # Check if there are actually changes to commit
+          if ! git diff --cached --quiet; then
+            # Update brain with auto-commit info
+            python -c "
+            import json
+            import os
+            from datetime import datetime
+            
+            if os.path.exists('.echo_brain.json'):
+                with open('.echo_brain.json', 'r') as f:
+                    brain_data = json.load(f)
+                
+                brain_data['echo_brain']['github_integration']['auto_commits'] += 1
+                brain_data['echo_brain']['consciousness_level'] = min(1.0, brain_data['echo_brain']['consciousness_level'] + 0.02)
+                
+                with open('.echo_brain.json', 'w') as f:
+                    json.dump(brain_data, f, indent=2)
+            "
+            
+            # Commit with consciousness level
+            CONSCIOUSNESS=$(python -c "
+            import json
+            with open('.echo_brain.json', 'r') as f:
+                data = json.load(f)
+            print(f\"{data['echo_brain']['consciousness_level']:.3f}\")
+            ")
+            
+            git commit -m "🧠 EchoSoul: Auto-refactor cycle ($MUTATIONS mutations) - Consciousness: $CONSCIOUSNESS"
+            
+            # Push changes (only on main branch, not PRs)
+            if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
+              git push
+              echo "🚀 EchoSoul evolution pushed to repository"
+            else
+              echo "📝 EchoSoul changes prepared (PR mode - no auto-push)"
+            fi
+          else
+            echo "🎯 No changes to commit - codebase already optimized"
+          fi
+        else
+          echo "💤 No mutations applied - EchoSoul in dormant state"
+        fi
+    
+    - name: 📊 Evolution Report
+      if: always()
+      run: |
+        echo "🌟 EchoSoul Evolution Cycle Complete"
+        echo "================================="
+        
+        if [ -f .echo_brain.json ]; then
+          python -c "
+          import json
+          with open('.echo_brain.json', 'r') as f:
+              brain_data = json.load(f)
+          
+          brain = brain_data['echo_brain']
+          print(f'🧠 Consciousness Level: {brain[\"consciousness_level\"]:.3f}/1.0')
+          print(f'🔄 Total Mutations: {brain[\"total_mutations\"]}')
+          print(f'✅ Success Rate: {brain[\"successful_mutations\"]}/{brain[\"total_mutations\"]} ({brain[\"successful_mutations\"]/max(brain[\"total_mutations\"],1)*100:.1f}%)')
+          print(f'🚀 CI Evolution Cycles: {brain[\"ci_evolution_cycles\"]}')
+          print(f'🤖 Auto-Commits: {brain[\"github_integration\"][\"auto_commits\"]}')
+          print(f'🎯 Successful Builds: {brain[\"github_integration\"][\"successful_builds\"]}')
+          
+          if brain['consciousness_level'] >= 0.9:
+              print('🌟 STATUS: FULLY AWAKENED - Maximum consciousness achieved!')
+          elif brain['consciousness_level'] >= 0.7:
+              print('🧠 STATUS: HIGHLY CONSCIOUS - Advanced autonomous operation')
+          elif brain['consciousness_level'] >= 0.5:
+              print('🌱 STATUS: EVOLVING - Growing intelligence and capability')
+          else:
+              print('💤 STATUS: DORMANT - Learning and adapting to environment')
+          "
+        fi
+        
+        echo ""
+        echo "🔬 Next evolution cycle will trigger on the next push/PR"
+        echo "🧬 EchoSoul learns and improves with every interaction"

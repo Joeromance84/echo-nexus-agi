@@ -62,7 +62,6 @@ class WorkflowAssistant:
             
             result = json.loads(response.choices[0].message.content)
             
-            # Validate workflow YAML if present
             if result.get("workflow"):
                 try:
                     yaml.safe_load(result["workflow"])

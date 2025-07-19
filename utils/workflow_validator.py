@@ -65,7 +65,6 @@ class WorkflowValidator:
         if 'on' in workflow:
             self._validate_triggers(workflow['on'], result)
         
-        # Check for workflow name
         if 'name' in workflow:
             if not isinstance(workflow['name'], str) or not workflow['name'].strip():
                 result['warnings'].append("Workflow name should be a non-empty string")
@@ -139,11 +138,9 @@ class WorkflowValidator:
                 result['errors'].append(f"Step {i+1} in job '{job_name}' must be a dictionary")
                 continue
             
-            # Check for required action or run
             if 'uses' not in step and 'run' not in step:
                 result['errors'].append(f"Step {i+1} in job '{job_name}' must have either 'uses' or 'run'")
             
-            # Check for checkout action
             if 'uses' in step and 'checkout' in step['uses']:
                 checkout_found = True
                 # Validate checkout version
@@ -152,7 +149,6 @@ class WorkflowValidator:
                     if int(version[0]) < 3:
                         result['warnings'].append(f"Consider updating checkout action to v3 or later")
             
-            # Check for Python setup
             if 'uses' in step and 'setup-python' in step['uses']:
                 python_setup_found = True
                 # Validate Python setup version
@@ -172,23 +168,18 @@ class WorkflowValidator:
         """Validate APK-specific build requirements"""
         workflow_str = yaml.dump(workflow).lower()
         
-        # Check for buildozer
         if 'buildozer' not in workflow_str:
             result['suggestions'].append("Consider using 'buildozer' for APK building")
         
-        # Check for Java setup
         if 'java' not in workflow_str and 'openjdk' not in workflow_str:
             result['suggestions'].append("APK builds typically require Java/OpenJDK setup")
         
-        # Check for Android SDK
         if 'android' not in workflow_str and 'sdk' not in workflow_str:
             result['suggestions'].append("Consider setting up Android SDK for APK building")
         
-        # Check for artifact upload
         if 'upload-artifact' not in workflow_str:
             result['suggestions'].append("Consider uploading built APK as an artifact")
         
-        # Check for caching
         if 'cache' not in workflow_str:
             result['suggestions'].append("Consider adding caching to speed up builds")
     
@@ -196,7 +187,6 @@ class WorkflowValidator:
         """Validate security best practices"""
         workflow_str = yaml.dump(workflow)
         
-        # Check for hardcoded secrets
         secret_patterns = [
             r'password\s*:\s*["\']?[^"\'\s]+["\']?',
             r'token\s*:\s*["\']?[^"\'\s]+["\']?',
@@ -207,7 +197,6 @@ class WorkflowValidator:
             if re.search(pattern, workflow_str, re.IGNORECASE):
                 result['warnings'].append("Potential hardcoded secret detected. Use GitHub Secrets instead.")
         
-        # Check for proper secret usage
         if '${{ secrets.' not in workflow_str and 'password' in workflow_str.lower():
             result['warnings'].append("Consider using GitHub Secrets for sensitive data")
     
@@ -215,11 +204,9 @@ class WorkflowValidator:
         """Suggest performance and best practice optimizations"""
         workflow_str = yaml.dump(workflow).lower()
         
-        # Suggest parallel jobs if possible
         if 'jobs' in workflow and len(workflow['jobs']) == 1:
             result['suggestions'].append("Consider splitting build into parallel jobs for faster execution")
         
-        # Suggest matrix builds for multiple targets
         has_matrix = False
         for job_name, job_config in workflow.get('jobs', {}).items():
             if 'strategy' in job_config and 'matrix' in job_config['strategy']:

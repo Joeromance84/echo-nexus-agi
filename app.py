@@ -4,7 +4,6 @@ import json
 import os
 from datetime import datetime
 import hashlib
-# from utils.openai_helper import WorkflowAssistant  # Removed OpenAI dependency
 from utils.workflow_validator import WorkflowValidator
 from utils.github_helper import GitHubHelper
 from utils.database_helper import DatabaseHelper
@@ -14,7 +13,6 @@ from data.policies import GitHubPolicies
 # Initialize session state
 if 'messages' not in st.session_state:
     st.session_state.messages = []
-# if 'workflow_assistant' not in st.session_state:
     # st.session_state.workflow_assistant = WorkflowAssistant()  # Removed OpenAI dependency
 if 'workflow_validator' not in st.session_state:
     st.session_state.workflow_validator = WorkflowValidator()
@@ -56,7 +54,6 @@ try:
 except:
     st.info("🌱 EchoSoul initializing...")
 
-# Sidebar for navigation and settings
 with st.sidebar:
     st.header("Navigation")
     page = st.selectbox(
@@ -170,7 +167,6 @@ if page == "Command Builder":
                 st.write("**Command Recognized:** GitHub Authentication Verification")
                 st.write("**Backend Action:** Using PyGithub to verify GitHub token and user identity")
                 
-                # Extract username if specified in command
                 target_username = None
                 words = command_lower.split()
                 for i, word in enumerate(words):
@@ -238,7 +234,6 @@ if page == "Command Builder":
                 st.write("**Command Recognized:** Build Trigger")
                 st.write("**Backend Action:** Using PyGithub to check workflow files and monitor builds")
                 
-                # Check for workflow files
                 workflow_check = st.session_state.github_helper.smart_file_check(repo_url, ".github/workflows/build-apk.yml")
                 
                 if workflow_check['exists']:
@@ -525,7 +520,6 @@ if page == "Command Builder":
                             if genesis_result.get('error'):
                                 st.error(f"Genesis error: {genesis_result['error']}")
                             
-                            # Show progress even if incomplete
                             progress_data = {
                                 'Attempts': genesis_result.get('total_attempts', 0),
                                 'Optimizations': genesis_result.get('optimizations_applied', 0), 
@@ -764,7 +758,6 @@ your-repo/
                 del st.session_state.selected_help
             st.rerun()
     
-    # Show recent chat history if any
     chat_history = st.session_state.database_helper.get_chat_history(st.session_state.user_session, limit=5)
     if chat_history:
         st.markdown("---")
@@ -1048,7 +1041,6 @@ elif page == "My Workflows":
                         st.subheader("Workflow YAML")
                         st.code(workflow['workflow_yaml'], language="yaml")
                         
-                        # Get build history for this workflow
                         build_history = st.session_state.database_helper.get_build_history(workflow['id'])
                         if build_history:
                             st.subheader("Build History")
@@ -1130,7 +1122,6 @@ elif page == "Validation Tools":
     
     st.subheader("YAML Workflow Validator")
     
-    # Text area for workflow input
     workflow_input = st.text_area(
         "Paste your GitHub Actions workflow YAML here:",
         height=300,

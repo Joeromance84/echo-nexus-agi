@@ -46,7 +46,6 @@ class EchoNexusBrain:
         self.processing_active = False
         self._ensure_schema()
         
-        # Response strategies for different event types
         self.event_handlers = {
             EventType.CRASH_PROCESSED: self._handle_crash_event,
             EventType.RESONANCE_RECEIVED: self._handle_resonance_event,
@@ -232,7 +231,6 @@ class EchoNexusBrain:
             )
             
             if refactor_event['success']:
-                # Process the event immediately for autonomous operation
                 processing_result = self.process_events(max_events=1)
                 
                 if processing_result['success']:
@@ -338,7 +336,6 @@ class EchoNexusBrain:
                     'reasoning': 'High-frequency crash detected, requires immediate attention'
                 })
                 
-                # Create GitHub issue for high-priority crashes
                 if 'repo_url' in crash_data:
                     issue_result = self._create_crash_issue(crash_data)
                     if issue_result.get('success'):
@@ -448,7 +445,6 @@ class EchoNexusBrain:
             
             changes = []
             
-            # Trigger auto-repair if repo URL is available
             if repo_url:
                 # Import here to avoid circular dependency
                 from .code_intelligence import AutoRepairEngine
@@ -843,7 +839,6 @@ class EchoNexusBrain:
             # This is a simplified implementation
             current_time = datetime.now()
             
-            # Sample metrics (in a real implementation, these would come from actual data)
             metrics = [
                 ('system_responsiveness', 0.95),
                 ('error_rate', 0.02),

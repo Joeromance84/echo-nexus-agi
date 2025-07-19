@@ -187,7 +187,6 @@ class GitHubPolicies:
     def _check_security_compliance(self, workflow: Dict, workflow_str: str, result: Dict):
         """Check security-related compliance"""
         
-        # Check for hardcoded secrets
         secret_patterns = [
             r'password\s*[:=]\s*["\']?[a-zA-Z0-9@#$%^&*()]+["\']?',
             r'token\s*[:=]\s*["\']?[a-zA-Z0-9]+["\']?',
@@ -200,7 +199,6 @@ class GitHubPolicies:
                 if '${{ secrets.' not in workflow_str:
                     result['issues'].append("Potential hardcoded secret detected. Use GitHub Secrets instead.")
         
-        # Check for unpinned actions
         if 'jobs' in workflow:
             for job_name, job_config in workflow['jobs'].items():
                 if 'steps' in job_config:
@@ -214,34 +212,28 @@ class GitHubPolicies:
         if 'permissions' not in workflow:
             result['recommendations'].append("Consider adding explicit permissions to limit GITHUB_TOKEN scope")
         
-        # Check for secrets exposure in logs
         if 'echo' in workflow_str and '${{' in workflow_str:
             result['warnings'].append("Be careful not to expose secrets in echo statements")
     
     def _check_resource_compliance(self, workflow: Dict, workflow_str: str, result: Dict):
         """Check resource usage compliance"""
         
-        # Check for caching
         if 'cache' not in workflow_str:
             result['recommendations'].append("Consider using actions/cache to improve build performance")
         
-        # Check for concurrency control
         if 'concurrency' not in workflow:
             result['recommendations'].append("Consider adding concurrency control to cancel redundant workflows")
         
-        # Check for artifact retention
         if 'upload-artifact' in workflow_str:
             if 'retention-days' not in workflow_str:
                 result['warnings'].append("Consider setting retention-days for artifacts to manage storage costs")
         
-        # Check for unnecessary parallel execution
         if 'jobs' in workflow and len(workflow['jobs']) > 10:
             result['warnings'].append("Large number of parallel jobs may exceed limits and increase costs")
     
     def _check_limits_compliance(self, workflow: Dict, workflow_str: str, result: Dict):
         """Check workflow limits compliance"""
         
-        # Check for timeouts
         timeout_found = False
         if 'jobs' in workflow:
             for job_name, job_config in workflow['jobs'].items():
@@ -272,13 +264,11 @@ class GitHubPolicies:
     def _check_content_compliance(self, workflow: Dict, workflow_str: str, result: Dict):
         """Check content policy compliance"""
         
-        # Check for cryptocurrency mining indicators
         mining_keywords = ['mining', 'miner', 'cryptocurrency', 'bitcoin', 'ethereum', 'monero', 'hashrate']
         for keyword in mining_keywords:
             if keyword in workflow_str:
                 result['warnings'].append(f"Workflow contains '{keyword}' - ensure this is not for cryptocurrency mining")
         
-        # Check for suspicious network activity
         suspicious_patterns = [
             r'curl.*-X\s+POST.*password',
             r'wget.*--post-data',
@@ -293,24 +283,20 @@ class GitHubPolicies:
     def _check_apk_compliance(self, workflow: Dict, workflow_str: str, result: Dict):
         """Check APK build specific compliance"""
         
-        # Check for legitimate build tools
         if 'buildozer' in workflow_str or 'gradle' in workflow_str:
             # This is good - using legitimate Android build tools
             pass
         elif 'android' in workflow_str:
             result['recommendations'].append("Ensure you're using legitimate Android development tools")
         
-        # Check for signing (recommended for production)
         if 'release' in workflow_str:
             if 'keystore' not in workflow_str and 'signing' not in workflow_str:
                 result['recommendations'].append("Consider adding APK signing for release builds")
         
-        # Check for proper artifact handling
         if 'apk' in workflow_str:
             if 'upload-artifact' not in workflow_str:
                 result['recommendations'].append("Consider uploading APK as workflow artifact")
         
-        # Check for license compliance
         if 'license' not in workflow_str:
             result['recommendations'].append("Ensure proper licensing compliance for your APK")
     

@@ -127,7 +127,6 @@ class ErrorGenomeDatabase:
             learning_insights = self._update_learning_weights(genome, mutation_data)
             result['learning_insights'] = learning_insights
             
-            # Check for genetic relationships with other bugs
             self._discover_genome_relationships(genome['id'], mutation_data)
             
             result['success'] = True
@@ -223,7 +222,6 @@ class ErrorGenomeDatabase:
                 self.database_helper.execute_query(query, [fix_pattern, genome_hash])
                 
             else:
-                # Increase mutation strength for failed fixes
                 query = """
                 UPDATE error_genome 
                 SET mutation_strength = mutation_strength + 1,
@@ -318,7 +316,6 @@ class ErrorGenomeDatabase:
             'confidence': 0.0
         }
         
-        # Check if mutation patterns suggest evolution
         occurrence_threshold = 5
         mutation_threshold = 3
         
@@ -379,7 +376,6 @@ class ErrorGenomeDatabase:
             'pattern_strength': genome['learning_weight']
         }
         
-        # Increase learning weight for frequently occurring bugs
         if genome['occurrence_count'] > 10:
             weight_increase = 0.1
             insights['weight_change'] = weight_increase

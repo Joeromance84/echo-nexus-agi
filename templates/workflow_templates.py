@@ -291,7 +291,6 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        # Update buildozer.spec for signing if keystore exists
         if [ -f release.keystore ]; then
           echo "android.release_artifact = apk" >> buildozer.spec
           echo "android.debug_artifact = apk" >> buildozer.spec
@@ -513,7 +512,6 @@ jobs:
             use_case = template_data.get('use_case', '').lower()
             description = template_data.get('description', '').lower()
             
-            # Check if any keyword matches
             for keyword in use_case_keywords:
                 if keyword.lower() in use_case or keyword.lower() in description:
                     matching_templates[template_id] = template_data
@@ -583,12 +581,10 @@ jobs:
             if 'release' not in template['content']:
                 result['issues'].append("Template doesn't support release builds")
         
-        # Check for signing requirements
         if project_info.get('needs_signing', False):
             if 'keystore' not in template['content'].lower():
                 result['issues'].append("Template doesn't include APK signing configuration")
         
-        # Check for caching needs
         if project_info.get('needs_caching', False):
             if 'cache' not in template['content'].lower():
                 result['recommendations'].append("Consider using a cached template for better performance")

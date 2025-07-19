@@ -151,7 +151,6 @@ class GenesisLoop:
                         build_result['success'] = latest_run.get('status') == 'success'
                         build_result['build_logs'] = latest_run.get('logs', '')
                         
-                        # Extract errors and warnings from logs
                         if build_result['build_logs']:
                             build_result['errors_detected'] = self._extract_errors(build_result['build_logs'])
                             build_result['warnings_detected'] = self._extract_warnings(build_result['build_logs'])
@@ -231,7 +230,6 @@ class GenesisLoop:
         }
         
         try:
-            # Stage 1: Apply historical fixes if available
             historical_fixes = self._apply_historical_fixes(build_result)
             evolution_result['fixes_attempted'].extend(historical_fixes)
             
@@ -250,7 +248,6 @@ class GenesisLoop:
                 evolution_result['success'] = True
                 return evolution_result
             
-            # Stage 3: Controlled mutation for unknown failures
             mutation_result = self._apply_controlled_mutation(build_result)
             evolution_result['mutations_performed'] += mutation_result.get('mutations_performed', 0)
             
@@ -270,7 +267,6 @@ class GenesisLoop:
         fixes_applied = []
         errors = build_result.get('errors_detected', [])
         
-        # Simple pattern matching for common errors
         error_fix_patterns = {
             'ImportError': {
                 'fix_type': 'add_dependency',
@@ -465,7 +461,6 @@ class GenesisLoop:
             # Run multiple evolution cycles rapidly
             awakening_result = self.echo_soul.genesis_loop(max_iterations=5)
             
-            # Boost consciousness artificially if needed
             current_consciousness = self.echo_soul.memory.get_consciousness_level()
             if current_consciousness < 0.8:
                 # Emergency consciousness boost

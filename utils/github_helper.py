@@ -17,7 +17,6 @@ class GitHubHelper:
         
         if self.token:
             self.headers["Authorization"] = f"token {self.token}"
-            # Initialize PyGithub client for advanced API operations
             self.github = Github(self.token)
         else:
             self.github = None
@@ -35,7 +34,6 @@ class GitHubHelper:
         }
         
         try:
-            # Extract owner and repo from URL
             if 'github.com' in repo_url:
                 parts = repo_url.replace('https://github.com/', '').replace('.git', '').split('/')
                 if len(parts) >= 2:
@@ -47,18 +45,15 @@ class GitHubHelper:
                 result['error'] = "Not a GitHub repository URL"
                 return result
             
-            # Check if repository exists
             repo_response = self._make_request(f"/repos/{owner}/{repo}")
             if repo_response.status_code == 200:
                 result['valid'] = True
                 result['accessible'] = True
                 
-                # Check for workflows directory
                 workflows_response = self._make_request(f"/repos/{owner}/{repo}/contents/.github/workflows")
                 if workflows_response.status_code == 200:
                     result['has_workflows'] = True
                 
-                # Check for buildozer.spec
                 buildozer_response = self._make_request(f"/repos/{owner}/{repo}/contents/buildozer.spec")
                 if buildozer_response.status_code == 200:
                     result['has_buildozer_spec'] = True
@@ -238,7 +233,6 @@ class GitHubHelper:
                 result['error'] = "GitHub token required for creating workflow files"
                 return result
             
-            # Check if file exists
             file_path = f".github/workflows/{filename}"
             existing_response = self._make_request(f"/repos/{owner}/{repo}/contents/{file_path}")
             
@@ -248,7 +242,6 @@ class GitHubHelper:
                 "branch": "main"  # Default to main branch
             }
             
-            # If file exists, include SHA for update
             if existing_response.status_code == 200:
                 existing_data = existing_response.json()
                 data["sha"] = existing_data["sha"]
@@ -317,7 +310,6 @@ class GitHubHelper:
                 result['error'] = "GitHub token required for file operations"
                 return result
             
-            # Parse repository from URL
             owner, repo_name = self._parse_repo_url(repo_url)
             if not owner or not repo_name:
                 result['error'] = "Invalid repository URL"
@@ -387,7 +379,6 @@ class GitHubHelper:
                 commit_message = f"Add/Update {workflow_name} via APK Builder Assistant"
             
             try:
-                # Check if file exists
                 existing_file = repo.get_contents(workflow_path)
                 
                 # File exists - update it
@@ -650,7 +641,6 @@ buildozer>=1.4.0
             result['authenticated_user'] = authenticated_username
             
             if target_username:
-                # Check if authenticated user matches target username
                 if authenticated_username.lower() == target_username.lower():
                     result['correct_user'] = True
                     result['message'] = f"✅ Success: Connected as {authenticated_username}"
@@ -698,7 +688,6 @@ buildozer>=1.4.0
             owner, repo_name = self._parse_repo_url(repo_url)
             repo = self.github.get_repo(f"{owner}/{repo_name}")
             
-            # Check for latest successful workflow run with APK artifact
             workflow_runs = repo.get_workflow_runs()
             successful_runs = [run for run in workflow_runs[:10] if run.conclusion == 'success']
             
@@ -786,7 +775,6 @@ buildozer>=1.4.0
                 result['files_modified'].append('analytics_helper.py')
                 result['telemetry_systems'].append('user_analytics')
             
-            # 3. Update buildozer.spec for telemetry dependencies
             buildozer_check = self.smart_file_check(repo_url, "buildozer.spec")
             if buildozer_check['exists']:
                 updated_buildozer = self._inject_telemetry_dependencies(buildozer_check['content'])
@@ -801,7 +789,6 @@ buildozer>=1.4.0
                 if buildozer_result['success']:
                     result['files_modified'].append('buildozer.spec')
             
-            # 4. Create telemetry workflow for processing data
             telemetry_workflow = self._generate_telemetry_workflow()
             
             workflow_result = self.smart_workflow_deploy(
@@ -926,7 +913,6 @@ buildozer>=1.4.0
             owner, repo_name = self._parse_repo_url(repo_url)
             repo = self.github.get_repo(f"{owner}/{repo_name}")
             
-            # Analyze recent workflow runs for patterns
             workflow_runs = list(repo.get_workflow_runs()[:50])
             
             # Performance analysis
@@ -998,13 +984,11 @@ jobs:
     
     - name: Deploy to Connected Devices
       run: |
-        # Wait for device
         adb wait-for-device
         
         # Install APK
         adb install -r ./apk/{apk_name}
         
-        # Launch app for immediate testing
         adb shell am start -n com.example.app/.MainActivity
         
         echo "✅ APK deployed and launched on device"
@@ -1097,7 +1081,6 @@ class AppTelemetry:
 # Global telemetry instance
 telemetry = AppTelemetry()
 
-# Decorators for easy integration
 def track_performance_decorator(operation_name):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -1195,7 +1178,6 @@ class FeatureFlags:
     def _refresh_flags(self):
         """Fetch latest feature flags from remote configuration"""
         try:
-            # In production, fetch from your configuration API
             # For development, use local configuration
             default_flags = {{
                 'dark_mode': {{'enabled': True, 'percentage': 50}},
@@ -1227,7 +1209,6 @@ def get_ab_variant(test_name: str, default: str = 'control') -> str:
     """Get A/B test variant for current user"""
     return feature_flags.get_variant(test_name, default)
 
-# Decorators for easy integration
 def feature_flag(flag_name: str, default: bool = False):
     """Decorator to conditionally execute code based on feature flag"""
     def decorator(func):

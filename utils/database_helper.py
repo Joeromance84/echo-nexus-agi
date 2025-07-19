@@ -19,7 +19,6 @@ class DatabaseHelper:
         """Initialize database tables"""
         with self.get_connection() as conn:
             with conn.cursor() as cursor:
-                # Drop existing tables if they exist (for fresh start)
                 cursor.execute("DROP TABLE IF EXISTS chat_history CASCADE")
                 cursor.execute("DROP TABLE IF EXISTS project_templates CASCADE")
                 cursor.execute("DROP TABLE IF EXISTS build_history CASCADE")

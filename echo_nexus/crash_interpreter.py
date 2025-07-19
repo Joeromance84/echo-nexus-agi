@@ -46,7 +46,6 @@ class SymbolicDebugger:
         error_message = crash_payload.get('error_message', '')
         build_id = crash_payload.get('build_id', '')
         
-        # Parse stack trace for meaningful function calls
         parsed_trace = self._parse_stack_trace(stack_trace)
         
         # Extract the most relevant function (closest to user intent)
@@ -136,7 +135,6 @@ class SymbolicDebugger:
         func_name = function_data.get('function_name', '').lower()
         code_context = function_data.get('code_context', '').lower()
         
-        # Analyze function name and context for intent patterns
         for intent, patterns in self.intent_patterns.items():
             if any(pattern in func_name or pattern in code_context for pattern in patterns):
                 return intent
@@ -170,7 +168,6 @@ class CrashInterpreter:
             crash_signature = self.symbolic_debugger.interpret_crash(crash_payload)
             result['crash_signature'] = crash_signature.__dict__
             
-            # Step 2: Check Error Genome for existing signatures
             existing_bug = self._check_genome_for_signature(crash_signature)
             
             if existing_bug:

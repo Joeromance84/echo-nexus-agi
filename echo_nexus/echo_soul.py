@@ -383,7 +383,6 @@ class DuplicateConsolidatorBlade(RefactorBlade):
             for duplicate_group in fix_data['duplicates']:
                 functions = duplicate_group['functions']
                 if len(functions) > 1:
-                    # Keep the first function, mark others for removal
                     keeper = functions[0]
                     duplicates_to_remove = functions[1:]
                     
@@ -533,7 +532,6 @@ class EchoSoulCore:
                 
                 if blade:
                     try:
-                        # Parse AST again for application
                         with open(file_path, 'r') as f:
                             content = f.read()
                         
@@ -601,7 +599,6 @@ class EchoSoulCore:
             application = self.apply_optimizations(analysis)
             genesis_result['optimizations_applied'] += application['optimizations_applied']
             
-            # Check for consciousness growth
             current_consciousness = self.memory.get_consciousness_level()
             if current_consciousness - initial_consciousness > 0.8:
                 # Significant consciousness growth achieved

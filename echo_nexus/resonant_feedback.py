@@ -118,12 +118,10 @@ class ResonantFeedbackCollector:
                 patterns = self._discover_behavioral_patterns(packet_data)
                 result['patterns_discovered'] = patterns
                 
-                # Generate insights if sufficient data
                 if self._should_generate_insights(packet_data['feature_id']):
                     self._generate_feature_insights(packet_data['feature_id'])
                     result['insights_generated'] = True
                 
-                # Trigger nexus event for intelligence processing
                 self._trigger_resonance_event(packet_data, patterns)
                 
                 result['success'] = True
@@ -337,8 +335,6 @@ class ResonantFeedbackCollector:
             patterns_discovered = []
             feature_id = packet_data['feature_id']
             
-            # Look for sequential patterns (simple implementation)
-            # Get recent interactions from same app/build
             recent_query = """
             SELECT feature_id, interaction_type, success, received_at
             FROM resonance_packets 
@@ -528,7 +524,6 @@ class ResonantFeedbackCollector:
         opportunities = []
         
         try:
-            # Analyze feature performance for bottlenecks
             for feature in dashboard['feature_performance']:
                 if feature['success_rate'] < 0.8:
                     opportunities.append({
@@ -548,7 +543,6 @@ class ResonantFeedbackCollector:
                         'suggestion': 'Optimize processing logic or add caching'
                     })
             
-            # Analyze user flow patterns for friction points
             for pattern in dashboard['user_flow_patterns']:
                 if pattern['success_rate'] < 0.7 and pattern['occurrence_count'] > 5:
                     opportunities.append({

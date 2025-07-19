@@ -76,14 +76,12 @@ class DependencyGraphBuilder:
         }
         
         try:
-            # Get all Python files from repository
             python_files = self._get_python_files(repo_url)
             
             if not python_files:
                 result['error'] = "No Python files found in repository"
                 return result
             
-            # Build AST for each file
             for file_path in python_files:
                 self._analyze_file_ast(repo_url, file_path)
             
@@ -184,7 +182,6 @@ class DependencyGraphBuilder:
         """Identify entry points for dependency traversal"""
         entry_points = []
         
-        # Look for common entry point patterns
         for node_id, node in self.dependency_graph.items():
             # Main functions
             if node.name == 'main' and node.type == 'function':
@@ -212,7 +209,6 @@ class DependencyGraphBuilder:
         reachable = set()
         queue = deque(entry_points)
         
-        # BFS traversal from entry points
         while queue:
             current_id = queue.popleft()
             if current_id in reachable or current_id not in self.dependency_graph:
@@ -302,10 +298,8 @@ class DependencyGraphBuilder:
             if node.type not in ['function', 'class']:
                 continue
             
-            # Analyze function/class name for semantic intent
             name_intent = self._infer_semantic_intent(node.name)
             
-            # Check if implementation matches intent
             if name_intent != 'unknown' and name_intent != node.semantic_intent:
                 semantic_issues.append({
                     'node_id': node.id,
@@ -391,11 +385,9 @@ class ASTNodeExtractor(ast.NodeVisitor):
         """Extract function definitions"""
         function_id = f"{self.file_path}:{node.name}:{node.lineno}"
         
-        # Generate AST hash for duplicate detection
         ast_content = ast.dump(node)
         ast_hash = hashlib.md5(ast_content.encode()).hexdigest()[:12]
         
-        # Infer semantic intent from function body
         semantic_intent = self._infer_function_intent(node)
         
         code_node = CodeNode(
@@ -436,7 +428,6 @@ class ASTNodeExtractor(ast.NodeVisitor):
         
         self.nodes.append(code_node)
         
-        # Set current class for method context
         old_class = self.current_class
         self.current_class = node.name
         self.generic_visit(node)
@@ -444,7 +435,6 @@ class ASTNodeExtractor(ast.NodeVisitor):
     
     def _infer_function_intent(self, node) -> str:
         """Infer semantic intent from function AST"""
-        # Analyze function body for semantic clues
         function_source = ast.unparse(node) if hasattr(ast, 'unparse') else ''
         
         # Simple keyword-based intent detection
@@ -466,7 +456,6 @@ class ASTNodeExtractor(ast.NodeVisitor):
     
     def _infer_class_intent(self, node) -> str:
         """Infer semantic intent from class AST"""
-        # Analyze class methods and attributes
         class_name = node.name.lower()
         
         intent_patterns = {
@@ -584,7 +573,6 @@ class AutoRepairEngine:
                 result['error'] = "No workflow logs found"
                 return result
             
-            # Analyze logs for error patterns
             errors_found = self._analyze_error_patterns(logs)
             result['errors_found'] = errors_found
             
@@ -592,7 +580,6 @@ class AutoRepairEngine:
                 result['success'] = True
                 return result
             
-            # Generate repairs for each error
             repairs = []
             for error in errors_found:
                 repair = self._generate_repair(error)
@@ -678,7 +665,6 @@ class AutoRepairEngine:
                     }
                 ]
                 
-                # Also check if buildozer.spec needs updating for mobile apps
                 repair['files_to_modify'].append({
                     'path': 'buildozer.spec',
                     'action': 'modify_section',
