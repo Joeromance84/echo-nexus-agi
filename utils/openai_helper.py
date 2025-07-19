@@ -72,10 +72,17 @@ class WorkflowAssistant:
             return result
             
         except Exception as e:
-            return {
-                "message": f"Error processing request: {str(e)}. Please check your OpenAI API key configuration.",
-                "workflow": None
-            }
+            error_msg = str(e)
+            if "insufficient_quota" in error_msg or "429" in error_msg:
+                return {
+                    "message": "Your OpenAI API quota has been exceeded. Please add credits to your OpenAI account at https://platform.openai.com/account/billing to continue using AI features. You can still use the workflow templates, validation tools, and other features without AI assistance.",
+                    "workflow": None
+                }
+            else:
+                return {
+                    "message": f"Error processing request: {error_msg}. Please check your OpenAI API key configuration.",
+                    "workflow": None
+                }
     
     def generate_workflow_from_specs(self, build_type, app_name, requirements=None, additional_config=None):
         """Generate a workflow based on specific parameters"""

@@ -49,8 +49,32 @@ with st.sidebar:
     )
     
     st.header("Settings")
-    api_key_status = "✅ Connected" if os.getenv("OPENAI_API_KEY") else "❌ Not Connected"
-    st.write(f"OpenAI API: {api_key_status}")
+    
+    # Test OpenAI API status
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        try:
+            # Quick test with minimal tokens
+            from openai import OpenAI
+            client = OpenAI(api_key=api_key)
+            test_response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": "test"}],
+                max_tokens=1
+            )
+            api_status = "✅ Working"
+        except Exception as e:
+            if "insufficient_quota" in str(e) or "429" in str(e):
+                api_status = "⚠️ Quota Exceeded"
+            else:
+                api_status = "❌ Error"
+    else:
+        api_status = "❌ Not Connected"
+    
+    st.write(f"OpenAI API: {api_status}")
+    
+    if api_status == "⚠️ Quota Exceeded":
+        st.warning("Add credits at platform.openai.com")
     
     # Database status
     try:
