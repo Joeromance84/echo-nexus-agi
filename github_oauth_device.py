@@ -12,8 +12,19 @@ import streamlit as st
 import qrcode
 import io
 import base64
+import logging
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
+
+# Configure surgical logging for device auth debugging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - DEVICE_AUTH - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('device_auth_debug.log'),
+        logging.StreamHandler()
+    ]
+)
 
 class GitHubDeviceAuth:
     """
@@ -21,7 +32,8 @@ class GitHubDeviceAuth:
     """
     
     def __init__(self):
-        self.client_id = "Ov23liXP1ZZZ9F2Y3mJ8"  # Public OAuth App ID for EchoNexus
+        # GitHub CLI's public client ID - well-tested and reliable
+        self.client_id = "178c6fc778ccc68e1d6a"
         self.device_code_url = "https://github.com/login/device/code"
         self.access_token_url = "https://github.com/login/oauth/access_token"
         self.verify_url = "https://github.com/login/device"
@@ -30,8 +42,11 @@ class GitHubDeviceAuth:
     def start_device_flow(self) -> Dict[str, Any]:
         """Start OAuth device flow and get device code"""
         
+        logging.info(f"🚀 STEP 1: Initial POST to /device/code initiated with client_id: {self.client_id}")
+        
         try:
             # Request device code
+            logging.info(f"📡 Making request to: {self.device_code_url}")
             response = requests.post(
                 self.device_code_url,
                 data={
@@ -41,8 +56,17 @@ class GitHubDeviceAuth:
                 headers={'Accept': 'application/json'}
             )
             
+            logging.info(f"📊 Response status code: {response.status_code}")
+            logging.info(f"📋 Response headers: {dict(response.headers)}")
+            
             if response.status_code == 200:
                 device_data = response.json()
+                
+                logging.info(f"✅ STEP 1 SUCCESS: Received device code, user code, and verification URI")
+                logging.info(f"📱 User code is: {device_data['user_code']}")
+                logging.info(f"🔗 Verification URI: {device_data['verification_uri']}")
+                logging.info(f"⏰ Expires in: {device_data['expires_in']} seconds")
+                logging.info(f"🔄 Polling interval: {device_data['interval']} seconds")
                 
                 return {
                     'status': 'success',
@@ -54,9 +78,11 @@ class GitHubDeviceAuth:
                     'interval': device_data['interval']
                 }
             else:
+                error_msg = f'Failed to start device flow: {response.status_code} - {response.text}'
+                logging.error(f"❌ STEP 1 FAILED: {error_msg}")
                 return {
                     'status': 'error',
-                    'message': f'Failed to start device flow: {response.text}'
+                    'message': error_msg
                 }
         
         except Exception as e:
@@ -131,7 +157,13 @@ class GitHubDeviceAuth:
         return img_buffer
     
     def poll_for_token(self, device_code: str, interval: int = 5) -> Dict[str, Any]:
-        """Poll GitHub for access token"""
+        """Poll GitHub for access token with surgical logging"""
+        
+        # Create a unique poll ID for tracking
+        poll_id = int(time.time() * 1000) % 10000
+        logging.info(f"🔄 POLL #{poll_id}: Starting token poll attempt")
+        logging.info(f"📡 POLL #{poll_id}: Making request to {self.access_token_url}")
+        logging.info(f"🆔 POLL #{poll_id}: Using device_code: {device_code[:10]}...{device_code[-10:]}")
         
         try:
             response = requests.post(
@@ -141,13 +173,21 @@ class GitHubDeviceAuth:
                     'device_code': device_code,
                     'grant_type': 'urn:ietf:params:oauth:grant-type:device_code'
                 },
-                headers={'Accept': 'application/json'}
+                headers={'Accept': 'application/json'},
+                timeout=30  # Add timeout to prevent hanging
             )
+            
+            logging.info(f"📊 POLL #{poll_id}: Response status code: {response.status_code}")
+            logging.info(f"⏱️ POLL #{poll_id}: Response time: {response.elapsed.total_seconds():.2f}s")
             
             if response.status_code == 200:
                 token_data = response.json()
+                logging.info(f"📋 POLL #{poll_id}: Response data keys: {list(token_data.keys())}")
                 
                 if 'access_token' in token_data:
+                    logging.info(f"✅ POLL #{poll_id}: SUCCESS! Received access token")
+                    logging.info(f"🔑 POLL #{poll_id}: Token type: {token_data.get('token_type', 'bearer')}")
+                    logging.info(f"🎯 POLL #{poll_id}: Scope: {token_data.get('scope', 'none')}")
                     return {
                         'status': 'success',
                         'access_token': token_data['access_token'],
@@ -156,27 +196,42 @@ class GitHubDeviceAuth:
                     }
                 elif 'error' in token_data:
                     error = token_data['error']
+                    error_desc = token_data.get('error_description', 'No description')
+                    logging.info(f"⚠️ POLL #{poll_id}: GitHub returned error: {error}")
+                    logging.info(f"📝 POLL #{poll_id}: Error description: {error_desc}")
                     
                     if error == 'authorization_pending':
-                        return {'status': 'pending'}
+                        logging.info(f"⏳ POLL #{poll_id}: Authorization still pending - user hasn't completed auth yet")
+                        return {'status': 'authorization_pending'}
                     elif error == 'slow_down':
+                        logging.warning(f"🐌 POLL #{poll_id}: Rate limited - need to slow down polling")
                         return {'status': 'slow_down'}
                     elif error == 'expired_token':
+                        logging.error(f"⏰ POLL #{poll_id}: Device code expired")
                         return {'status': 'expired'}
                     elif error == 'access_denied':
+                        logging.error(f"🚫 POLL #{poll_id}: User denied authorization")
                         return {'status': 'denied'}
                     else:
-                        return {'status': 'error', 'message': token_data.get('error_description', error)}
-            
-            return {
-                'status': 'error',
-                'message': f'Token request failed: {response.text}'
-            }
+                        logging.error(f"❌ POLL #{poll_id}: Unknown error: {error}")
+                        return {'status': 'error', 'message': f"{error}: {error_desc}"}
+                else:
+                    logging.warning(f"🤔 POLL #{poll_id}: Unexpected response structure")
+                    return {'status': 'authorization_pending'}  # Default assumption
+            else:
+                error_msg = f'Token request failed: {response.status_code} - {response.text}'
+                logging.error(f"💥 POLL #{poll_id}: HTTP error: {error_msg}")
+                return {
+                    'status': 'error',
+                    'message': error_msg
+                }
         
         except Exception as e:
+            error_msg = f'Token polling error: {str(e)}'
+            logging.error(f"💥 POLL #{poll_id}: Exception: {error_msg}")
             return {
                 'status': 'error',
-                'message': f'Token polling error: {str(e)}'
+                'message': error_msg
             }
     
     def verify_token(self, access_token: str) -> Dict[str, Any]:
@@ -272,101 +327,108 @@ class GitHubDeviceAuth:
                     'user': token_verification['user']
                 }
         
+        # Initialize device auth state
+        if 'device_auth_started' not in st.session_state:
+            st.session_state.device_auth_started = False
+        if 'device_auth_data' not in st.session_state:
+            st.session_state.device_auth_data = None
+        
         # Start new device flow
         st.write("### 📱 GitHub Device Authentication")
         st.write("Authenticate easily using your GitHub mobile app or any browser!")
         
-        if st.button("🚀 Start Device Authentication", key=f"start_device_auth_{int(time.time())}"):
-            # Start device flow
-            device_result = self.start_device_flow()
-            
-            if device_result['status'] == 'success':
-                # Store device data in session state
-                st.session_state.device_auth_data = device_result
-                st.session_state.device_auth_started = True
-                st.rerun()
+        # Debug information
+        with st.expander("🔧 Debug Info", expanded=False):
+            st.write(f"Client ID: {self.client_id}")
+            st.write(f"Device auth started: {st.session_state.device_auth_started}")
+            st.write(f"Device data available: {st.session_state.device_auth_data is not None}")
+        
+        if not st.session_state.device_auth_started:
+            if st.button("🚀 Start Device Authentication", key="start_device_auth_btn"):
+                with st.spinner("Starting device authentication flow..."):
+                    # Start device flow
+                    device_result = self.start_device_flow()
+                    
+                    st.write("Device flow result:", device_result)  # Debug
+                    
+                    if device_result['status'] == 'success':
+                        # Store device data in session state
+                        st.session_state.device_auth_data = device_result
+                        st.session_state.device_auth_started = True
+                        st.success("Device flow started! Please check the instructions below.")
+                        st.rerun()
+                    else:
+                        st.error(f"Failed to start device flow: {device_result.get('message', 'Unknown error')}")
+                        return device_result
         
         # Handle ongoing device flow
-        if st.session_state.get('device_auth_started') and st.session_state.get('device_auth_data'):
+        if st.session_state.device_auth_started and st.session_state.device_auth_data:
             device_data = st.session_state.device_auth_data
             
             # Display UI
             self.display_device_flow_ui(device_data)
             
-            # Auto-refresh section
-            st.subheader("🔄 Waiting for authentication...")
+            # Manual check button instead of automatic polling
+            st.subheader("🔄 Check Authentication Status")
             
-            # Create placeholder for status updates
-            status_placeholder = st.empty()
-            progress_placeholder = st.empty()
+            col1, col2 = st.columns(2)
             
-            # Polling loop
-            max_attempts = device_data['expires_in'] // device_data['interval']
+            with col1:
+                if st.button("🔍 Check Now", key="check_auth_btn"):
+                    with st.spinner("Checking authentication..."):
+                        token_result = self.poll_for_token(device_data['device_code'])
+                        
+                        if token_result['status'] == 'success':
+                            # Verify token
+                            verification = self.verify_token(token_result['access_token'])
+                            
+                            if verification['status'] == 'success':
+                                # Save session
+                                self.save_oauth_session(token_result['access_token'], verification['user'])
+                                
+                                st.success("🎉 Authentication successful!")
+                                st.balloons()
+                                
+                                # Clear device auth state
+                                st.session_state.device_auth_started = False
+                                st.session_state.device_auth_data = None
+                                
+                                return {
+                                    'status': 'authenticated',
+                                    'method': 'oauth_device_flow',
+                                    'user': verification['user']
+                                }
+                            else:
+                                st.error(f"Token verification failed: {verification.get('message', 'Unknown error')}")
+                        
+                        elif token_result['status'] == 'authorization_pending':
+                            st.info("⏳ Still waiting for authorization. Please complete the authentication in your GitHub app.")
+                        
+                        elif token_result['status'] == 'denied':
+                            st.error("❌ Authentication was denied. Please try again.")
+                            st.session_state.device_auth_started = False
+                            return {'status': 'denied'}
+                        
+                        elif token_result['status'] == 'expired':
+                            st.error("⏰ Authentication code expired. Please start over.")
+                            st.session_state.device_auth_started = False
+                            return {'status': 'expired'}
+                        
+                        elif token_result['status'] == 'error':
+                            st.error(f"❌ Error: {token_result.get('message', 'Unknown error')}")
+                            st.session_state.device_auth_started = False
+                            return {'status': 'error', 'message': token_result.get('message')}
             
-            for attempt in range(max_attempts):
-                with status_placeholder.container():
-                    st.info(f"⏳ Checking authentication... (attempt {attempt + 1}/{max_attempts})")
-                
-                with progress_placeholder.container():
-                    progress_percent = (attempt + 1) / max_attempts
-                    st.progress(progress_percent)
-                
-                # Poll for token
-                token_result = self.poll_for_token(
-                    device_data['device_code'], 
-                    device_data['interval']
-                )
-                
-                if token_result['status'] == 'success':
-                    # Verify token
-                    verification = self.verify_token(token_result['access_token'])
-                    
-                    if verification['status'] == 'success':
-                        # Save session
-                        self.save_oauth_session(token_result['access_token'], verification['user'])
-                        
-                        with status_placeholder.container():
-                            st.success("🎉 Authentication successful!")
-                        
-                        with progress_placeholder.container():
-                            st.progress(1.0)
-                        
-                        # Clear device auth state
-                        st.session_state.device_auth_started = False
-                        st.session_state.device_auth_data = None
-                        
-                        return {
-                            'status': 'authenticated',
-                            'method': 'oauth_device_flow',
-                            'user': verification['user']
-                        }
-                
-                elif token_result['status'] == 'denied':
-                    with status_placeholder.container():
-                        st.error("❌ Authentication was denied. Please try again.")
+            with col2:
+                if st.button("🔄 Start Over", key="restart_auth_btn"):
                     st.session_state.device_auth_started = False
-                    return {'status': 'denied'}
-                
-                elif token_result['status'] == 'expired':
-                    with status_placeholder.container():
-                        st.error("⏰ Authentication code expired. Please start over.")
-                    st.session_state.device_auth_started = False
-                    return {'status': 'expired'}
-                
-                elif token_result['status'] == 'error':
-                    with status_placeholder.container():
-                        st.error(f"❌ Error: {token_result['message']}")
-                    st.session_state.device_auth_started = False
-                    return {'status': 'error', 'message': token_result['message']}
-                
-                # Wait before next poll (with some UI updates)
-                time.sleep(device_data['interval'])
+                    st.session_state.device_auth_data = None
+                    st.rerun()
             
-            # Timeout
-            with status_placeholder.container():
-                st.error("⏰ Authentication timed out. Please try again.")
-            st.session_state.device_auth_started = False
-            return {'status': 'timeout'}
+            # Auto-refresh option
+            if st.checkbox("🔄 Auto-refresh every 5 seconds", key="auto_refresh_checkbox"):
+                time.sleep(5)
+                st.rerun()
         
         return {'status': 'waiting_for_start'}
 

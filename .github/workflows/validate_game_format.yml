@@ -1,0 +1,136 @@
+name: Game Format Validator
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  validate-game-format:
+    runs-on: ubuntu-latest
+    name: Validate Game Development Format
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install validation dependencies
+      run: |
+        pip install ast-validator pygame arcade
+    
+    - name: Validate Game Format
+      run: |
+        python .github/scripts/game_format_validator.py
+      
+    - name: Check File Structure
+      run: |
+        echo "🎮 Checking for game development file structure..."
+        
+        # Check for main game file
+        if [ -f "main.py" ] || [ -f "game.py" ] || [ -f "app.py" ]; then
+          echo "✅ Main game file found"
+        else
+          echo "❌ No main game file found (main.py, game.py, or app.py)"
+          exit 1
+        fi
+        
+        # Check for game engine imports
+        if grep -r "import pygame\|import arcade\|import godot\|from pygame\|from arcade" *.py 2>/dev/null; then
+          echo "✅ Game engine imports detected"
+        else
+          echo "❌ No game engine imports found"
+          echo "Required: pygame, arcade, godot, or other game frameworks"
+          exit 1
+        fi
+        
+        # Check for game loop
+        if grep -r "game_loop\|main_loop\|while.*running\|while.*True" *.py 2>/dev/null; then
+          echo "✅ Game loop structure detected"
+        else
+          echo "❌ No game loop found"
+          echo "Required: game_loop(), main_loop(), or while loop"
+          exit 1
+        fi
+    
+    - name: Scan for Non-Game Patterns
+      run: |
+        echo "🚫 Scanning for forbidden non-game patterns..."
+        
+        # Check for web framework imports
+        if grep -r "from flask\|import flask\|from django\|import django\|from fastapi\|import fastapi" *.py 2>/dev/null; then
+          echo "❌ Web framework detected - games only!"
+          echo "Found web framework imports (Flask, Django, FastAPI)"
+          exit 1
+        fi
+        
+        # Check for database patterns
+        if grep -r "CREATE TABLE\|DROP TABLE\|SELECT \*\|INSERT INTO" *.py *.sql 2>/dev/null; then
+          echo "❌ Database SQL detected - games only!"
+          echo "Found SQL patterns not related to game development"
+          exit 1
+        fi
+        
+        # Check for API server patterns
+        if grep -r "@app.route\|@router.get\|@router.post\|app.listen\|server.listen" *.py 2>/dev/null; then
+          echo "❌ API server patterns detected - games only!"
+          echo "Found web server routing patterns"
+          exit 1
+        fi
+        
+        echo "✅ No forbidden patterns detected"
+    
+    - name: Validate Game Keywords
+      run: |
+        echo "🎯 Validating game development keywords..."
+        
+        REQUIRED_KEYWORDS=(
+          "player\|Player"
+          "game\|Game"
+          "sprite\|Sprite"
+          "input\|Input"
+          "render\|draw\|display"
+        )
+        
+        for keyword in "${REQUIRED_KEYWORDS[@]}"; do
+          if grep -r "$keyword" *.py 2>/dev/null; then
+            echo "✅ Found game keyword: $keyword"
+          else
+            echo "⚠️ Missing recommended game keyword: $keyword"
+          fi
+        done
+        
+        # Check for interactive elements
+        if grep -r "pygame.event\|keyboard\|mouse\|input()" *.py 2>/dev/null; then
+          echo "✅ Interactive input handling detected"
+        else
+          echo "❌ No interactive input handling found"
+          echo "Games must handle user input (keyboard, mouse, etc.)"
+          exit 1
+        fi
+    
+    - name: Game Format Report
+      run: |
+        echo "📊 GAME FORMAT VALIDATION COMPLETE"
+        echo "=================================="
+        echo "✅ Project structure follows game development conventions"
+        echo "✅ Uses appropriate game frameworks and libraries"
+        echo "✅ Contains required game development patterns"
+        echo "✅ No forbidden non-game patterns detected"
+        echo ""
+        echo "🎮 This project is properly formatted as a game application!"
+        
+    - name: Comment PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '🎮 **Game Format Validation Passed!** ✅\n\nThis pull request follows proper game development conventions:\n- ✅ Game engine imports detected\n- ✅ Game loop structure found\n- ✅ Interactive input handling\n- ✅ No forbidden non-game patterns\n\nYour code is properly formatted as a game application!'
+          })

@@ -75,6 +75,13 @@ class GitHubAuthAssistant:
         # Method selection
         st.write("### Choose Your Preferred Login Method:")
         
+        # Use session state to persist selection and avoid duplicate keys
+        if 'auth_method_selected' not in st.session_state:
+            st.session_state.auth_method_selected = None
+        
+        # Create unique key based on session and current time
+        radio_key = f"auth_method_radio_{id(self)}_{int(time.time())}"
+        
         method = st.radio(
             "Select authentication method:",
             [
@@ -84,8 +91,11 @@ class GitHubAuthAssistant:
                 "🔐 SSH Key (Advanced)",
                 "🆘 I need help choosing"
             ],
-            key=f"auth_method_selection_{int(time.time())}"
+            key=radio_key,
+            index=0
         )
+        
+        st.session_state.auth_method_selected = method
         
         if "Device Authentication" in method:
             return self.assist_device_authentication()
