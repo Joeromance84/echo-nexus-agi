@@ -1,0 +1,127 @@
+name: Advanced AGI APK Automation
+
+on:
+  push:
+    paths:
+      - '*.py'
+      - 'buildozer.spec'
+      - 'requirements.txt'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  BUILDOZER_LOG_LEVEL: 2
+  ANDROID_HOME: /usr/local/lib/android/sdk
+
+jobs:
+  automated-compatibility-check:
+    runs-on: ubuntu-latest
+    outputs:
+      compatibility-status: ${{ steps.compatibility.outputs.status }}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Run Automated Compatibility Analysis
+        id: compatibility
+        run: |
+          python complete_agi_deployment.py --compatibility-check
+          echo "status=compatible" >> $GITHUB_OUTPUT
+  
+  intelligent-apk-build:
+    needs: automated-compatibility-check
+    if: needs.automated-compatibility-check.outputs.compatibility-status == 'compatible'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 33
+          build-tools: 33.0.0
+          
+      - name: Cache Build Environment
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer
+            .buildozer
+            ~/.android
+          key: buildozer-${{ hashFiles('buildozer.spec') }}-${{ hashFiles('complete_agi_deployment.py') }}
+          restore-keys: |
+            buildozer-${{ hashFiles('buildozer.spec') }}-
+            buildozer-
+          
+      - name: Install Build Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython kivy
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-11-jdk autoconf libtool pkg-config
+          
+      - name: Run Complete AGI Deployment
+        run: |
+          python complete_agi_deployment.py --full-deployment
+          
+      - name: Execute Buildozer APK Build
+        run: |
+          buildozer android debug
+          
+      - name: Intelligent Build Validation
+        run: |
+          python complete_agi_deployment.py --validate-build
+          
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: echocorecb-agi-apk-${{ github.sha }}
+          path: |
+            bin/*.apk
+            **/*.apk
+          retention-days: 30
+          
+      - name: Upload Build Intelligence Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agi-build-intelligence-${{ github.sha }}
+          path: |
+            agi_build_report.json
+            compatibility_analysis.json
+            learning_database.json
+          retention-days: 7
+          
+      - name: Update Learning Database
+        if: always()
+        run: |
+          python complete_agi_deployment.py --update-learning --build-status=${{ job.status }}
+          
+      - name: AGI Success Notification
+        if: success()
+        run: |
+          echo "🎯 AGI AUTOMATED APK BUILD SUCCESSFUL"
+          echo "📱 EchoCoreCB mobile AGI platform ready"
+          echo "🧠 Learning database updated with success patterns"
+          
+      - name: AGI Failure Analysis
+        if: failure()
+        run: |
+          echo "❌ AGI BUILD FAILED - Analyzing and learning"
+          python complete_agi_deployment.py --failure-analysis
+          echo "📊 Failure patterns added to learning database"

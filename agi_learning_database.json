@@ -1,0 +1,60 @@
+{
+  "compatibility_rules": {
+    "last_updated": "2025-07-19T21:27:45.897811",
+    "incompatible_libraries": {
+      "streamlit": "Web framework - use kivy for mobile UI",
+      "flask": "Web server - not needed on mobile",
+      "django": "Web framework - use kivy for mobile",
+      "fastapi": "Web API framework - not for mobile apps",
+      "tornado": "Web server - not for mobile",
+      "psycopg2": "PostgreSQL driver - use sqlite3 for mobile",
+      "psycopg2-binary": "PostgreSQL driver - use sqlite3 for mobile",
+      "mysql-connector-python": "MySQL driver - use sqlite3 for mobile",
+      "pymongo": "MongoDB driver - use sqlite3 for mobile",
+      "tkinter": "Desktop GUI - use kivy for mobile",
+      "pyqt5": "Desktop GUI - use kivy for mobile",
+      "pyqt6": "Desktop GUI - use kivy for mobile",
+      "wxpython": "Desktop GUI - use kivy for mobile",
+      "pywin32": "Windows-specific - not available on Android",
+      "wmi": "Windows management - not available on Android",
+      "psutil": "System utilities - limited Android support",
+      "tensorflow": "Heavy ML library - use tensorflow-lite for mobile",
+      "pytorch": "Heavy ML library - use pytorch-mobile for mobile",
+      "scikit-learn": "ML library with C deps - use lightweight alternatives",
+      "pytest": "Testing framework - not needed in production APK",
+      "black": "Code formatter - not needed in production APK",
+      "flake8": "Linter - not needed in production APK"
+    },
+    "compatible_libraries": {
+      "kivy": "Mobile UI framework - required",
+      "python3": "Python runtime - required",
+      "requests": "HTTP client - mobile compatible",
+      "pyyaml": "YAML parser - mobile compatible",
+      "json": "JSON handling - built-in",
+      "sqlite3": "Database - mobile compatible",
+      "openai": "AI API client - mobile compatible",
+      "google-genai": "Google AI client - mobile compatible"
+    },
+    "dynamic_rules": []
+  },
+  "build_patterns": {
+    "success_indicators": [
+      "*.apk file generated",
+      "buildozer android debug succeeded",
+      "no compatibility errors",
+      "artifact upload successful"
+    ],
+    "failure_indicators": [
+      "buildozer: Command failed",
+      "ModuleNotFoundError",
+      "incompatible library",
+      "build timeout"
+    ]
+  },
+  "performance_metrics": {
+    "average_build_time": 0,
+    "success_rate": 0,
+    "common_failures": {},
+    "optimization_opportunities": []
+  }
+}
