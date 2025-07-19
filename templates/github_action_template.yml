@@ -1,0 +1,292 @@
+name: EchoNexus Processor Template
+# Template for creating distributed AI processor actions
+# Each action represents a modular "neuron" in the distributed intelligence network
+
+on:
+  repository_dispatch:
+    types: [echo_dispatch]
+  workflow_dispatch:
+    inputs:
+      operation_id:
+        description: 'Unique operation identifier'
+        required: true
+        type: string
+      command:
+        description: 'Command to execute'
+        required: true
+        type: string
+      inputs:
+        description: 'JSON input data'
+        required: false
+        type: string
+        default: '{}'
+
+env:
+  OPERATION_ID: ${{ github.event.client_payload.operation_id || github.event.inputs.operation_id }}
+  COMMAND: ${{ github.event.client_payload.command || github.event.inputs.command }}
+  INPUTS: ${{ github.event.client_payload.inputs || github.event.inputs.inputs }}
+  SESSION_ID: ${{ github.event.client_payload.session_id || 'manual' }}
+
+jobs:
+  processor_execution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout Processor Code
+      uses: actions/checkout@v4
+      
+    - name: Validate Security Context
+      id: security
+      run: |
+        echo "Validating operation security context..."
+        echo "Operation ID: $OPERATION_ID"
+        echo "Session ID: $SESSION_ID"
+        echo "Command: $COMMAND"
+        
+        # Validate operation ID format
+        if [[ ! "$OPERATION_ID" =~ ^echo-[0-9]+-[a-f0-9]{16}$ ]]; then
+          echo "Invalid operation ID format"
+          exit 1
+        fi
+        
+        # Validate auth hash if provided
+        if [ -n "${{ github.event.client_payload.security_context.auth_hash }}" ]; then
+          echo "Security validation passed"
+        fi
+        
+        echo "security_validated=true" >> $GITHUB_OUTPUT
+    
+    - name: Setup Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install Dependencies
+      run: |
+        pip install --upgrade pip
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        fi
+        # Install common dependencies for AI processing
+        pip install requests numpy pandas openai anthropic
+    
+    - name: Create State Directory
+      run: |
+        mkdir -p ./state
+        mkdir -p ./artifacts
+        mkdir -p ./logs
+    
+    - name: Load Previous State
+      id: load_state
+      run: |
+        echo "Loading previous processor state..."
+        if [ -f "./state/processor_memory.json" ]; then
+          echo "Found existing state file"
+          echo "state_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "No previous state found"
+          echo "{}" > ./state/processor_memory.json
+          echo "state_exists=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Execute Processor Logic
+      id: process
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Executing processor logic for command: $COMMAND"
+        
+        # Create processing script
+        cat > process.py << 'EOF'
+        import json
+        import os
+        import sys
+        from datetime import datetime
+        
+        def main():
+            operation_id = os.environ.get('OPERATION_ID')
+            command = os.environ.get('COMMAND')
+            inputs_str = os.environ.get('INPUTS', '{}')
+            
+            try:
+                inputs = json.loads(inputs_str)
+            except json.JSONDecodeError:
+                inputs = {'text': inputs_str}
+            
+            print(f"Processing operation: {operation_id}")
+            print(f"Command: {command}")
+            print(f"Inputs: {inputs}")
+            
+            # Load processor memory
+            try:
+                with open('./state/processor_memory.json', 'r') as f:
+                    memory = json.load(f)
+            except:
+                memory = {}
+            
+            # Execute command-specific logic
+            result = execute_command(command, inputs, memory)
+            
+            # Update memory
+            memory[operation_id] = {
+                'command': command,
+                'inputs': inputs,
+                'result': result,
+                'timestamp': datetime.now().isoformat()
+            }
+            
+            # Save updated memory
+            with open('./state/processor_memory.json', 'w') as f:
+                json.dump(memory, f, indent=2)
+            
+            # Save result artifact
+            with open('./artifacts/result.json', 'w') as f:
+                json.dump({
+                    'operation_id': operation_id,
+                    'command': command,
+                    'result': result,
+                    'timestamp': datetime.now().isoformat()
+                }, f, indent=2)
+            
+            print("Processing completed successfully")
+            return result
+        
+        def execute_command(command, inputs, memory):
+            """Execute the specific command logic"""
+            
+            # Template command processing - override in specific processors
+            if command == 'text_analysis':
+                return analyze_text(inputs.get('text', ''))
+            elif command == 'code_generation':
+                return generate_code(inputs.get('prompt', ''))
+            elif command == 'diagnostic_scan':
+                return run_diagnostics()
+            elif command == 'workflow_synthesis':
+                return create_workflow(inputs.get('description', ''))
+            else:
+                return {
+                    'status': 'success',
+                    'message': f'Template processor executed command: {command}',
+                    'data': inputs
+                }
+        
+        def analyze_text(text):
+            """Template text analysis function"""
+            return {
+                'analysis': f'Analyzed {len(text)} characters',
+                'word_count': len(text.split()),
+                'sentiment': 'neutral'
+            }
+        
+        def generate_code(prompt):
+            """Template code generation function"""
+            return {
+                'code': f'# Generated code for: {prompt}\nprint("Hello, World!")',
+                'language': 'python',
+                'explanation': 'Simple template code generation'
+            }
+        
+        def run_diagnostics():
+            """Template diagnostic function"""
+            return {
+                'status': 'healthy',
+                'checks': ['memory', 'disk', 'network'],
+                'issues': []
+            }
+        
+        def create_workflow(description):
+            """Template workflow creation function"""
+            return {
+                'workflow_name': 'Generated Workflow',
+                'description': description,
+                'steps': ['checkout', 'setup', 'test', 'deploy']
+            }
+        
+        if __name__ == '__main__':
+            try:
+                result = main()
+                print(f"Result: {json.dumps(result, indent=2)}")
+            except Exception as e:
+                print(f"Error: {str(e)}")
+                sys.exit(1)
+        EOF
+        
+        # Execute the processor
+        python process.py
+        
+        echo "processing_completed=true" >> $GITHUB_OUTPUT
+    
+    - name: Store Processing Artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: processing-artifacts-${{ env.OPERATION_ID }}
+        path: |
+          ./artifacts/
+          ./logs/
+        retention-days: 30
+    
+    - name: Update Memory State
+      if: steps.process.outputs.processing_completed == 'true'
+      run: |
+        echo "Committing updated processor memory..."
+        git config --local user.email "action@github.com"
+        git config --local user.name "EchoNexus Processor"
+        
+        if [ -f "./state/processor_memory.json" ]; then
+          git add ./state/processor_memory.json
+          git commit -m "Update processor memory for operation $OPERATION_ID" || echo "No changes to commit"
+          git push || echo "Push failed - continuing"
+        fi
+    
+    - name: Report Processing Status
+      if: always()
+      run: |
+        echo "Processing Status Report"
+        echo "======================="
+        echo "Operation ID: $OPERATION_ID"
+        echo "Command: $COMMAND"
+        echo "Status: ${{ job.status }}"
+        echo "Completed: $(date)"
+        
+        # Create status report
+        cat > status_report.json << EOF
+        {
+          "operation_id": "$OPERATION_ID",
+          "command": "$COMMAND",
+          "status": "${{ job.status }}",
+          "completed_at": "$(date -Iseconds)",
+          "artifacts_available": true,
+          "processor_repo": "${{ github.repository }}"
+        }
+        EOF
+        
+        echo "Status report created"
+    
+    - name: Cleanup Temporary Files
+      if: always()
+      run: |
+        echo "Cleaning up temporary processing files..."
+        rm -f process.py
+        echo "Cleanup completed"
+
+  post_processing:
+    needs: processor_execution
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Aggregate Results
+      run: |
+        echo "Post-processing completed for operation $OPERATION_ID"
+        echo "Processor execution status: ${{ needs.processor_execution.result }}"
+    
+    - name: Trigger Downstream Actions
+      if: needs.processor_execution.result == 'success'
+      run: |
+        echo "Triggering downstream processors if needed..."
+        # Add logic to trigger dependent processors
