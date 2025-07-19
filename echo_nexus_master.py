@@ -460,6 +460,10 @@ class FederatedAIOrchestrator:
         self.github_token = os.getenv('GITHUB_TOKEN', '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')
         self.github_user = 'joeromance84'
         
+        # Federated Control Plane
+        from federated_control_plane import FederatedControlPlane
+        self.control_plane = FederatedControlPlane(self.github_token, self.github_user)
+        
         # AI clients
         self.openai_client = None
         self.gemini_client = None
@@ -665,6 +669,7 @@ class FederatedAIOrchestrator:
     def get_federation_status(self) -> Dict[str, Any]:
         """Get comprehensive federation status"""
         cache_stats = self.cache_manager.get_cache_stats()
+        control_plane_status = self.control_plane.get_federation_status()
         
         return {
             "system_metrics": self.system_metrics,
@@ -675,7 +680,8 @@ class FederatedAIOrchestrator:
                 for provider, capability in self.task_router.agent_profiles.items()
             },
             "optimization_active": self.running,
-            "total_routing_history": len(self.task_router.routing_history)
+            "total_routing_history": len(self.task_router.routing_history),
+            "federated_control_plane": control_plane_status
         }
     
     def optimize_ci_cd_pipeline(self, repo_name: str, requirements: Dict[str, Any]) -> Dict[str, Any]:
