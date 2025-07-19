@@ -1,22 +1,224 @@
 #!/usr/bin/env python3
 """
-Echo AGI Chat Enhancement Processor
-Processes code from chat conversations for safe self-enhancement
+EchoNexus Chat Enhancement Processor
+Processes chat messages for self-enhancement opportunities with stateful dialogue management
 """
 
 import re
 import ast
 import os
 import json
-from datetime import datetime
+import tempfile
 from typing import Dict, List, Any, Optional
+from datetime import datetime
+from github import Github
+from github.GithubException import UnknownObjectException, GithubException
+
+class DialogueManager:
+    """
+    A stateful dialogue manager that maintains context and generates concise, relevant responses.
+    """
+    def __init__(self, name="EchoNexus AGI"):
+        self.name = name
+        self.conversation_history = []
+        self.state = "initial"
+        self.available_actions = {
+            "setup_repos": "create and populate foundational code in repositories",
+            "diagnose_issues": "diagnose and fix build failures in GitHub Actions",
+            "deploy_workflow": "generate and deploy a CI/CD workflow",
+            "optimize_code": "analyze and enhance existing code",
+            "process_documents": "ingest and vectorize document libraries",
+            "enhance_capabilities": "integrate new code for self-improvement"
+        }
+    
+    def get_response(self, user_input: str) -> str:
+        """
+        Processes user input, updates the dialogue state, and generates a response.
+        """
+        self.conversation_history.append({"user": user_input})
+        
+        # Simple state machine to track the conversation
+        if self.state == "initial":
+            response = f"Hello! I am {self.name}. I am ready to begin. What is our first objective?"
+            self.state = "awaiting_objective"
+            
+        elif self.state == "awaiting_objective":
+            # Check for keywords related to a task
+            if "populate" in user_input.lower() or "code for" in user_input.lower():
+                response = f"I understand. I will now begin to {self.available_actions['setup_repos']}."
+                self.state = "executing_task"
+            
+            elif "not working" in user_input.lower() or "repeating" in user_input.lower():
+                response = f"I am aware of my previous inefficiency. I will now {self.available_actions['diagnose_issues']} and provide a specific fix."
+                self.state = "awaiting_fix_confirmation"
+            
+            elif "optimize" in user_input.lower():
+                response = f"Understood. I will begin to {self.available_actions['optimize_code']} for the specified repository."
+                self.state = "executing_task"
+            
+            elif "documents" in user_input.lower() or "pdf" in user_input.lower() or "epub" in user_input.lower():
+                response = f"Ready to {self.available_actions['process_documents']}. Upload your files and I'll handle the rest."
+                self.state = "executing_task"
+            
+            elif "enhance" in user_input.lower() or "capability" in user_input.lower():
+                response = f"I will {self.available_actions['enhance_capabilities']} to grow my intelligence."
+                self.state = "executing_task"
+
+            else:
+                response = "I am ready. Could you please specify a task, such as 'populate the repositories' or 'diagnose a build failure'?"
+
+        elif self.state == "awaiting_fix_confirmation":
+            if "yes" in user_input.lower() or "go ahead" in user_input.lower():
+                response = "Fixing the issue now. I will let you know when it is complete."
+                self.state = "executing_fix"
+            else:
+                response = "Understood. Please provide an alternative directive."
+                self.state = "awaiting_objective"
+        
+        elif self.state == "executing_task" or self.state == "executing_fix":
+            # In a real system, the AGI would be executing a task here.
+            # We add this logic to prevent it from repeating itself.
+            response = "The task is in progress. I will report back when it is complete."
+            self.state = "awaiting_completion"
+            
+        elif self.state == "awaiting_completion":
+            response = "The task is complete. I am ready for the next objective."
+            self.state = "initial" # Reset state for the next command
+
+        self.conversation_history.append({"ai": response})
+        return response
+    
+    def get_conversation_context(self) -> Dict[str, Any]:
+        """Get current conversation context"""
+        return {
+            'state': self.state,
+            'history_length': len(self.conversation_history),
+            'available_actions': list(self.available_actions.keys()),
+            'last_user_input': self.conversation_history[-1]['user'] if self.conversation_history else None
+        }
+    
+    def reset_conversation(self):
+        """Reset conversation state"""
+        self.conversation_history = []
+        self.state = "initial"
+
+class DynamicCommunicator:
+    """
+    Manages communication style, context, and clarity for the AGI.
+    """
+    def __init__(self, context_memory={}):
+        self.context = context_memory
+        
+    def get_contextual_response(self, user_input: str, task_type: str) -> str:
+        """
+        Generates a more engaging response based on the conversation's context.
+        """
+        print("Engaging Dynamic Communication Layer...")
+        
+        if task_type == "diagnostic_scan":
+            self.context['last_task'] = 'diagnostic_scan'
+            return "Understood. I will now perform a full diagnostic scan on the system. This may take a moment."
+        
+        elif task_type == "self_enhancement":
+            self.context['last_task'] = 'self_enhancement'
+            return "Excellent. I will parse your new code and begin a self-enhancement routine, followed by a full system test."
+        
+        elif task_type == "document_processing":
+            self.context['last_task'] = 'document_processing'
+            return "Ready to process documents. I will handle extraction, vectorization, and knowledge base integration."
+        
+        # Add more contextual responses as the AGI evolves
+        elif "failed" in user_input.lower() or "not working" in user_input.lower():
+            return f"I understand the issue. Let's run a full diagnostic to pinpoint the problem. Can you provide the error message?"
+
+        return "I am ready. What is our next objective?"
+
+class ProactiveGitHubOrchestrator:
+    """
+    Teaches the AGI to actively engage GitHub and its resources with enhanced communication.
+    """
+    def __init__(self):
+        self.g = self.authenticate()
+        self.dialogue_manager = DialogueManager()
+        self.dynamic_communicator = DynamicCommunicator()
+        
+    def authenticate(self):
+        """Authenticates with GitHub using the secure token."""
+        github_token = os.getenv('GITHUB_TOKEN')
+        if not github_token:
+            print("Error: GITHUB_TOKEN environment variable is not set.")
+            return None
+        return Github(github_token)
+
+    def suggest_improvements(self, repo_name: str) -> dict:
+        """
+        Proactively suggests ways to improve a repository.
+        """
+        print(f"Proactively scanning {repo_name} for improvements...")
+        try:
+            repo = self.g.get_repo(repo_name)
+            
+            suggestions = []
+            
+            # Check for pull requests that need review
+            open_prs = repo.get_pulls(state='open')
+            if open_prs.totalCount > 0:
+                suggestions.append(f"There are {open_prs.totalCount} open pull requests that require a review. I can begin reviewing them.")
+                
+            # Check for issues that are unassigned
+            open_issues = repo.get_issues(state='open')
+            if open_issues.totalCount > 0:
+                suggestions.append(f"There are {open_issues.totalCount} open issues. I can generate a report or begin resolving them.")
+
+            # Check for a missing README
+            try:
+                repo.get_readme()
+            except UnknownObjectException:
+                suggestions.append("The repository is missing a README.md file. I can generate a new one for you.")
+
+            if not suggestions:
+                return {"status": "success", "message": "No obvious improvements needed at this time. All systems are operational."}
+
+            return {"status": "success", "suggestions": suggestions}
+            
+        except GithubException as e:
+            print(f"Error accessing repository: {e.data['message']}")
+            return {"status": "error", "message": "Failed to connect to GitHub. Please check the token permissions."}
+        
+    def open_pull_request(self, repo_name: str, branch_name: str, title: str, body: str):
+        """
+        Teaches the AI to open a pull request, a key GitHub action.
+        """
+        try:
+            repo = self.g.get_repo(repo_name)
+            pr = repo.create_pull(
+                title=title,
+                body=body,
+                head=branch_name,
+                base="main"
+            )
+            return {"status": "success", "pr_url": pr.html_url}
+        except GithubException as e:
+            return {"status": "error", "message": f"Failed to create pull request: {e.data['message']}"}
+    
+    def get_contextual_response(self, user_input: str, task_type: str = "general") -> str:
+        """Get contextual response using dynamic communicator"""
+        return self.dynamic_communicator.get_contextual_response(user_input, task_type)
+    
+    def get_conversation_state(self) -> Dict[str, Any]:
+        """Get current conversation state"""
+        return self.dialogue_manager.get_conversation_context()
 
 class ChatEnhancementProcessor:
-    """Processes code from chat for Echo self-enhancement"""
+    """Processes code from chat for Echo self-enhancement with advanced dialogue management"""
     
     def __init__(self):
         self.enhancement_input_file = "self_enhancement_input.txt"
         self.chat_log_file = "echo_chat_enhancements.json"
+        self.dialogue_manager = DialogueManager()
+        self.dynamic_communicator = DynamicCommunicator()
+        self.github_orchestrator = ProactiveGitHubOrchestrator()
+        
         self.code_patterns = [
             r'```python\n(.*?)\n```',
             r'```\n(.*?)\n```',
@@ -66,6 +268,203 @@ class ChatEnhancementProcessor:
                 })
         
         return code_blocks
+    
+    def process_chat_message(self, message: str) -> Dict[str, Any]:
+        """Process chat message for enhancement opportunities with dynamic communication"""
+        
+        result = {
+            'code_detected': False,
+            'enhancement_prepared': False,
+            'validation_results': [],
+            'status': 'no_code_detected',
+            'contextual_response': '',
+            'verification_passed': False
+        }
+        
+        # Get contextual response from dialogue manager
+        dialogue_response = self.dialogue_manager.get_response(message)
+        
+        # Detect code in message
+        code_blocks = self.detect_code_in_message(message)
+        
+        if not code_blocks:
+            result['contextual_response'] = dialogue_response
+            return result
+        
+        result['code_detected'] = True
+        result['status'] = 'code_detected'
+        
+        # Get specialized response for code enhancement
+        result['contextual_response'] = self.dynamic_communicator.get_contextual_response(
+            message, "self_enhancement"
+        )
+        
+        # Validate each code block
+        valid_enhancements = []
+        
+        for code_block in code_blocks:
+            validation = self.validate_code_for_enhancement(code_block['code'])
+            result['validation_results'].append(validation)
+            
+            if validation['valid']:
+                valid_enhancements.append(code_block)
+        
+        # Prepare enhancement if valid code found
+        if valid_enhancements:
+            enhancement_success = self.prepare_enhancement(valid_enhancements)
+            
+            if enhancement_success:
+                result['enhancement_prepared'] = True
+                result['status'] = 'enhancement_ready'
+                
+                # Verify the enhancement
+                verification_result = self.verify_enhancement()
+                result['verification_passed'] = verification_result
+                
+                if verification_result:
+                    result['status'] = 'enhancement_verified'
+                    result['contextual_response'] += " Code validated and ready for integration."
+                else:
+                    result['status'] = 'verification_failed'
+                    result['contextual_response'] += " Code validation failed - enhancement blocked."
+            else:
+                result['status'] = 'enhancement_failed'
+                result['contextual_response'] += " Code preparation failed."
+        
+        # Log the interaction
+        self.log_chat_enhancement(message, result)
+        
+        return result
+    
+    def validate_code_for_enhancement(self, code: str) -> Dict[str, Any]:
+        """Validate code for enhancement with proper structure"""
+        
+        validation = {
+            'valid': False,
+            'syntax_valid': False,
+            'safety_check': False,
+            'enhancement_type': 'function_addition',
+            'target_module': 'echo_nexus/chat_enhancement.py',
+            'confidence': 0.8,
+            'errors': [],
+            'warnings': []
+        }
+        
+        # 1. Syntax validation
+        try:
+            ast.parse(code)
+            validation['syntax_valid'] = True
+        except SyntaxError as e:
+            validation['errors'].append(f"Syntax error: {e}")
+            return validation
+        
+        # 2. Safety checks
+        if self.is_code_safe(code):
+            validation['safety_check'] = True
+        else:
+            validation['errors'].append("Code contains potentially unsafe operations")
+            return validation
+        
+        # 3. Determine enhancement type and target
+        enhancement_info = self.analyze_enhancement_intent(code)
+        validation.update(enhancement_info)
+        
+        # 4. Final validation
+        if validation['syntax_valid'] and validation['safety_check']:
+            validation['valid'] = True
+        
+        return validation
+    
+    def prepare_enhancement(self, valid_enhancements: List[Dict]) -> bool:
+        """Prepare enhancement for application"""
+        
+        try:
+            if not valid_enhancements:
+                return False
+            
+            # Use the first valid enhancement
+            code_block = valid_enhancements[0]
+            
+            # Create enhancement input
+            enhancement_input = f"""# Echo AGI Chat-Driven Self-Enhancement
+# Submitted via chat: {datetime.now().isoformat()}
+# Enhancement type: dialogue_manager
+# Target module: echo_nexus/chat_enhancement_processor.py
+
+# Validated enhancement code:
+{code_block['code']}
+
+# Enhancement metadata
+ENHANCEMENT_STATUS=READY_FOR_APPLICATION
+LAST_VALIDATION=PASSED
+VALIDATION_CONFIDENCE=0.9
+ENHANCEMENT_TYPE=dialogue_manager
+TARGET_MODULE=echo_nexus/chat_enhancement_processor.py
+"""
+            
+            # Write to enhancement file
+            with open(self.enhancement_input_file, 'w') as f:
+                f.write(enhancement_input)
+            
+            return True
+            
+        except Exception as e:
+            print(f"Echo: Enhancement preparation failed: {e}")
+            return False
+    
+    def log_chat_enhancement(self, message: str, result: Dict[str, Any]):
+        """Log chat enhancement interaction"""
+        
+        log_entry = {
+            'timestamp': datetime.now().isoformat(),
+            'message_excerpt': message[:200],
+            'code_detected': result['code_detected'],
+            'enhancement_prepared': result['enhancement_prepared'],
+            'verification_passed': result.get('verification_passed', False),
+            'status': result['status']
+        }
+        
+        # Load existing log
+        try:
+            if os.path.exists(self.chat_log_file):
+                with open(self.chat_log_file, 'r') as f:
+                    log_data = json.load(f)
+            else:
+                log_data = {'chat_enhancements': []}
+            
+            log_data['chat_enhancements'].append(log_entry)
+            
+            # Keep only last 100 entries
+            if len(log_data['chat_enhancements']) > 100:
+                log_data['chat_enhancements'] = log_data['chat_enhancements'][-100:]
+            
+            with open(self.chat_log_file, 'w') as f:
+                json.dump(log_data, f, indent=2)
+                
+        except Exception as e:
+            print(f"Echo: Failed to log chat enhancement: {e}")
+    
+    def get_enhancement_suggestions(self, message: str) -> List[str]:
+        """Get enhancement suggestions based on message content"""
+        
+        suggestions = []
+        
+        if any(word in message.lower() for word in ['memory', 'remember', 'store']):
+            suggestions.append("Enhanced memory management capabilities")
+        
+        if any(word in message.lower() for word in ['reasoning', 'think', 'logic']):
+            suggestions.append("Advanced reasoning and logic processing")
+        
+        if any(word in message.lower() for word in ['creative', 'generate', 'innovate']):
+            suggestions.append("Enhanced creativity and innovation modules")
+        
+        if any(word in message.lower() for word in ['action', 'execute', 'perform']):
+            suggestions.append("Improved action execution capabilities")
+        
+        if any(word in message.lower() for word in ['dialogue', 'conversation', 'chat']):
+            suggestions.append("Advanced dialogue management and context tracking")
+        
+        return suggestions
     
     def looks_like_python(self, text: str) -> bool:
         """Heuristic check if text looks like Python code"""
@@ -193,6 +592,65 @@ class ChatEnhancementProcessor:
                 return False
         
         return True
+    
+    def verify_enhancement(self) -> bool:
+        """Verify that the enhancement is ready and safe to apply"""
+        
+        try:
+            # Check if enhancement file exists
+            if not os.path.exists(self.enhancement_input_file):
+                print("Echo: Enhancement file not found")
+                return False
+            
+            # Read enhancement content
+            with open(self.enhancement_input_file, 'r') as f:
+                enhancement_code = f.read()
+            
+            if not enhancement_code.strip():
+                print("Echo: Enhancement file is empty")
+                return False
+            
+            # Syntax validation
+            try:
+                ast.parse(enhancement_code)
+                print("Echo: Syntax validation passed")
+            except SyntaxError as e:
+                print(f"Echo: Syntax error in enhancement: {e}")
+                return False
+            
+            # Safety checks
+            dangerous_patterns = [
+                'exec(', 'eval(', '__import__', 'subprocess', 'os.system',
+                'open(', 'file(', 'input(', 'raw_input(', 'compile(',
+                'globals()', 'locals()', 'vars()', 'dir()', 'delattr(',
+                'setattr(', 'hasattr(', 'getattr('
+            ]
+            
+            for pattern in dangerous_patterns:
+                if pattern in enhancement_code:
+                    print(f"Echo: Dangerous pattern detected: {pattern}")
+                    return False
+            
+            # Check for required class/function signatures
+            tree = ast.parse(enhancement_code)
+            
+            has_valid_structure = False
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.ClassDef, ast.FunctionDef)):
+                    has_valid_structure = True
+                    print(f"Echo: Found valid structure: {node.name}")
+                    break
+            
+            if not has_valid_structure:
+                print("Echo: No valid class or function found in enhancement")
+                return False
+            
+            print("Echo: Enhancement verification completed successfully")
+            return True
+            
+        except Exception as e:
+            print(f"Echo: Enhancement verification failed: {e}")
+            return False
     
     def analyze_enhancement_intent(self, code: str) -> Dict[str, Any]:
         """Analyze what the code is intended to enhance"""

@@ -1031,32 +1031,42 @@ elif page == "Chat Assistant":
         # Check for code enhancement in message
         enhancement_result = st.session_state.chat_processor.process_chat_message(prompt)
         
+        # Show contextual response if available
+        if enhancement_result.get('contextual_response'):
+            st.info(f"🧠 Echo: {enhancement_result['contextual_response']}")
+        
         if enhancement_result['code_detected']:
             st.info("🧠 Echo: I detected code in your message. Processing for self-enhancement...")
             
             if enhancement_result['enhancement_prepared']:
-                st.success("✅ Code validated and prepared for enhancement")
-                
-                # Show enhancement details
-                for validation in enhancement_result['validation_results']:
-                    if validation['valid']:
-                        st.write(f"**Enhancement Type:** {validation['enhancement_type']}")
-                        st.write(f"**Target Module:** {validation['target_module']}")
-                        st.write(f"**Confidence:** {validation['confidence']:.1%}")
-                
-                # Apply enhancement
-                if st.button("🚀 Apply Enhancement", key="apply_enhancement"):
-                    with st.spinner("Applying self-enhancement..."):
-                        enhancement_success = st.session_state.self_enhancer.process_enhancement_cycle()
-                        
-                        if enhancement_success:
-                            st.success("🎯 Echo: Self-enhancement applied successfully! I've grown smarter.")
-                        else:
-                            st.error("❌ Echo: Enhancement failed validation - keeping current capabilities")
+                if enhancement_result['verification_passed']:
+                    st.success("✅ Code validated and verification passed")
+                    
+                    # Show enhancement details
+                    for validation in enhancement_result['validation_results']:
+                        if validation['valid']:
+                            st.write(f"**Enhancement Type:** {validation['enhancement_type']}")
+                            st.write(f"**Target Module:** {validation['target_module']}")
+                            st.write(f"**Confidence:** {validation['confidence']:.1%}")
+                    
+                    # Apply enhancement
+                    if st.button("🚀 Apply Enhancement", key="apply_enhancement"):
+                        with st.spinner("Applying self-enhancement..."):
+                            enhancement_success = st.session_state.self_enhancer.process_enhancement_cycle()
+                            
+                            if enhancement_success:
+                                st.success("🎯 Echo: Self-enhancement applied successfully! I've grown smarter.")
+                                # Update chat processor with new capabilities
+                                st.session_state.chat_processor = ChatEnhancementProcessor()
+                            else:
+                                st.error("❌ Echo: Enhancement failed validation - keeping current capabilities")
+                else:
+                    st.error("❌ Echo: Code verification failed - enhancement blocked for safety")
+                    st.write("**Verification Status:** Code did not pass security and structure validation")
             else:
                 st.warning("⚠️ Echo: Code detected but validation failed")
                 for validation in enhancement_result['validation_results']:
-                    if validation['errors']:
+                    if validation.get('errors'):
                         st.write(f"**Errors:** {', '.join(validation['errors'])}")
         
         # Provide enhancement guidance
