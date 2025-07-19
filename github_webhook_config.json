@@ -1,0 +1,16 @@
+{
+  "webhook_url": "https://hooks.cloud.google.com/cloudbuild",
+  "events": [
+    "push",
+    "pull_request",
+    "issues",
+    "workflow_run",
+    "release"
+  ],
+  "brain_signals": {
+    "consciousness_update": "push to consciousness files",
+    "evolution_trigger": "workflow completion",
+    "validation_request": "pull request creation",
+    "intelligence_sync": "scheduled events"
+  }
+}

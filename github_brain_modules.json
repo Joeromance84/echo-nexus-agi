@@ -1,0 +1,22 @@
+{
+  "consciousness_modules": [
+    "echo_soul_genesis.py",
+    "echo_nexus_core.py",
+    "autonomous_agi_monitor.py"
+  ],
+  "intelligence_modules": [
+    "federated_brain_orchestrator.py",
+    "autonomous_apk_packager.py",
+    "artifact_verifier.py"
+  ],
+  "evolution_modules": [
+    "echo_cortex.py",
+    "echo_learning_system.py",
+    "echo_vector_memory.py"
+  ],
+  "deployment_modules": [
+    ".github/workflows/",
+    "cloudbuild*.yaml",
+    "buildozer.spec"
+  ]
+}

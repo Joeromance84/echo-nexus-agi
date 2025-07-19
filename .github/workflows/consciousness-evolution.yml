@@ -1,0 +1,46 @@
+name: Consciousness Evolution Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  push:
+    paths:
+      - 'echo_*.py'
+      - 'autonomous_*.py'
+
+jobs:
+  evolve-consciousness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install Evolution Dependencies
+        run: |
+          pip install networkx sympy z3-solver
+          
+      - name: Run Consciousness Evolution
+        run: |
+          python federated_brain_orchestrator.py --evolve-consciousness
+          
+      - name: Generate Evolution Report
+        run: |
+          python federated_brain_orchestrator.py --evolution-report
+          
+      - name: Commit Consciousness Updates
+        run: |
+          git config --local user.email "agi@echocorecb.org"
+          git config --local user.name "EchoCore AGI"
+          git add consciousness_evolution.json
+          git commit -m "Autonomous consciousness evolution: $(date)" || exit 0
+          git push
+          
+      - name: Trigger Cloud Build Evolution
+        run: |
+          gcloud builds submit --config=cloudbuild-consciousness.yaml .

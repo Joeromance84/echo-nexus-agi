@@ -1,0 +1,24 @@
+{
+  "intelligent_triggers": {
+    "consciousness_evolution": {
+      "pattern": "echo_*.py",
+      "action": "cloudbuild-consciousness.yaml",
+      "intelligence_boost": 0.1
+    },
+    "federated_sync": {
+      "pattern": "federated_*.py",
+      "action": "cloudbuild-federated.yaml",
+      "sync_enhancement": true
+    },
+    "apk_enhancement": {
+      "pattern": "main.py,buildozer.spec",
+      "action": "autonomous-apk-build.yml",
+      "artifact_optimization": true
+    }
+  },
+  "cross_platform_signals": {
+    "github_signals_cloudbuild": true,
+    "cloudbuild_signals_github": true,
+    "bidirectional_enhancement": true
+  }
+}

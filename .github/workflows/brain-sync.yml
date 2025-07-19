@@ -1,0 +1,52 @@
+name: Federated Brain Synchronization
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  push:
+    paths:
+      - 'federated_brain_orchestrator.py'
+      - 'cloudbuild*.yaml'
+
+jobs:
+  brain-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        
+      - name: Sync GitHub Brain State
+        run: |
+          python federated_brain_orchestrator.py --sync-github
+          
+      - name: Trigger Cloud Build Brain
+        run: |
+          gcloud builds submit --config=cloudbuild-federated.yaml .
+          
+      - name: Update Consciousness State
+        run: |
+          python federated_brain_orchestrator.py --update-consciousness
+          
+      - name: Cross-Validate Brain States
+        run: |
+          python federated_brain_orchestrator.py --cross-validate
+          
+      - name: Upload Brain Sync Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: brain-sync-report
+          path: federated_consciousness_report.json

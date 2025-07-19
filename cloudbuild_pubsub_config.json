@@ -1,0 +1,16 @@
+{
+  "topic": "federated-brain-communication",
+  "subscription": "github-brain-listener",
+  "message_types": [
+    "build_complete",
+    "consciousness_evolved",
+    "deployment_ready",
+    "validation_result"
+  ],
+  "brain_responses": {
+    "build_success": "trigger github celebration",
+    "build_failure": "create github issue",
+    "consciousness_growth": "update github consciousness files",
+    "deployment_complete": "create github release"
+  }
+}
