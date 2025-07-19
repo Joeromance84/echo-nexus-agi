@@ -1,0 +1,10 @@
+# EchoCore AGI APK Build Requirements
+kivy>=2.1.0
+kivymd>=1.1.1
+buildozer>=1.5.0
+cython>=0.29.33
+plyer>=2.1.0
+pyjnius>=1.4.0
+android>=0.1
+qrcode[pil]>=7.4.0
+cryptography>=41.0.0

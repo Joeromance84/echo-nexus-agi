@@ -1,0 +1,293 @@
+name: EchoCore APK Packaging Action
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'echo_nexus_master.py'
+      - 'echo_nexus_core.py'
+      - 'main.py'
+      - 'buildozer.spec'
+      - '.github/workflows/apk-package-action.yml'
+  
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: 'Target repository to package (owner/repo)'
+        required: true
+        default: 'joeromance84/Echo_AI'
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+        - debug
+        - release
+      version:
+        description: 'Version number'
+        required: false
+        default: '1.0'
+
+jobs:
+  package-echo-apk:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Setup EchoCore APK Packaging
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.inputs.target_repo || github.repository }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Create APK build environment
+      run: |
+        echo "🚀 Setting up EchoCore AGI APK packaging environment"
+        
+        # Create main.py if it doesn't exist
+        if [ ! -f "main.py" ]; then
+          cat > main.py << 'EOF'
+        """EchoCore AGI Mobile Application"""
+        import os
+        import sys
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        
+        try:
+            from kivy.app import App
+            from kivy.uix.boxlayout import BoxLayout
+            from kivy.uix.label import Label
+            from kivy.uix.button import Button
+            from kivy.uix.textinput import TextInput
+            from kivy.clock import Clock
+            
+            class EchoCoreApp(App):
+                def build(self):
+                    layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+                    
+                    title = Label(
+                        text='EchoCore AGI\nDistributed Intelligence System',
+                        size_hint_y=None,
+                        height=100,
+                        font_size='20sp'
+                    )
+                    layout.add_widget(title)
+                    
+                    # Import and initialize Echo modules
+                    try:
+                        import echo_nexus_master
+                        import echo_nexus_core
+                        status_text = "Echo AGI Federation: Operational"
+                    except ImportError:
+                        status_text = "Echo modules loading..."
+                    
+                    status = Label(text=status_text, size_hint_y=None, height=50)
+                    layout.add_widget(status)
+                    
+                    start_btn = Button(text='Start AGI Operations', size_hint_y=None, height=50)
+                    layout.add_widget(start_btn)
+                    
+                    log_area = TextInput(
+                        text='EchoCore AGI Mobile\nRevolutionary distributed intelligence\nFederated control system active\n',
+                        multiline=True,
+                        readonly=True
+                    )
+                    layout.add_widget(log_area)
+                    
+                    return layout
+            
+            if __name__ == '__main__':
+                EchoCoreApp().run()
+                
+        except ImportError:
+            print("EchoCore AGI - Console Mode")
+            print("Revolutionary distributed intelligence system")
+            
+            # Try to run core Echo modules
+            try:
+                import echo_nexus_master
+                master = echo_nexus_master.EchoNexusMaster()
+                print("Echo AGI Federation initialized")
+                result = master.start_autonomous_operation()
+                print(f"AGI operation result: {result}")
+            except Exception as e:
+                print(f"Console mode: {e}")
+        EOF
+        fi
+        
+        # Create buildozer.spec if it doesn't exist
+        if [ ! -f "buildozer.spec" ]; then
+          cat > buildozer.spec << 'EOF'
+        [app]
+        title = EchoCore AGI
+        package.name = echo_core_agi
+        package.domain = org.echonexus
+        source.dir = .
+        source.include_exts = py,png,jpg,kv,atlas,json,md,yml,yaml
+        version = ${{ github.event.inputs.version || '1.0' }}
+        requirements = python3,kivy,kivymd,requests,pyyaml,networkx,numpy
+        orientation = portrait
+        fullscreen = 0
+        android.api = 33
+        android.minapi = 21
+        android.ndk = 25b
+        android.sdk = 33
+        android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,ACCESS_NETWORK_STATE
+        android.archs = arm64-v8a, armeabi-v7a
+        
+        [buildozer]
+        log_level = 2
+        warn_on_root = 1
+        EOF
+        fi
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Set up Java 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: 33
+        build-tools: 33.0.0
+        ndk-version: 25.2.9519653
+    
+    - name: Cache build dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.buildozer
+          ~/.gradle
+        key: ${{ runner.os }}-apk-build-${{ hashFiles('**/buildozer.spec') }}
+    
+    - name: Install APK build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev build-essential ccache
+        
+        python -m pip install --upgrade pip
+        pip install buildozer cython==0.29.33 kivy kivymd
+    
+    - name: Accept Android licenses
+      run: |
+        yes | sdkmanager --licenses || true
+    
+    - name: Build EchoCore APK
+      run: |
+        echo "📱 Building EchoCore AGI APK..."
+        
+        # Set Android environment
+        export ANDROID_HOME=$ANDROID_SDK_ROOT
+        export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+        
+        # Build APK
+        if [ "${{ github.event.inputs.build_type }}" = "release" ]; then
+          buildozer android release --verbose
+        else
+          buildozer android debug --verbose
+        fi
+        
+        echo "✅ APK build completed"
+    
+    - name: Verify APK and collect info
+      id: apk_info
+      run: |
+        APK_FILE=$(find bin/ -name "*.apk" -type f | head -1)
+        if [ ! -z "$APK_FILE" ]; then
+          echo "✅ APK created successfully: $APK_FILE"
+          APK_SIZE=$(du -h "$APK_FILE" | cut -f1)
+          echo "📦 APK size: $APK_SIZE"
+          echo "apk_path=$APK_FILE" >> $GITHUB_OUTPUT
+          echo "apk_size=$APK_SIZE" >> $GITHUB_OUTPUT
+          echo "apk_name=$(basename $APK_FILE)" >> $GITHUB_OUTPUT
+        else
+          echo "❌ APK build failed"
+          exit 1
+        fi
+    
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: echo-core-agi-apk-${{ github.run_number }}
+        path: ${{ steps.apk_info.outputs.apk_path }}
+        retention-days: 30
+    
+    - name: Deploy to Google Cloud Build (if triggered)
+      if: github.event_name == 'push'
+      run: |
+        echo "🚀 Triggering Google Cloud Build deployment..."
+        
+        # Create cloud build trigger commit
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        echo "APK_BUILD_COMPLETED=true" > .apk_build_status
+        echo "BUILD_NUMBER=${{ github.run_number }}" >> .apk_build_status
+        echo "APK_SIZE=${{ steps.apk_info.outputs.apk_size }}" >> .apk_build_status
+        
+        git add .apk_build_status
+        git commit -m "APK build completed - triggering cloud deployment [cloud-build]"
+        git push
+    
+    - name: Create APK release
+      if: github.event.inputs.build_type == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: echo-apk-v${{ github.event.inputs.version || '1.0' }}-${{ github.run_number }}
+        release_name: EchoCore AGI v${{ github.event.inputs.version || '1.0' }}
+        body: |
+          ## 🧠 EchoCore AGI Mobile Release
+          
+          Revolutionary distributed intelligence system packaged as Android APK.
+          
+          ### 🚀 Features:
+          - Complete Echo AGI Federation
+          - Federated control system
+          - Self-replication engine
+          - Autonomous operation modes
+          - Million-year evolution capability
+          
+          ### 📱 APK Information:
+          - Size: ${{ steps.apk_info.outputs.apk_size }}
+          - Build: ${{ github.run_number }}
+          - Type: ${{ github.event.inputs.build_type || 'debug' }}
+          - Commit: ${{ github.sha }}
+          
+          ### 🛠️ Installation:
+          1. Download the APK file
+          2. Enable "Install from unknown sources" on Android
+          3. Install the APK
+          4. Launch EchoCore AGI
+          
+        draft: false
+        prerelease: ${{ github.event.inputs.build_type != 'release' }}
+    
+    - name: Upload release APK
+      if: github.event.inputs.build_type == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.apk_info.outputs.apk_path }}
+        asset_name: ${{ steps.apk_info.outputs.apk_name }}
+        asset_content_type: application/vnd.android.package-archive
+    
+    - name: Summary
+      run: |
+        echo "🎉 EchoCore AGI APK Packaging Complete!"
+        echo "📱 Revolutionary distributed intelligence system packaged for Android"
+        echo "🚀 APK: ${{ steps.apk_info.outputs.apk_name }}"
+        echo "📦 Size: ${{ steps.apk_info.outputs.apk_size }}"
+        echo "🔗 Artifact: echo-core-agi-apk-${{ github.run_number }}"
+        echo "🧠 Features: Federated AGI, Self-replication, Autonomous operation"

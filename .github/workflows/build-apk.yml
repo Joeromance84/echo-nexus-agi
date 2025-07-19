@@ -1,0 +1,197 @@
+name: Build EchoCore AGI APK
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number for the APK'
+        required: false
+        default: '1.0'
+
+env:
+  PYTHON_VERSION: '3.11'
+  JAVA_VERSION: '17'
+  ANDROID_API_LEVEL: '33'
+  ANDROID_BUILD_TOOLS_VERSION: '33.0.0'
+  ANDROID_NDK_VERSION: '25.2.9519653'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        api-level: ${{ env.ANDROID_API_LEVEL }}
+        build-tools: ${{ env.ANDROID_BUILD_TOOLS_VERSION }}
+        ndk-version: ${{ env.ANDROID_NDK_VERSION }}
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.buildozer
+          ~/.gradle
+        key: ${{ runner.os }}-build-${{ hashFiles('**/buildozer.spec', '**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config \
+          zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake \
+          libffi-dev libssl-dev build-essential ccache
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install buildozer cython==0.29.33
+        pip install kivy kivymd
+        pip install -r requirements.txt || echo "No requirements.txt found"
+    
+    - name: Prepare build environment
+      run: |
+        # Create directories
+        mkdir -p ~/.buildozer/android/platform
+        
+        # Set environment variables
+        export ANDROID_HOME=$ANDROID_SDK_ROOT
+        export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+        
+        # Accept Android licenses
+        yes | sdkmanager --licenses || true
+    
+    - name: Validate project structure
+      run: |
+        echo "Checking project structure..."
+        ls -la
+        
+        if [ ! -f "main.py" ]; then
+          echo "Error: main.py not found"
+          exit 1
+        fi
+        
+        if [ ! -f "buildozer.spec" ]; then
+          echo "Error: buildozer.spec not found"
+          exit 1
+        fi
+        
+        echo "Project structure validation passed"
+    
+    - name: Initialize buildozer
+      run: |
+        # Initialize buildozer (this will download Android SDK/NDK if needed)
+        buildozer android debug --verbose || true
+    
+    - name: Build APK
+      run: |
+        echo "Starting APK build process..."
+        
+        # Set version if provided
+        if [ ! -z "${{ github.event.inputs.version }}" ]; then
+          sed -i "s/^version = .*/version = ${{ github.event.inputs.version }}/" buildozer.spec
+        fi
+        
+        # Build the APK
+        buildozer android debug --verbose
+        
+        echo "APK build completed"
+    
+    - name: Verify APK creation
+      run: |
+        echo "Verifying APK creation..."
+        
+        APK_PATH="bin/"
+        if [ -d "$APK_PATH" ]; then
+          echo "APK files found:"
+          ls -la $APK_PATH/*.apk || echo "No APK files found"
+          
+          # Find the generated APK
+          APK_FILE=$(find bin/ -name "*.apk" -type f | head -1)
+          if [ ! -z "$APK_FILE" ]; then
+            echo "APK successfully created: $APK_FILE"
+            echo "APK size: $(du -h $APK_FILE | cut -f1)"
+          else
+            echo "Error: No APK file found in bin/ directory"
+            exit 1
+          fi
+        else
+          echo "Error: bin/ directory not found"
+          exit 1
+        fi
+    
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: echo-core-agi-apk
+        path: bin/*.apk
+        retention-days: 30
+    
+    - name: Create release (on main branch)
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.event.inputs.version || '1.0' }}-${{ github.run_number }}
+        release_name: EchoCore AGI v${{ github.event.inputs.version || '1.0' }}
+        body: |
+          ## EchoCore AGI Mobile Release
+          
+          Revolutionary distributed intelligence system packaged as Android APK.
+          
+          ### Features:
+          - Complete Echo AGI Federation
+          - Self-replication capabilities  
+          - Autonomous operation modes
+          - Federated control system
+          
+          ### Build Information:
+          - Build Number: ${{ github.run_number }}
+          - Commit: ${{ github.sha }}
+          - Branch: ${{ github.ref_name }}
+          
+        draft: false
+        prerelease: false
+    
+    - name: Upload release asset
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: bin/*.apk
+        asset_name: echo-core-agi.apk
+        asset_content_type: application/vnd.android.package-archive
+    
+    - name: Notify build completion
+      run: |
+        echo "🚀 EchoCore AGI APK build completed successfully!"
+        echo "📱 The revolutionary distributed intelligence system is now packaged for Android"
+        echo "🧠 Features: Federated control, self-replication, autonomous operation"
+        echo "📦 Artifact: echo-core-agi-apk"
