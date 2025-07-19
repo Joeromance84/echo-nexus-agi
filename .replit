@@ -20,6 +20,10 @@ author = "agent"
 task = "workflow.run"
 args = "Streamlit App"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "APK Build Monitor"
+
 [[workflows.workflow]]
 name = "Streamlit App"
 author = "agent"
@@ -28,6 +32,14 @@ author = "agent"
 task = "shell.exec"
 args = "streamlit run app.py --server.port 5000"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "APK Build Monitor"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 autonomous_agi_monitor.py"
 
 [[ports]]
 localPort = 5000

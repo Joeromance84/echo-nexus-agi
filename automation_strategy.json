@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-07-19T21:33:37.291035",
+  "monitoring_protocols": {
+    "build_monitoring": true,
+    "compatibility_checking": true,
+    "performance_optimization": true,
+    "failure_recovery": true,
+    "learning_integration": true
+  },
+  "precision_rules": {
+    "dependency_validation": "Always verify mobile compatibility before build",
+    "build_validation": "Ensure APK generation and artifact upload success",
+    "failure_analysis": "Capture failure patterns for learning improvement",
+    "success_replication": "Document and replicate successful build patterns",
+    "continuous_optimization": "Apply learned optimizations automatically"
+  },
+  "learning_integration": true,
+  "continuous_improvement": true
+}
