@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 from utils.github_authenticator import GitHubAuthenticator
 from github_setup_wizard import GitHubSetupWizard
+from github_oauth_device import GitHubDeviceAuth
 
 class GitHubAuthAssistant:
     """
@@ -24,6 +25,7 @@ class GitHubAuthAssistant:
         self.github_username = "joeromance84"
         self.authenticator = GitHubAuthenticator()
         self.setup_wizard = GitHubSetupWizard()
+        self.device_auth = GitHubDeviceAuth()
         
     def check_and_maintain_session(self) -> Dict[str, Any]:
         """Check existing session and maintain persistent authentication"""
@@ -76,15 +78,18 @@ class GitHubAuthAssistant:
         method = st.radio(
             "Select authentication method:",
             [
-                "🔑 Personal Access Token (Recommended - Most Reliable)",
-                "⚡ GitHub CLI (Quick Setup)",
-                "🔐 SSH Key (Advanced - Most Secure)",
+                "📱 Device Authentication (Easiest - Use GitHub App)",
+                "🔑 Personal Access Token (Manual Setup)",
+                "⚡ GitHub CLI (Command Line)",
+                "🔐 SSH Key (Advanced)",
                 "🆘 I need help choosing"
             ],
-            key="auth_method_selection"
+            key=f"auth_method_selection_{int(time.time())}"
         )
         
-        if "Personal Access Token" in method:
+        if "Device Authentication" in method:
+            return self.assist_device_authentication()
+        elif "Personal Access Token" in method:
             return self.assist_token_setup()
         elif "GitHub CLI" in method:
             return self.assist_cli_setup()
@@ -93,6 +98,59 @@ class GitHubAuthAssistant:
         elif "help choosing" in method:
             return self.provide_method_recommendations()
     
+    def assist_device_authentication(self) -> Dict[str, Any]:
+        """Assist with device authentication (OAuth device flow)"""
+        
+        st.write("### 📱 Device Authentication")
+        st.write("The easiest way to connect! Works with your GitHub mobile app or any browser.")
+        
+        # Show the benefits
+        with st.expander("✨ Why Device Authentication?", expanded=True):
+            st.write("""
+            **Perfect for mobile users:**
+            - 📱 Use your GitHub mobile app
+            - 🔢 Just enter a simple code
+            - ✅ Secure OAuth flow
+            - 🚀 No manual token creation
+            - 💾 Stays logged in permanently
+            
+            **Works on any device:**
+            - 📲 Scan QR code with phone
+            - 💻 Use any browser
+            - 🔒 Enterprise-grade security
+            - ⚡ Takes less than 1 minute
+            """)
+        
+        # Start device authentication
+        auth_result = self.device_auth.streamlit_device_auth_flow()
+        
+        if auth_result['status'] == 'authenticated':
+            # Update session state
+            st.session_state.github_authenticated = True
+            st.session_state.github_user_info = auth_result['user']
+            
+            # Save session
+            session_data = self.create_device_session(auth_result)
+            self.save_session(session_data)
+            
+            st.balloons()
+            st.success("🎉 Device authentication successful! You're now permanently connected.")
+            
+            return auth_result
+        
+        return auth_result
+    
+    def create_device_session(self, auth_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Create session data for device authentication"""
+        
+        return {
+            'created_at': time.time(),
+            'user_info': auth_result['user'],
+            'method': 'device_authentication',
+            'username': auth_result['user']['login'],
+            'authenticated': True
+        }
+
     def assist_token_setup(self) -> Dict[str, Any]:
         """Assist with Personal Access Token setup"""
         
@@ -378,23 +436,36 @@ cat ~/.ssh/id_ed25519_echonexus.pub
     def provide_method_recommendations(self) -> Dict[str, Any]:
         """Provide personalized method recommendations"""
         
-        st.write("### 🎯 Recommended Authentication Method")
+        st.write("### 🎯 Perfect Authentication Method for You")
         
-        st.info("""
-**For joeromance84, I recommend the Personal Access Token method because:**
+        st.success("""
+**Device Authentication - The Steve Jobs Approach** 📱
 
-✅ **Most Reliable**: Works in all environments  
-✅ **Easiest Setup**: Just copy and paste  
-✅ **Persistent**: Stays logged in forever  
-✅ **Full Control**: Access to all repositories and features  
-✅ **Quick Recovery**: Easy to regenerate if needed  
+Like the iPhone revolutionized phones by making them simple and delightful, Device Authentication transforms GitHub login:
 
-This method will keep you permanently logged in with zero maintenance required.
+✨ **Beautifully Simple**: Open GitHub app → Enter code → Done  
+📱 **Works Anywhere**: Phone, tablet, computer - your choice  
+🚀 **Under 60 Seconds**: Faster than making coffee  
+🔒 **Enterprise Secure**: OAuth 2.0 with zero compromise  
+💾 **Never Login Again**: Permanent connection, like magic  
+
+**This touches hearts through simplicity** - no copying tokens, no command lines, just pure elegance.
         """)
         
-        if st.button("🚀 Start Personal Access Token Setup", key="start_token_setup"):
-            st.session_state.auth_method_selection = "🔑 Personal Access Token (Recommended - Most Reliable)"
-            st.rerun()
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("📱 Use Device Authentication", key="start_device_setup"):
+                st.session_state.auth_method_selection = "📱 Device Authentication (Easiest - Use GitHub App)"
+                st.rerun()
+        
+        with col2:
+            if st.button("🔑 Use Manual Token", key="start_token_setup_alt"):
+                st.session_state.auth_method_selection = "🔑 Personal Access Token (Manual Setup)"
+                st.rerun()
+        
+        st.write("---")
+        st.write("💡 **Innovation Tip**: Device Authentication represents the future of secure login - seamless, secure, and user-friendly.")
         
         return {'status': 'recommendation_provided'}
     
