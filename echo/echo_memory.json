@@ -1,0 +1,158 @@
+{
+  "version": "2.0.0",
+  "last_updated": "2025-07-19T04:51:04.353013Z",
+  "episodic_snapshots": [
+    {
+      "snapshot_id": "echo_20250719_045104",
+      "timestamp": "2025-07-19T04:51:04.352946Z",
+      "summary": "Resolved IndentationError in parser.py using rule_42 (repair_syntax)",
+      "intent": "repair_syntax",
+      "outcome": "success",
+      "files_modified": [
+        "utils/parser.py"
+      ],
+      "rules_applied": [
+        "rule_42"
+      ],
+      "tools_used": [
+        "CrashParser",
+        "RepairEngine"
+      ],
+      "metadata_depth": 2,
+      "communication_generated": {
+        "commit_message": "fix(parser.py): Resolved IndentationError using rule_42 (EchoIntent: \"repair_syntax\")",
+        "action_log": {
+          "timestamp": "2025-07-19T04:51:04.352991Z",
+          "action": "unknown_action",
+          "target": "utils/parser.py:15",
+          "intent": "repair_syntax",
+          "tool": "unknown_tool",
+          "rule": "unknown_rule",
+          "outcome": "success",
+          "metadata": {
+            "error_type": "IndentationError"
+          }
+        }
+      },
+      "full_context": {
+        "_metadata_sequence": [
+          {
+            "source": "CrashParser",
+            "timestamp": "2025-07-19T04:51:04.352139Z",
+            "keys": [
+              "intent",
+              "error_type",
+              "file",
+              "line",
+              "message"
+            ]
+          },
+          {
+            "source": "RepairEngine",
+            "timestamp": "2025-07-19T04:51:04.352168Z",
+            "keys": [
+              "rule_id",
+              "rule_applied",
+              "tool_used",
+              "outcome"
+            ]
+          }
+        ],
+        "intent": "repair_syntax",
+        "error_type": "IndentationError",
+        "file": "utils/parser.py",
+        "line": 15,
+        "message": "unexpected indent",
+        "_source": "RepairEngine",
+        "_ingested_at": "2025-07-19T04:51:04.352168Z",
+        "_sequence": 1,
+        "rule_id": "rule_42",
+        "rule_applied": {
+          "rule_id": "rule_42",
+          "confidence": 0.9
+        },
+        "tool_used": "RepairEngine",
+        "outcome": "success"
+      },
+      "performance_metrics": {
+        "metadata_sequence_length": 2,
+        "context_complexity": 13,
+        "time_span": "calculated_span",
+        "success_indicators": [
+          "explicit_success",
+          "high_confidence_rule"
+        ]
+      }
+    }
+  ],
+  "intent_history": [
+    {
+      "intent": "repair_syntax",
+      "source": "CrashParser",
+      "timestamp": "2025-07-19T04:51:04.352157Z",
+      "context_depth": 9
+    }
+  ],
+  "rule_usage_patterns": {
+    "rule_42": {
+      "total_uses": 1,
+      "successes": 1,
+      "failures": 0,
+      "first_used": "2025-07-19T04:51:04.352175Z",
+      "contexts": [
+        "repair_syntax"
+      ],
+      "last_used": "2025-07-19T04:51:04.352178Z"
+    }
+  },
+  "last_active_context": {
+    "_metadata_sequence": [
+      {
+        "source": "CrashParser",
+        "timestamp": "2025-07-19T04:51:04.352139Z",
+        "keys": [
+          "intent",
+          "error_type",
+          "file",
+          "line",
+          "message"
+        ]
+      },
+      {
+        "source": "RepairEngine",
+        "timestamp": "2025-07-19T04:51:04.352168Z",
+        "keys": [
+          "rule_id",
+          "rule_applied",
+          "tool_used",
+          "outcome"
+        ]
+      }
+    ],
+    "intent": "repair_syntax",
+    "error_type": "IndentationError",
+    "file": "utils/parser.py",
+    "line": 15,
+    "message": "unexpected indent",
+    "_source": "RepairEngine",
+    "_ingested_at": "2025-07-19T04:51:04.352168Z",
+    "_sequence": 1,
+    "rule_id": "rule_42",
+    "rule_applied": {
+      "rule_id": "rule_42",
+      "confidence": 0.9
+    },
+    "tool_used": "RepairEngine",
+    "outcome": "success"
+  },
+  "metadata": {
+    "total_snapshots": 1,
+    "total_intents": 1,
+    "memory_depth": {
+      "depth": 1,
+      "recent_diversity": 1,
+      "complexity_score": 7,
+      "maturity_level": "nascent"
+    }
+  }
+}

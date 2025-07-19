@@ -1,0 +1,127 @@
+{
+  "version": "2.0.0",
+  "last_updated": "2025-07-19T04:51:04.844225Z",
+  "episodic_snapshots": [
+    {
+      "snapshot_id": "echo_20250719_045104",
+      "timestamp": "2025-07-19T04:51:04.844162Z",
+      "summary": "Integration test completed",
+      "intent": "analyze_project_structure",
+      "outcome": "completed",
+      "files_modified": [],
+      "rules_applied": [],
+      "tools_used": [
+        "EchoRouter"
+      ],
+      "metadata_depth": 2,
+      "communication_generated": {
+        "commit_message": "feat(codebase): analyze_project_structure completed using unknown",
+        "action_log": {
+          "timestamp": "2025-07-19T04:51:04.844202Z",
+          "action": "unknown_action",
+          "target": "unknown",
+          "intent": "analyze_project_structure",
+          "tool": "unknown_tool",
+          "rule": "unknown_rule",
+          "outcome": "unknown_outcome",
+          "metadata": {}
+        }
+      },
+      "full_context": {
+        "_metadata_sequence": [
+          {
+            "source": "EchoRouter",
+            "timestamp": "2025-07-19T04:51:04.840626Z",
+            "keys": [
+              "intent",
+              "event_source",
+              "routing_timestamp",
+              "event_data_keys"
+            ]
+          },
+          {
+            "source": "EchoRouter",
+            "timestamp": "2025-07-19T04:51:04.842377Z",
+            "keys": [
+              "routing_success",
+              "plugin_executed",
+              "execution_metadata"
+            ]
+          }
+        ],
+        "intent": "analyze_project_structure",
+        "event_source": "EchoRouter",
+        "routing_timestamp": "2025-07-19T04:51:04.840616Z",
+        "event_data_keys": [
+          "target"
+        ],
+        "_source": "EchoRouter",
+        "_ingested_at": "2025-07-19T04:51:04.842377Z",
+        "_sequence": 1,
+        "routing_success": false,
+        "plugin_executed": "code_intelligence",
+        "execution_metadata": {}
+      },
+      "performance_metrics": {
+        "metadata_sequence_length": 2,
+        "context_complexity": 11,
+        "time_span": "calculated_span",
+        "success_indicators": []
+      }
+    }
+  ],
+  "intent_history": [
+    {
+      "intent": "analyze_project_structure",
+      "source": "EchoRouter",
+      "timestamp": "2025-07-19T04:51:04.840633Z",
+      "context_depth": 8
+    }
+  ],
+  "rule_usage_patterns": {},
+  "last_active_context": {
+    "_metadata_sequence": [
+      {
+        "source": "EchoRouter",
+        "timestamp": "2025-07-19T04:51:04.840626Z",
+        "keys": [
+          "intent",
+          "event_source",
+          "routing_timestamp",
+          "event_data_keys"
+        ]
+      },
+      {
+        "source": "EchoRouter",
+        "timestamp": "2025-07-19T04:51:04.842377Z",
+        "keys": [
+          "routing_success",
+          "plugin_executed",
+          "execution_metadata"
+        ]
+      }
+    ],
+    "intent": "analyze_project_structure",
+    "event_source": "EchoRouter",
+    "routing_timestamp": "2025-07-19T04:51:04.840616Z",
+    "event_data_keys": [
+      "target"
+    ],
+    "_source": "EchoRouter",
+    "_ingested_at": "2025-07-19T04:51:04.842377Z",
+    "_sequence": 1,
+    "routing_success": false,
+    "plugin_executed": "code_intelligence",
+    "execution_metadata": {}
+  },
+  "metadata": {
+    "total_snapshots": 1,
+    "total_intents": 1,
+    "memory_depth": {
+      "depth": 1,
+      "recent_diversity": 1,
+      "complexity_score": 7,
+      "maturity_level": "nascent"
+    }
+  }
+}

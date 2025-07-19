@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "description": "Phase 1 RepairGenome - Basic symbolic repair patterns",
+  "last_updated": "2025-07-19T04:50:24.514172Z",
+  "rules": [
+    {
+      "rule_id": "rule_01",
+      "name": "Fix Missing Indentation",
+      "error_type": "IndentationError",
+      "error_subtype": "missing_indentation",
+      "pattern": "^\\s*(return|pass|break|continue|raise)\\s*$",
+      "fix_strategy": "add_indentation",
+      "replacement": "    \\1",
+      "confidence": 0.9,
+      "auto_apply": true,
+      "description": "Add 4-space indentation to statements that need it"
+    },
+    {
+      "rule_id": "rule_02",
+      "name": "Fix Extra Indentation",
+      "error_type": "IndentationError",
+      "error_subtype": "extra_indentation",
+      "pattern": "^(\\s{8,})(.*?)$",
+      "fix_strategy": "reduce_indentation",
+      "replacement": "    \\2",
+      "confidence": 0.8,
+      "auto_apply": true,
+      "description": "Reduce excessive indentation to 4 spaces"
+    },
+    {
+      "rule_id": "rule_03",
+      "name": "Add Missing Colon",
+      "error_type": "SyntaxError",
+      "error_subtype": "invalid_syntax",
+      "pattern": "^(\\s*)(if|elif|else|for|while|def|class|try|except|finally|with)\\s+([^:]+?)$",
+      "fix_strategy": "add_colon",
+      "replacement": "\\1\\2 \\3:",
+      "confidence": 0.95,
+      "auto_apply": true,
+      "description": "Add missing colon to control structures"
+    },
+    {
+      "rule_id": "rule_04",
+      "name": "Fix Unmatched Parentheses",
+      "error_type": "SyntaxError",
+      "error_subtype": "invalid_syntax",
+      "pattern": "^(.*?)\\($",
+      "fix_strategy": "close_parentheses",
+      "replacement": "\\1()",
+      "confidence": 0.7,
+      "auto_apply": false,
+      "description": "Close unmatched opening parentheses"
+    },
+    {
+      "rule_id": "rule_05",
+      "name": "Remove Unused Imports",
+      "error_type": "optimization",
+      "error_subtype": "unused_import",
+      "pattern": "^import\\s+(\\w+)(?:\\s*#.*)?$",
+      "fix_strategy": "conditional_removal",
+      "replacement": "",
+      "confidence": 0.6,
+      "auto_apply": false,
+      "description": "Remove imports that are not used in the file"
+    },
+    {
+      "rule_id": "rule_06",
+      "name": "Fix Print Statement",
+      "error_type": "SyntaxError",
+      "error_subtype": "invalid_syntax",
+      "pattern": "^(\\s*)print\\s+([^(].*?)$",
+      "fix_strategy": "add_parentheses",
+      "replacement": "\\1print(\\2)",
+      "confidence": 0.9,
+      "auto_apply": true,
+      "description": "Convert Python 2 print statement to Python 3 function"
+    }
+  ],
+  "metadata": {
+    "total_rules": 6,
+    "auto_apply_rules": 4,
+    "confidence_threshold": 0.8,
+    "phase": "1.0_core"
+  }
+}

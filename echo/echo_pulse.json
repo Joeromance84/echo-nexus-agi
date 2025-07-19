@@ -1,0 +1,82 @@
+{
+  "echo_pulse": {
+    "version": "1.0.0",
+    "description": "Echo Pulse - Plugin Registry and System Manifest",
+    "last_updated": "2025-07-19T14:30:00Z",
+    "plugins": [
+      {
+        "name": "refactor_blade",
+        "module": "blades.refactor_blade",
+        "entry_point": "RefactorBlade",
+        "description": "Applies common code refactors and optimizations",
+        "capabilities": ["remove_unused_imports", "fix_indentation", "optimize_code"],
+        "trigger_events": ["refactor_request", "code_optimization"],
+        "priority": 5,
+        "enabled": true
+      },
+      {
+        "name": "crash_parser",
+        "module": "blades.crash_parser",
+        "entry_point": "CrashParser", 
+        "description": "Analyzes error logs and extracts actionable information",
+        "capabilities": ["parse_syntax_errors", "extract_traceback", "identify_error_patterns"],
+        "trigger_events": ["error_detected", "build_failure", "syntax_error"],
+        "priority": 10,
+        "enabled": true
+      },
+      {
+        "name": "repair_engine",
+        "module": "blades.repair_engine",
+        "entry_point": "RepairEngine",
+        "description": "Applies symbolic fixes based on error patterns",
+        "capabilities": ["apply_syntax_fixes", "fix_common_errors", "validate_repairs"],
+        "trigger_events": ["repair_needed", "fix_application"],
+        "priority": 8,
+        "enabled": true
+      },
+      {
+        "name": "git_connector",
+        "module": "blades.git_connector",
+        "entry_point": "GitConnector",
+        "description": "Handles Git operations and GitHub integration",
+        "capabilities": ["read_diffs", "commit_changes", "create_branches"],
+        "trigger_events": ["git_operation", "commit_request"],
+        "priority": 3,
+        "enabled": true
+      }
+    ],
+    "event_types": [
+      {
+        "name": "pr_opened",
+        "description": "Pull request opened event from GitHub",
+        "required_data": ["repo", "pr_number", "diff_url"],
+        "default_handler": "crash_parser"
+      },
+      {
+        "name": "push_event",
+        "description": "Code push event from GitHub",
+        "required_data": ["repo", "commit_hash", "changed_files"],
+        "default_handler": "refactor_blade"
+      },
+      {
+        "name": "syntax_error",
+        "description": "Syntax error detected in code",
+        "required_data": ["file_path", "error_message", "line_number"],
+        "default_handler": "repair_engine"
+      },
+      {
+        "name": "refactor_request",
+        "description": "Manual refactor request",
+        "required_data": ["target_files", "refactor_type"],
+        "default_handler": "refactor_blade"
+      }
+    ],
+    "system_config": {
+      "event_queue_size": 100,
+      "plugin_timeout": 300,
+      "retry_attempts": 3,
+      "log_level": "INFO",
+      "backup_before_changes": true
+    }
+  }
+}
