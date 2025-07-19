@@ -5,6 +5,7 @@ description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
     "openai>=1.97.0",
+    "psycopg2-binary>=2.9.10",
     "pyyaml>=6.0.2",
     "requests>=2.32.4",
     "streamlit>=1.47.0",

@@ -22,8 +22,9 @@ The application follows a modular architecture built on Streamlit as the web fra
 
 ### Core Application (app.py)
 - **Purpose**: Main application entry point with Streamlit UI setup
-- **Features**: Session state management, sidebar navigation, multi-page interface
-- **Pages**: Chat Assistant, Workflow Templates, Validation Tools, Policy Compliance, Setup Guide
+- **Features**: Session state management, sidebar navigation, multi-page interface, database integration
+- **Pages**: Chat Assistant, My Workflows, Workflow Templates, Validation Tools, Policy Compliance, Analytics, Setup Guide
+- **Database Integration**: PostgreSQL for storing workflows, build history, chat messages, and user preferences
 
 ### AI Assistant (utils/openai_helper.py)
 - **Purpose**: Handles OpenAI API integration for intelligent workflow generation
