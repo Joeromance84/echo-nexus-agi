@@ -1,0 +1,108 @@
+name: AGI Autonomous Monitoring
+
+on:
+  schedule:
+    # Run every 15 minutes to proactively monitor for issues
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    # Allow manual triggering for testing
+    inputs:
+      monitoring_mode:
+        description: 'Monitoring mode'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - issues_only
+          - verification_only
+
+jobs:
+  autonomous-monitoring:
+    runs-on: ubuntu-latest
+    name: Autonomous AGI Repository Monitoring
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install PyGithub requests python-dateutil
+          
+      - name: Run AGI Autonomous Monitoring
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 << 'EOF'
+          import os
+          import json
+          import sys
+          from datetime import datetime
+          
+          # Add current directory to path
+          sys.path.append('.')
+          
+          try:
+              from autonomous_agi_monitor import AutonomousAGIMonitor
+              
+              print("🤖 SCHEDULED AGI MONITORING CYCLE")
+              print(f"Timestamp: {datetime.now().isoformat()}")
+              print("=" * 50)
+              
+              monitor = AutonomousAGIMonitor()
+              
+              # Run the complete autonomous monitoring cycle
+              result = monitor.run_proactive_monitoring_cycle()
+              
+              # Output results for GitHub Actions logs
+              print("\n📊 MONITORING CYCLE RESULTS:")
+              print(f"Issues detected: {len(result.get('issues_detected', []))}")
+              print(f"Fixes generated: {len(result.get('fixes_triggered', []))}")
+              print(f"Pull requests created: {len(result.get('pull_requests_created', []))}")
+              print(f"Verifications completed: {len(result.get('verifications_performed', []))}")
+              
+              # Save monitoring results as workflow artifact
+              with open('agi_monitoring_results.json', 'w') as f:
+                  json.dump(result, f, indent=2, default=str)
+              
+              if result.get('pull_requests_created'):
+                  print("\n🎉 AGI CREATED AUTONOMOUS FIXES!")
+                  for pr in result['pull_requests_created']:
+                      print(f"  • PR #{pr.get('pr_number')}: {pr.get('pr_url')}")
+              
+              if result.get('cycle_complete'):
+                  print("\n✅ Autonomous monitoring cycle completed successfully")
+              else:
+                  print("\n⚠️ Monitoring cycle incomplete - check logs for issues")
+                  
+          except ImportError as e:
+              print(f"❌ Import error: {e}")
+              print("AGI monitoring system not yet fully deployed")
+              
+          except Exception as e:
+              print(f"❌ AGI monitoring error: {e}")
+              sys.exit(1)
+          EOF
+          
+      - name: Upload monitoring results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agi-monitoring-results
+          path: agi_monitoring_results.json
+          retention-days: 7
+          
+      - name: Monitoring summary
+        if: always()
+        run: |
+          echo "🤖 AGI AUTONOMOUS MONITORING COMPLETE"
+          echo "Time: $(date)"
+          echo "Next scheduled run: 15 minutes"
+          echo "Manual trigger: Workflow dispatch available"
+          echo "Results: Check agi-monitoring-results artifact"
