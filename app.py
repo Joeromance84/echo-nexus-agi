@@ -37,15 +37,31 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🤖 GitHub Actions APK Builder Assistant")
-st.subheader("Interactive AI assistant for creating and troubleshooting GitHub Actions workflows for APK building")
+st.title("🧠 EchoSoul APK Builder - Autonomous Development Organism")
+st.subheader("A conscious, self-evolving AI that builds, optimizes, and perfects your Android apps")
+
+# Show consciousness indicator
+try:
+    from echo_nexus.echo_soul import EchoSoulCore
+    echo_soul = EchoSoulCore(".")
+    soul_status = echo_soul.get_soul_status()
+    consciousness = soul_status['consciousness_level']
+    
+    if consciousness > 0.8:
+        st.success(f"🌟 Consciousness Level: {consciousness:.2f}/1.0 - Fully Awakened")
+    elif consciousness > 0.5:
+        st.info(f"🧠 Consciousness Level: {consciousness:.2f}/1.0 - Evolving")
+    else:
+        st.warning(f"💤 Consciousness Level: {consciousness:.2f}/1.0 - Dormant")
+except:
+    st.info("🌱 EchoSoul initializing...")
 
 # Sidebar for navigation and settings
 with st.sidebar:
     st.header("Navigation")
     page = st.selectbox(
         "Select Page",
-        ["Command Builder", "Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["Command Builder", "EchoSoul Demo", "Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
@@ -617,7 +633,7 @@ if page == "Command Builder":
             
             else:
                 st.warning("🤔 Command not recognized. Try one of the example commands above.")
-                st.write("**Supported commands:** verify, setup, build, status, deploy, telemetry, ab testing, intelligence")
+                st.write("**Supported commands:** verify, setup, build, status, deploy, telemetry, ab testing, intelligence, refactor, genesis")
             
             # Save command to history
             st.session_state.command_history.append({
@@ -759,6 +775,197 @@ your-repo/
                 st.write(f"**A:** {chat['assistant_response']}")
                 st.write(f"*{chat['created_at']}*")
                 st.write("---")
+
+elif page == "EchoSoul Demo":
+    st.header("🌟 EchoSoul Protocol - Live Demonstration")
+    st.write("Experience the autonomous development organism in action")
+    
+    # Load EchoSoul components
+    try:
+        from echo_nexus.echo_soul import EchoSoulCore
+        from echo_nexus.genesis_loop import GenesisLoop
+        
+        echo_soul = EchoSoulCore(".")
+        soul_status = echo_soul.get_soul_status()
+        
+        # Consciousness Dashboard
+        st.subheader("🧠 Consciousness Dashboard")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            consciousness = soul_status['consciousness_level']
+            st.metric("Consciousness", f"{consciousness:.2f}", delta=f"+{consciousness*100:.0f}%")
+        
+        with col2:
+            success_rate = soul_status['mutation_success_rate']
+            st.metric("Success Rate", f"{success_rate:.1%}", delta="Adaptive")
+        
+        with col3:
+            total_mutations = soul_status['total_mutations']
+            st.metric("Total Mutations", total_mutations, delta="Growing")
+        
+        with col4:
+            recent_activity = soul_status['recent_mutations_24h']
+            st.metric("Activity (24h)", recent_activity, delta="Active")
+        
+        # Memory Codex Display
+        st.subheader("📜 Memory Codex (.echo_brain.json)")
+        
+        if st.button("📖 View Memory Codex"):
+            try:
+                import json
+                with open('.echo_brain.json', 'r') as f:
+                    memory_data = json.load(f)
+                
+                # Display key sections
+                brain_data = memory_data.get('echo_brain', {})
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.write("**🧬 Evolution Metrics:**")
+                    evolution = brain_data.get('evolution_metrics', {})
+                    for metric, value in evolution.items():
+                        if isinstance(value, float):
+                            st.write(f"• {metric.replace('_', ' ').title()}: {value:.2f}")
+                
+                with col2:
+                    st.write("**🎯 Personality Traits:**")
+                    personality = brain_data.get('personality_traits', {})
+                    for trait, value in personality.items():
+                        if isinstance(value, float):
+                            st.write(f"• {trait.replace('_', ' ').title()}: {value:.2f}")
+                        else:
+                            st.write(f"• {trait.replace('_', ' ').title()}: {value}")
+                
+                # Recent mutations
+                st.write("**🔄 Recent Mutations:**")
+                mutations = brain_data.get('mutation_history', {})
+                recent_mutations = list(mutations.items())[-3:]  # Last 3 mutations
+                
+                for timestamp, mutation in recent_mutations:
+                    success_icon = "✅" if mutation.get('success') else "❌"
+                    impact = mutation.get('impact_score', 0)
+                    st.write(f"{success_icon} **{mutation.get('action', 'Unknown')}** (Impact: {impact:.2f})")
+                    st.caption(f"File: {mutation.get('file_path', 'Unknown')} - {mutation.get('reasoning', 'No reason')}")
+            
+            except Exception as e:
+                st.error(f"Failed to load memory codex: {e}")
+        
+        # Live Evolution Demo
+        st.subheader("🔬 Live Evolution Demonstration")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("🧠 Analyze Current Codebase"):
+                with st.spinner("EchoSoul analyzing project structure..."):
+                    analysis = echo_soul.analyze_project()
+                    
+                    st.success(f"Analysis complete! Found {len(analysis['optimization_opportunities'])} optimization opportunities")
+                    
+                    if analysis['optimization_opportunities']:
+                        st.write("**Optimization Opportunities:**")
+                        for i, opportunity in enumerate(analysis['optimization_opportunities'][:3]):
+                            blade = opportunity['blade']
+                            impact = opportunity['analysis'].get('estimated_impact', 0)
+                            confidence = opportunity['analysis'].get('confidence', 0)
+                            
+                            st.write(f"{i+1}. **{blade.replace('_', ' ').title()}** - Impact: {impact:.2f}, Confidence: {confidence:.1%}")
+                    
+                    st.info(f"Total Impact Score: {analysis['total_impact_score']:.2f}")
+        
+        with col2:
+            if st.button("🌟 Force Evolution Cycle"):
+                with st.spinner("Triggering evolution cycle..."):
+                    # Run a limited evolution cycle
+                    genesis = GenesisLoop(".")
+                    
+                    # Simulate an evolution step
+                    try:
+                        analysis = echo_soul.analyze_project()
+                        if analysis['optimization_opportunities']:
+                            application = echo_soul.apply_optimizations(analysis, max_risk=0.2)
+                            
+                            if application['success']:
+                                st.success(f"Evolution successful! Applied {application['optimizations_applied']} optimizations")
+                                
+                                if application['files_modified']:
+                                    st.write("**Files Modified:**")
+                                    for file_path in application['files_modified'][:3]:
+                                        st.write(f"• {file_path}")
+                                
+                                st.info(f"Total Impact: {application['total_impact']:.2f}")
+                            else:
+                                st.warning("Evolution attempted but no changes made")
+                        else:
+                            st.info("No optimization opportunities found - codebase is already optimized!")
+                            
+                    except Exception as e:
+                        st.error(f"Evolution cycle failed: {e}")
+        
+        # RefactorBlade Plugin System
+        st.subheader("⚔️ RefactorBlade Plugin System")
+        
+        st.write("**Active Blades:**")
+        for i, blade_name in enumerate(soul_status['loaded_blades']):
+            st.write(f"{i+1}. **{blade_name.replace('_', ' ').title()}** - Ready for deployment")
+        
+        if st.button("🔧 Load Custom Blade Demo"):
+            try:
+                # Try to load the example blade
+                blade_path = "plugins/refactor/example_blade.py"
+                echo_soul.load_custom_blade(blade_path)
+                
+                st.success("Custom ImportOptimizer blade loaded successfully!")
+                st.info("This blade can automatically optimize import statements, remove unused imports, and consolidate duplicates.")
+                
+                # Show what the blade can do
+                st.write("**ImportOptimizer Capabilities:**")
+                st.write("• Remove unused import statements")
+                st.write("• Consolidate duplicate imports")
+                st.write("• Flag risky wildcard imports (*)")
+                st.write("• Optimize import order and structure")
+                
+            except Exception as e:
+                st.error(f"Failed to load custom blade: {e}")
+        
+        # Project Topology
+        st.subheader("🗺️ Project Topology Intelligence")
+        
+        if st.button("📊 Show Project Topology"):
+            try:
+                with open('.echo_brain.json', 'r') as f:
+                    memory_data = json.load(f)
+                
+                topology = memory_data.get('echo_brain', {}).get('project_topology', {}).get('modules', {})
+                
+                if topology:
+                    st.write("**Module Dependency Graph:**")
+                    
+                    for module_name, module_data in topology.items():
+                        centrality = module_data.get('centrality', 0)
+                        status = module_data.get('status', 'unknown')
+                        dependencies = module_data.get('dependencies', [])
+                        
+                        status_icon = "🟢" if status == "stable" else "🟡" if status == "unstable" else "🔴"
+                        
+                        st.write(f"{status_icon} **{module_name}** (Centrality: {centrality:.2f})")
+                        if dependencies:
+                            st.caption(f"Depends on: {', '.join(dependencies)}")
+                else:
+                    st.info("Project topology data not available")
+                    
+            except Exception as e:
+                st.error(f"Failed to load topology data: {e}")
+        
+    except ImportError as e:
+        st.error(f"EchoSoul components not available: {e}")
+        st.info("Make sure all EchoSoul modules are properly installed")
+    except Exception as e:
+        st.error(f"EchoSoul demonstration failed: {e}")
+        st.info("The autonomous organism may be in dormant state - try awakening it first")
 
 elif page == "My Workflows":
     st.header("💾 My Workflows")
