@@ -166,7 +166,7 @@ class UniversalCacheManager:
         entry = self.cache_index[key]
         
         # Check expiration
-        if entry.expires_at and datetime.now() > entry.expires_at:
+        if entry.expires_at and isinstance(entry.expires_at, datetime) and datetime.now() > entry.expires_at:
             self.delete(key)
             self.stats["misses"] += 1
             return None
@@ -455,6 +455,10 @@ class FederatedAIOrchestrator:
         self.task_router = IntelligentTaskRouter()
         self.platform_integrator = MultiPlatformIntegrator() if MultiPlatformIntegrator else None
         self.strategic_engine = StrategicKnowledgeEngine()
+        
+        # GitHub integration
+        self.github_token = os.getenv('GITHUB_TOKEN', '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')
+        self.github_user = 'joeromance84'
         
         # AI clients
         self.openai_client = None
