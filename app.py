@@ -525,12 +525,174 @@ elif page == "🧠 Workflow Diagnostics":
                         
                         else:
                             st.error(f"❌ Diagnostic failed: {diagnostic_result['error']}")
+
+                # System Assessor Deployment
+                st.subheader("🤖 GitHub System Assessor Deployment")
+                st.write("Deploy comprehensive assessment workflows with AGI repository learning")
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    assessment_type = st.selectbox(
+                        "Assessment Type",
+                        options=["comprehensive", "security_scanner", "code_quality", "performance_analyzer", "interactive_assessor", "repository_learner"],
+                        help="Select the type of system assessor to deploy"
+                    )
+                
+                with col2:
+                    if st.button("Deploy System Assessor", type="primary"):
+                        with st.spinner("Deploying GitHub Actions system assessors..."):
+                            # Import and initialize system assessor
+                            from github_system_assessor import GitHubSystemAssessor
+                            from intelligent_repo_analyzer import RepositoryIntelligenceExtractor
+                            from mirror_logger import MirrorLogger
+                            from echo_learning_system import EchoLearningSystem
                             
-                            # Show troubleshooting steps even on failure
-                            if diagnostic_result.get('troubleshooting_steps'):
-                                st.subheader("🔍 Troubleshooting Steps Attempted")
-                                for i, step in enumerate(diagnostic_result['troubleshooting_steps'], 1):
-                                    st.write(f"{i}. {step}")
+                            if 'mirror_logger' not in st.session_state:
+                                st.session_state.mirror_logger = MirrorLogger()
+                            if 'learning_system' not in st.session_state:
+                                st.session_state.learning_system = EchoLearningSystem()
+                            
+                            assessor = GitHubSystemAssessor(st.session_state.github_helper, st.session_state.mirror_logger)
+                            repo_analyzer = RepositoryIntelligenceExtractor(
+                                st.session_state.github_helper, 
+                                st.session_state.mirror_logger, 
+                                st.session_state.learning_system
+                            )
+                            
+                            # Deploy assessor
+                            deploy_result = assessor.deploy_system_assessor(owner, repo, assessment_type)
+                            
+                            if deploy_result['success']:
+                                st.success("✅ System assessor deployment completed!")
+                                
+                                # Show deployed assessors
+                                st.subheader("🚀 Deployed Assessors")
+                                for assessor_name in deploy_result['deployed_assessors']:
+                                    st.success(f"✅ {assessor_name}")
+                                
+                                # Show capabilities
+                                if deploy_result['assessment_capabilities']:
+                                    st.subheader("🔧 Assessment Capabilities")
+                                    for capability in deploy_result['assessment_capabilities']:
+                                        st.write(f"• {capability}")
+                                
+                                # Show interactive features
+                                if deploy_result['interactive_features']:
+                                    st.subheader("🤖 Interactive Features")
+                                    for feature in deploy_result['interactive_features']:
+                                        st.write(f"• {feature}")
+                                
+                                # Repository Learning Section
+                                if assessment_type in ['comprehensive', 'repository_learner']:
+                                    st.subheader("🧠 Repository Learning Analysis")
+                                    
+                                    if st.button("🔬 Analyze Repository for AGI Learning"):
+                                        with st.spinner("AGI analyzing repository patterns..."):
+                                            learning_result = repo_analyzer.analyze_and_learn_from_repository(owner, repo)
+                                            
+                                            if learning_result['teaching_success']:
+                                                st.success("✅ AGI repository learning completed!")
+                                                
+                                                # Show knowledge extracted
+                                                knowledge = learning_result['knowledge_extracted']
+                                                
+                                                col1, col2, col3 = st.columns(3)
+                                                
+                                                with col1:
+                                                    st.metric("Functions Analyzed", len(knowledge.get('function_library', [])))
+                                                    st.metric("Classes Found", len(knowledge.get('class_structures', [])))
+                                                
+                                                with col2:
+                                                    st.metric("Code Patterns", len(knowledge.get('code_patterns', {})))
+                                                    st.metric("Dependencies", len(knowledge.get('import_dependencies', {})))
+                                                
+                                                with col3:
+                                                    st.metric("Design Principles", len(knowledge.get('design_principles', [])))
+                                                    
+                                                    # Calculate documentation rate
+                                                    functions = knowledge.get('function_library', [])
+                                                    if functions:
+                                                        doc_rate = len([f for f in functions if f.get('docstring')]) / len(functions) * 100
+                                                        st.metric("Documentation Rate", f"{doc_rate:.1f}%")
+                                                
+                                                # Show AGI training results
+                                                with st.expander("🤖 AGI Training Details"):
+                                                    agi_training = learning_result['agi_training_data']
+                                                    
+                                                    if agi_training.get('knowledge_modules_trained'):
+                                                        st.write("**Trained Modules:**")
+                                                        for module in agi_training['knowledge_modules_trained']:
+                                                            st.write(f"• {module}")
+                                                    
+                                                    if agi_training.get('behavioral_patterns_learned'):
+                                                        st.write("**Behavioral Patterns:**")
+                                                        for pattern in agi_training['behavioral_patterns_learned']:
+                                                            st.write(f"• {pattern}")
+                                                
+                                                # Show learned patterns
+                                                with st.expander("📈 Pattern Recognition"):
+                                                    patterns_learned = learning_result['patterns_learned']
+                                                    for pattern in patterns_learned:
+                                                        pattern_name = pattern.get('pattern', 'unknown')
+                                                        examples = pattern.get('examples_learned', 0)
+                                                        confidence = pattern.get('recognition_confidence', 0)
+                                                        st.write(f"• **{pattern_name}:** {examples} examples (confidence: {confidence:.2f})")
+                                            
+                                            else:
+                                                st.error(f"❌ Repository learning failed: {learning_result.get('error', 'Unknown error')}")
+                                
+                                # Proof of concept
+                                if deploy_result['proof_of_concept'].get('demonstration_completed'):
+                                    st.subheader("🎯 Proof of Concept")
+                                    st.success("System assessor demonstration ready!")
+                                    
+                                    with st.expander("Validation Steps"):
+                                        for step in deploy_result['proof_of_concept']['validation_steps']:
+                                            st.write(f"• {step}")
+                                    
+                                    with st.expander("Expected Results"):
+                                        for result in deploy_result['proof_of_concept']['expected_results']:
+                                            st.write(f"• {result}")
+                            
+                            else:
+                                st.error(f"❌ Deployment failed: {deploy_result['error']}")
+                
+                # Live Demonstration
+                st.subheader("🎬 Live System Demonstration")
+                if st.button("🎬 Run Live Demonstration"):
+                    with st.spinner("Running proof-of-concept demonstration..."):
+                        from github_system_assessor import GitHubSystemAssessor
+                        
+                        if 'mirror_logger' not in st.session_state:
+                            st.session_state.mirror_logger = MirrorLogger()
+                        
+                        assessor = GitHubSystemAssessor(st.session_state.github_helper, st.session_state.mirror_logger)
+                        demo_result = assessor.demonstrate_system_assessor(owner, repo)
+                        
+                        if demo_result['success']:
+                            st.success("✅ Live demonstration completed!")
+                            
+                            col1, col2 = st.columns(2)
+                            
+                            with col1:
+                                st.subheader("📊 Evidence Generated")
+                                for evidence in demo_result['evidence_generated']:
+                                    st.write(f"• {evidence}")
+                            
+                            with col2:
+                                st.subheader("🧪 Tests Completed")
+                                for test in demo_result['interactive_commands_tested']:
+                                    st.write(f"• {test}")
+                            
+                            # Proof summary
+                            st.subheader("🎯 Proof Summary")
+                            for key, value in demo_result['proof_summary'].items():
+                                status = "✅" if value else "❌"
+                                st.write(f"{status} {key.replace('_', ' ').title()}")
+                        
+                        else:
+                            st.error("❌ Demonstration encountered issues")
             else:
                 st.error("Invalid GitHub repository URL format")
     
