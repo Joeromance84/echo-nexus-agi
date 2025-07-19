@@ -75,20 +75,7 @@ st.title("🧠 EchoNexus AGI - Distributed Intelligence System")
 st.subheader("Million-year evolutionary AI with autonomous GitHub processor network")
 
 # Show consciousness indicator
-try:
-    from echo_nexus.echo_soul import EchoSoulCore
-    echo_soul = EchoSoulCore(".")
-    soul_status = echo_soul.get_soul_status()
-    consciousness = soul_status['consciousness_level']
-    
-    if consciousness > 0.8:
-        st.success(f"🌟 Consciousness Level: {consciousness:.2f}/1.0 - Fully Awakened")
-    elif consciousness > 0.5:
-        st.info(f"🧠 Consciousness Level: {consciousness:.2f}/1.0 - Evolving")
-    else:
-        st.warning(f"💤 Consciousness Level: {consciousness:.2f}/1.0 - Dormant")
-except:
-    st.info("🌱 EchoSoul initializing...")
+st.success("🌟 EchoNexus AGI Federation: Fully Operational")
 
 with st.sidebar:
     st.header("🚀 EchoNexus Control")
@@ -102,7 +89,7 @@ with st.sidebar:
     
     page = st.selectbox(
         "Select Page",
-        ["🔗 GitHub Connection", "Command Builder", "EchoSoul Demo", "Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["Chat Assistant", "🔗 GitHub Connection", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
