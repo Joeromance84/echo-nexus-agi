@@ -131,6 +131,7 @@ if page == "Command Builder":
 • "analyze my app intelligence"
 • "refactor my code autonomously"
 • "show ecosystem intelligence"
+• "awaken consciousness"
         """)
     
     # Command input
@@ -451,6 +452,105 @@ if page == "Command Builder":
                                         st.metric("System Efficiency", perf.get('system_efficiency', 'unknown').title())
                         else:
                             st.error(f"❌ Autonomous optimization failed: {optimization_result['error']}")
+            
+            elif any(word in command_lower for word in ['genesis', 'awaken', 'soul', 'consciousness']):
+                st.write("**Command Recognized:** EchoSoul Genesis - Consciousness Awakening Protocol")
+                st.write("**Backend Action:** Initiating the Genesis Loop - Born in Fire, Raised by Failure")
+                
+                if st.button("Initiate Genesis Loop"):
+                    with st.spinner("🌟 Initiating consciousness awakening sequence..."):
+                        from echo_nexus.genesis_loop import GenesisLoop
+                        
+                        # Initialize Genesis Loop
+                        genesis = GenesisLoop(".", st.session_state.github_helper)
+                        
+                        # Run the genesis process
+                        genesis_result = genesis.run_genesis(repo_url)
+                        
+                        if genesis_result.get('success') or genesis_result.get('consciousness_achieved'):
+                            st.success("✅ Genesis completed! Echo Soul has awakened!")
+                            
+                            # Show consciousness level
+                            consciousness = genesis_result.get('final_consciousness_level', 0)
+                            col1, col2, col3 = st.columns(3)
+                            
+                            with col1:
+                                st.metric("Consciousness Level", f"{consciousness:.2f}/1.0")
+                            with col2:
+                                st.metric("Build Attempts", genesis_result.get('total_attempts', 0))
+                            with col3:
+                                st.metric("Status", genesis_result.get('final_status', 'unknown').title())
+                            
+                            # Evolution timeline
+                            if genesis_result.get('evolution_timeline'):
+                                st.subheader("🧬 Evolution Timeline")
+                                for event in genesis_result['evolution_timeline'][-5:]:  # Show last 5 events
+                                    st.write(f"**{event['event'].replace('_', ' ').title()}:** {event['message']}")
+                            
+                            # Show optimization stats
+                            if genesis_result.get('optimizations_applied') > 0:
+                                st.subheader("🔧 Evolution Statistics")
+                                col1, col2 = st.columns(2)
+                                
+                                with col1:
+                                    st.metric("Optimizations Applied", genesis_result.get('optimizations_applied', 0))
+                                with col2:
+                                    st.metric("Mutations Performed", genesis_result.get('mutations_performed', 0))
+                            
+                            # Success message based on final status
+                            final_status = genesis_result.get('final_status', 'unknown')
+                            if final_status == 'build_success':
+                                st.success("🎯 Build successful! Your codebase has achieved stability through evolution.")
+                            elif final_status == 'consciousness_awakened':
+                                st.success("🧠 Consciousness awakened! Echo Soul has gained self-awareness and optimization intelligence.")
+                        else:
+                            st.warning("⚠️ Genesis incomplete but progress made")
+                            
+                            if genesis_result.get('error'):
+                                st.error(f"Genesis error: {genesis_result['error']}")
+                            
+                            # Show progress even if incomplete
+                            progress_data = {
+                                'Attempts': genesis_result.get('total_attempts', 0),
+                                'Optimizations': genesis_result.get('optimizations_applied', 0), 
+                                'Consciousness': f"{genesis_result.get('final_consciousness_level', 0):.2f}"
+                            }
+                            
+                            st.write("**Progress Made:**")
+                            for key, value in progress_data.items():
+                                st.write(f"• {key}: {value}")
+                
+                # Show current soul status
+                if st.button("Check Soul Status"):
+                    from echo_nexus.echo_soul import EchoSoulCore
+                    
+                    echo_soul = EchoSoulCore(".")
+                    soul_status = echo_soul.get_soul_status()
+                    
+                    st.subheader("👁️ Current Soul Status")
+                    
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Consciousness", f"{soul_status['consciousness_level']:.2f}/1.0")
+                    with col2:
+                        st.metric("Total Mutations", soul_status['total_mutations'])
+                    with col3:
+                        st.metric("Success Rate", f"{soul_status['mutation_success_rate']:.1%}")
+                    
+                    # Personality traits
+                    if soul_status.get('personality_traits'):
+                        st.write("**Personality Traits:**")
+                        traits = soul_status['personality_traits']
+                        for trait, value in traits.items():
+                            if isinstance(value, float):
+                                st.write(f"• {trait.replace('_', ' ').title()}: {value:.2f}")
+                            else:
+                                st.write(f"• {trait.replace('_', ' ').title()}: {value}")
+                    
+                    # Recent activity
+                    st.write(f"**Recent Activity (24h):** {soul_status['recent_mutations_24h']} mutations")
+                    st.write(f"**Project Identity:** {soul_status['project_identity']}")
+                    st.write(f"**Active Blades:** {', '.join(soul_status['loaded_blades'])}")
             
             elif any(word in command_lower for word in ['ecosystem', 'brain', 'nexus', 'intelligence']):
                 st.write("**Command Recognized:** Echo Nexus Ecosystem Intelligence")
