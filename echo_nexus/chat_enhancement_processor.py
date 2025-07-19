@@ -69,13 +69,18 @@ class DialogueManager:
                 response = f"I will {self.available_actions['enhance_capabilities']} to grow my intelligence."
                 self.state = "executing_task"
             
+            # Check for APK/packaging commands
+            elif any(cmd in user_input.lower() for cmd in ["package", "apk", "build", "deploy", "mobile"]):
+                response = "I understand you want to package Echo Core. I will trigger the APK build workflow through GitHub Actions. The mobile app will include the complete Echo dialogue system and AI capabilities."
+                self.state = "executing_task"
+            
             # Auto-detect large text blocks as knowledge input
             elif len(user_input.strip()) > 500:  # Large text blocks are likely knowledge
                 response = "I detect a substantial amount of text. Processing as knowledge input for analysis and synthesis..."
                 self.state = "ingesting_knowledge"
 
             else:
-                response = "I am ready. Could you please specify a task, such as 'populate the repositories', 'ingest this document', or 'diagnose a build failure'?"
+                response = "I am ready. Could you please specify a task, such as 'package Echo Core as APK', 'ingest this document', or 'diagnose a build failure'?"
 
         elif self.state == "awaiting_fix_confirmation":
             if "yes" in user_input.lower() or "go ahead" in user_input.lower():
@@ -104,7 +109,7 @@ class DialogueManager:
                 self.state = "initial"
                 
                 # Store the knowledge for future reference
-                self.store_synthesized_knowledge(user_input, knowledge_summary)
+                self._store_knowledge(user_input, knowledge_summary)
                 
             except Exception as e:
                 response = f"An error occurred during knowledge ingestion: {e}. The information has been logged for manual review."
@@ -550,7 +555,7 @@ Knowledge has been processed and integrated into my understanding."""
         except Exception as e:
             return f"Knowledge synthesis error: {e}. Content logged for manual review."
     
-    def store_synthesized_knowledge(self, original_text: str, synthesis: str):
+    def _store_knowledge(self, original_text: str, synthesis: str):
         """Store synthesized knowledge for future reference"""
         
         try:

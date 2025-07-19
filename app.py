@@ -1038,8 +1038,8 @@ elif page == "Chat Assistant":
         if enhancement_result['code_detected']:
             st.info("🧠 Echo: I detected code in your message. Processing for self-enhancement...")
             
-            if enhancement_result['enhancement_prepared']:
-                if enhancement_result['verification_passed']:
+            if enhancement_result.get('enhancement_prepared', False):
+                if enhancement_result.get('verification_passed', False):
                     st.success("✅ Code validated and verification passed")
                     
                     # Show enhancement details
