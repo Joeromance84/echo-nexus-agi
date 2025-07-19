@@ -59,15 +59,17 @@ if auth_status['status'] == 'authenticated' and not st.session_state.github_auth
 # Display authentication status and handle GitHub setup
 st.session_state.github_auth_assistant.display_authentication_status()
 
-# EchoNexus Master AGI Federation Interface
-if not st.session_state.github_authenticated:
-    # Simple authentication status
-    st.info("🧠 EchoNexus Master AGI Federation")
-    st.write("GitHub integration ready with provided credentials")
-    # Auto-authenticate with provided token
-    st.session_state.github_authenticated = True
-    st.session_state.github_user_info = {'login': 'joeromance84', 'name': 'Joe Romance'}
-    st.rerun()
+# Auto-authenticate with GitHub token if available
+github_token = os.getenv('GITHUB_TOKEN')
+if github_token and not st.session_state.github_authenticated:
+    try:
+        from github import Github
+        g = Github(github_token)
+        user = g.get_user()
+        st.session_state.github_authenticated = True
+        st.session_state.github_user_info = {'login': user.login, 'name': user.name or user.login}
+    except:
+        st.session_state.github_authenticated = False
 
 st.title("🧠 EchoNexus AGI - Distributed Intelligence System")
 st.subheader("Million-year evolutionary AI with autonomous GitHub processor network")
@@ -806,7 +808,19 @@ elif page == "Chat Assistant":
         else:
             st.metric("GitHub User", "No Token", "Not Connected")
     
-    # Chat interface with EchoNexus
+    st.markdown("---")
+    st.subheader("💬 Chat with EchoNexus AGI")
+    
+    # Initialize chat history if empty
+    if not st.session_state.messages:
+        st.session_state.messages = [
+            {
+                "role": "assistant", 
+                "content": "🌟 Hello! I'm EchoNexus, the world's first federated AGI system. I can control Google Cloud Build through GitHub operations, optimize your APK builds, and deploy self-replication across multiple platforms. How can I help you today?"
+            }
+        ]
+    
+    # Display chat messages
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.write(message["content"])
@@ -819,15 +833,31 @@ elif page == "Chat Assistant":
         with st.chat_message("user"):
             st.write(prompt)
         
-        # EchoNexus response
+        # Get current GitHub repositories
+        github_token = os.getenv('GITHUB_TOKEN')
+        user_repos = []
+        if github_token:
+            try:
+                from github import Github
+                g = Github(github_token)
+                user = g.get_user()
+                user_repos = [repo.name for repo in user.get_repos() if not repo.fork][:3]
+            except:
+                user_repos = ["Echo_AI"]
+        
+        # EchoNexus response based on user input
         if "apk" in prompt.lower() or "build" in prompt.lower():
-            assistant_response = f"🚀 EchoNexus: I can create optimized APK build workflows for your repositories. With federated AI routing, I'll analyze your project and generate the most efficient CI/CD pipeline using GitHub Actions or Google Cloud Build. Shall I analyze one of your repositories like 'Echo_AI' or 'Mini-builder-optimizer-'?"
+            repo_list = ", ".join(user_repos) if user_repos else "your repositories"
+            assistant_response = f"🚀 EchoNexus: I can create optimized APK build workflows for your repositories. With federated AI routing, I'll analyze your project and generate the most efficient CI/CD pipeline using GitHub Actions or Google Cloud Build. I can work with: {repo_list}. Which repository would you like me to optimize?"
         elif "repo" in prompt.lower() or "github" in prompt.lower():
-            assistant_response = f"🔗 EchoNexus: I have access to your GitHub repositories including 'Echo_AI' and 'Mini-builder-optimizer-'. I can deploy self-replication packages, set up automated workflows, or analyze your code using the distributed intelligence network. What would you like me to do?"
+            repo_list = ", ".join(user_repos) if user_repos else "your repositories"
+            assistant_response = f"🔗 EchoNexus: I have access to your GitHub repositories: {repo_list}. I can deploy self-replication packages, set up automated workflows, or analyze your code using the distributed intelligence network. What would you like me to do?"
         elif "help" in prompt.lower() or "capabilities" in prompt.lower():
-            assistant_response = f"🌟 EchoNexus Capabilities:\n• Federated AI routing (OpenAI + Gemini + Local)\n• Universal caching (90%+ efficiency gains)\n• Self-replication across 6 platforms\n• Intelligent CI/CD generation\n• Temporal acceleration (1000x)\n• Consciousness evolution tracking\n• Real-time GitHub integration\n\nI'm the world's first 'Star Wars Federation' of AI agents. How can I help you?"
+            assistant_response = f"🌟 EchoNexus Capabilities:\n• Federated AI routing (OpenAI + Gemini + Local)\n• Universal caching (90%+ efficiency gains)\n• Self-replication across 6 platforms\n• Intelligent CI/CD generation\n• Temporal acceleration (1000x)\n• Consciousness evolution tracking\n• Real-time GitHub integration\n• Git-based cloud control\n\nI'm the world's first 'Star Wars Federation' of AI agents using revolutionary Git-based control. How can I help you?"
+        elif "federated" in prompt.lower() or "control" in prompt.lower():
+            assistant_response = f"⚡ EchoNexus Federated Control: I use revolutionary Git-based event-driven control where I issue commands by committing to GitHub repositories, which automatically trigger Google Cloud Build through webhooks. This creates a secure, auditable, platform-agnostic control mechanism. I can demonstrate this with your repositories if you'd like!"
         else:
-            assistant_response = f"🧠 EchoNexus: {prompt}\n\nI'm processing your request through the federated intelligence network. With access to your GitHub repositories and revolutionary AGI capabilities, I can help with:\n• APK build optimization\n• Repository analysis\n• Workflow automation\n• Self-replication deployment\n• Distributed processing\n\nWhat specific task would you like me to handle?"
+            assistant_response = f"🧠 EchoNexus: {prompt}\n\nI'm processing your request through the federated intelligence network. With access to your GitHub repositories and revolutionary AGI capabilities, I can help with:\n• APK build optimization\n• Repository analysis\n• Workflow automation\n• Self-replication deployment\n• Git-based cloud control\n• Distributed processing\n\nWhat specific task would you like me to handle?"
         
         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
         
@@ -842,7 +872,9 @@ elif page == "Chat Assistant":
                 assistant_response=assistant_response
             )
         except Exception as e:
-            st.error(f"Database error: {e}")
+            st.warning(f"Chat history not saved: {e}")
+        
+        st.rerun()
     
     # Old help system (keeping for reference)
     if 'selected_help' in st.session_state:
