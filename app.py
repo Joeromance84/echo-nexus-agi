@@ -4,7 +4,7 @@ import json
 import os
 from datetime import datetime
 import hashlib
-from utils.openai_helper import WorkflowAssistant
+# from utils.openai_helper import WorkflowAssistant  # Removed OpenAI dependency
 from utils.workflow_validator import WorkflowValidator
 from utils.github_helper import GitHubHelper
 from utils.database_helper import DatabaseHelper
@@ -14,8 +14,8 @@ from data.policies import GitHubPolicies
 # Initialize session state
 if 'messages' not in st.session_state:
     st.session_state.messages = []
-if 'workflow_assistant' not in st.session_state:
-    st.session_state.workflow_assistant = WorkflowAssistant()
+# if 'workflow_assistant' not in st.session_state:
+    # st.session_state.workflow_assistant = WorkflowAssistant()  # Removed OpenAI dependency
 if 'workflow_validator' not in st.session_state:
     st.session_state.workflow_validator = WorkflowValidator()
 if 'github_helper' not in st.session_state:
@@ -50,31 +50,9 @@ with st.sidebar:
     
     st.header("Settings")
     
-    # Test OpenAI API status
-    api_key = os.getenv("OPENAI_API_KEY")
-    if api_key:
-        try:
-            # Quick test with minimal tokens
-            from openai import OpenAI
-            client = OpenAI(api_key=api_key)
-            test_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[{"role": "user", "content": "test"}],
-                max_tokens=1
-            )
-            api_status = "✅ Working"
-        except Exception as e:
-            if "insufficient_quota" in str(e) or "429" in str(e):
-                api_status = "⚠️ Quota Exceeded"
-            else:
-                api_status = "❌ Error"
-    else:
-        api_status = "❌ Not Connected"
-    
-    st.write(f"OpenAI API: {api_status}")
-    
-    if api_status == "⚠️ Quota Exceeded":
-        st.warning("Add credits at platform.openai.com")
+    # App mode (without AI dependency)
+    st.write("🤖 Mode: Template & Validation Based")
+    st.info("AI features disabled - using pre-built templates and validation tools")
     
     # Database status
     try:
@@ -91,111 +69,130 @@ with st.sidebar:
         st.rerun()
 
 if page == "Chat Assistant":
-    st.header("💬 Interactive Workflow Assistant")
+    st.header("🛠️ Workflow Assistant (Template-Based)")
     
-    # Chat interface
-    chat_container = st.container()
+    st.info("💡 AI features are disabled. Use this page to get help with templates and guidance!")
     
-    with chat_container:
-        # Display chat messages
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.write(message["content"])
-                if "workflow" in message and message["workflow"]:
-                    st.code(message["workflow"], language="yaml")
-                    st.download_button(
-                        "Download Workflow",
-                        message["workflow"],
-                        f"workflow_{datetime.now().strftime('%Y%m%d_%H%M%S')}.yml",
-                        "text/yaml"
-                    )
-
-    # Chat input
-    if prompt := st.chat_input("Ask about GitHub Actions workflows for APK building..."):
-        # Add user message
-        st.session_state.messages.append({"role": "user", "content": prompt})
+    # Quick help sections
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("🚀 Quick Start")
+        if st.button("🎯 I need a basic APK workflow"):
+            st.session_state.selected_help = "basic_workflow"
+            st.rerun()
         
-        with st.chat_message("user"):
-            st.write(prompt)
+        if st.button("🔧 I want to customize a template"):
+            st.session_state.selected_help = "customize_template"
+            st.rerun()
         
-        # Generate AI response
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                try:
-                    response = st.session_state.workflow_assistant.process_request(prompt)
-                    
-                    st.write(response["message"])
-                    
-                    workflow_yaml = None
-                    if response.get("workflow"):
-                        workflow_yaml = response["workflow"]
-                        st.code(workflow_yaml, language="yaml")
-                        
-                        # Validate workflow
-                        validation_result = st.session_state.workflow_validator.validate_workflow(workflow_yaml)
-                        if validation_result["valid"]:
-                            st.success("✅ Workflow is valid!")
-                        else:
-                            st.error(f"❌ Workflow validation failed: {validation_result['errors']}")
-                        
-                        # Check policy compliance
-                        policy_check = st.session_state.github_policies.check_compliance(workflow_yaml)
-                        if policy_check["compliant"]:
-                            st.success("✅ Workflow complies with GitHub policies!")
-                        else:
-                            st.warning(f"⚠️ Policy concerns: {policy_check['issues']}")
-                        
-                        # Save workflow to database
-                        workflow_name = f"Workflow_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-                        workflow_id = st.session_state.database_helper.save_workflow(
-                            name=workflow_name,
-                            description=f"Generated from: {prompt[:100]}...",
-                            workflow_yaml=workflow_yaml,
-                            template_type="ai_generated",
-                            user_session=st.session_state.user_session
-                        )
-                        
-                        # Update validation status
-                        st.session_state.database_helper.update_workflow_validation(
-                            workflow_id=workflow_id,
-                            is_validated=validation_result["valid"],
-                            validation_errors=str(validation_result.get("errors", [])),
-                            policy_compliant=policy_check["compliant"],
-                            policy_issues=str(policy_check.get("issues", []))
-                        )
-                        
-                        st.download_button(
-                            "Download Workflow",
-                            workflow_yaml,
-                            f"workflow_{datetime.now().strftime('%Y%m%d_%H%M%S')}.yml",
-                            "text/yaml"
-                        )
-                        
-                        st.success(f"💾 Workflow saved to database with ID: {workflow_id[:8]}...")
-                    
-                    # Save chat message to database
-                    st.session_state.database_helper.save_chat_message(
-                        user_session=st.session_state.user_session,
-                        user_message=prompt,
-                        assistant_response=response["message"],
-                        generated_workflow_id=workflow_id if response.get("workflow") else None
-                    )
-                    
-                    # Add assistant message
-                    st.session_state.messages.append({
-                        "role": "assistant", 
-                        "content": response["message"],
-                        "workflow": workflow_yaml
-                    })
-                    
-                except Exception as e:
-                    error_msg = f"Error processing request: {str(e)}"
-                    st.error(error_msg)
-                    st.session_state.messages.append({
-                        "role": "assistant", 
-                        "content": error_msg,
-                        "workflow": None
-                    })
+        if st.button("❌ My build is failing"):
+            st.session_state.selected_help = "troubleshooting"
+            st.rerun()
+    
+    with col2:
+        st.subheader("📋 Resources")
+        if st.button("📖 View all templates"):
+            st.session_state.go_to_page = "Workflow Templates"
+            st.rerun()
+        
+        if st.button("🔍 Validate my workflow"):
+            st.session_state.go_to_page = "Validation Tools"
+            st.rerun()
+        
+        if st.button("📜 Check policy compliance"):
+            st.session_state.go_to_page = "Policy Compliance"
+            st.rerun()
+    
+    # Handle page navigation
+    if 'go_to_page' in st.session_state:
+        page = st.session_state.go_to_page
+        del st.session_state.go_to_page
+        st.rerun()
+    
+    # Display contextual help
+    if 'selected_help' in st.session_state:
+        st.markdown("---")
+        help_type = st.session_state.selected_help
+        
+        if help_type == "basic_workflow":
+            st.subheader("🎯 Basic APK Workflow Setup")
+            st.write("Here's what you need for a basic APK build:")
+            
+            st.write("**1. Repository Structure:**")
+            st.code("""
+your-repo/
+├── main.py                 # Your app entry point
+├── buildozer.spec         # Build configuration
+├── requirements.txt       # Python dependencies
+└── .github/
+    └── workflows/
+        └── build.yml      # GitHub Actions workflow
+            """)
+            
+            st.write("**2. Recommended Template:**")
+            st.write("Use the **Basic APK Build** template from the Workflow Templates page.")
+            
+            st.write("**3. Next Steps:**")
+            st.write("- Go to 'Workflow Templates' → Select 'Basic APK Build'")
+            st.write("- Download the template and customize for your project")
+            st.write("- Add it to your repository as `.github/workflows/build.yml`")
+            
+        elif help_type == "customize_template":
+            st.subheader("🔧 Customizing Templates")
+            st.write("Common customizations you might need:")
+            
+            st.write("**Python Version:**")
+            st.code("python-version: '3.9'  # Change to your preferred version")
+            
+            st.write("**Java Version:**")
+            st.code("java-version: '11'  # Or '8' for older projects")
+            
+            st.write("**Build Type:**")
+            st.code("buildozer android debug  # For testing\nbuildozer android release  # For production")
+            
+            st.write("**Additional Dependencies:**")
+            st.code("pip install your-package  # Add after pip install buildozer")
+            
+        elif help_type == "troubleshooting":
+            st.subheader("❌ Common Build Issues")
+            
+            with st.expander("Java Version Errors"):
+                st.write("**Problem:** Java-related build failures")
+                st.write("**Solution:** Use Java 11 (recommended) or Java 8")
+                st.code("- name: Set up Java\n  uses: actions/setup-java@v3\n  with:\n    distribution: 'temurin'\n    java-version: '11'")
+            
+            with st.expander("Missing Dependencies"):
+                st.write("**Problem:** SDL2 or other system library errors")
+                st.write("**Solution:** Install required system packages")
+                st.code("sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev")
+            
+            with st.expander("Buildozer Configuration"):
+                st.write("**Problem:** Buildozer fails to find files")
+                st.write("**Solution:** Check your buildozer.spec configuration")
+                st.code("source.dir = .\nsource.include_exts = py,png,jpg,kv,atlas")
+            
+            with st.expander("Permission Errors"):
+                st.write("**Problem:** Permission denied during build")
+                st.write("**Solution:** Use sudo for system installations")
+                st.code("sudo apt-get install -y build-essential")
+        
+        if st.button("🔄 Back to options"):
+            if 'selected_help' in st.session_state:
+                del st.session_state.selected_help
+            st.rerun()
+    
+    # Show recent chat history if any
+    chat_history = st.session_state.database_helper.get_chat_history(st.session_state.user_session, limit=5)
+    if chat_history:
+        st.markdown("---")
+        st.subheader("💬 Previous Help Sessions")
+        with st.expander("View History"):
+            for chat in chat_history:
+                st.write(f"**Q:** {chat['user_message']}")
+                st.write(f"**A:** {chat['assistant_response']}")
+                st.write(f"*{chat['created_at']}*")
+                st.write("---")
 
 elif page == "My Workflows":
     st.header("💾 My Workflows")
