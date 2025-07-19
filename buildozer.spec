@@ -19,8 +19,8 @@ source.include_exts = py,png,jpg,kv,atlas,json,txt,md,yml,yaml
 version = 2.0
 
 # (list) Application requirements
-# comma separated e.g. requirements = sqlite3,kivy,python3,requests,pyyaml
-requirements = sqlite3,kivy,python3,requests,pyyaml
+# comma separated e.g. requirements = python3,kivy,requests,pyyaml
+requirements = python3,kivy,requests,pyyaml
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
@@ -95,3 +95,11 @@ android.allow_backup = True
 # Automated compatibility check: 2025-07-19T21:33:23.146582
 
 # Automated compatibility check: 2025-07-19T21:33:37.276990
+
+# Automated compatibility check: 2025-07-19T21:38:37.377985
+
+# Automated compatibility check: 2025-07-19T21:43:37.496323
+
+# Automated compatibility check: 2025-07-19T22:21:21.717296
+
+# EchoNexus auto-fix applied: 2025-07-19T22:24:29.819659

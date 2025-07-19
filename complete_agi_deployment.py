@@ -41,6 +41,18 @@ class CompleteAGIDeployment:
             "pytorch": "Heavy ML library - use pytorch-mobile for mobile",
             "scikit-learn": "ML library with C deps - use lightweight alternatives",
             
+            # AI libraries with complex dependencies
+            "openai": "AI API client - has heavy C dependencies on Android",
+            "google-genai": "Google AI client - incompatible C extensions",
+            "pygithub": "GitHub API client - has C dependencies",
+            "networkx": "Graph library - requires NumPy with C extensions",
+            "nltk": "Natural language toolkit - too heavy for mobile",
+            "numpy": "Mathematical library - has C extensions that fail",
+            "sympy": "Symbolic math - complex dependencies",
+            "z3-solver": "SMT solver - not mobile compatible",
+            "spacy": "NLP library - very heavy, not mobile compatible",
+            "qrcode": "QR code library - imaging dependencies can fail",
+            
             # Development tools
             "pytest": "Testing framework - not needed in production APK",
             "black": "Code formatter - not needed in production APK", 
