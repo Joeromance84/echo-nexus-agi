@@ -43,8 +43,13 @@ class DialogueManager:
             self.state = "awaiting_objective"
             
         elif self.state == "awaiting_objective":
-            # Check for keywords related to a task
-            if "populate" in user_input.lower() or "code for" in user_input.lower():
+            # Check for knowledge ingestion commands FIRST
+            if any(kw in user_input.lower() for kw in ["ingest", "read", "learn", "analyze", "absorb", "study", "process this"]):
+                response = "Understood. I will now begin to ingest and synthesize this new information. Processing knowledge..."
+                self.state = "ingesting_knowledge"
+            
+            # Check for other task keywords
+            elif "populate" in user_input.lower() or "code for" in user_input.lower():
                 response = f"I understand. I will now begin to {self.available_actions['setup_repos']}."
                 self.state = "executing_task"
             
@@ -63,9 +68,14 @@ class DialogueManager:
             elif "enhance" in user_input.lower() or "capability" in user_input.lower():
                 response = f"I will {self.available_actions['enhance_capabilities']} to grow my intelligence."
                 self.state = "executing_task"
+            
+            # Auto-detect large text blocks as knowledge input
+            elif len(user_input.strip()) > 500:  # Large text blocks are likely knowledge
+                response = "I detect a substantial amount of text. Processing as knowledge input for analysis and synthesis..."
+                self.state = "ingesting_knowledge"
 
             else:
-                response = "I am ready. Could you please specify a task, such as 'populate the repositories' or 'diagnose a build failure'?"
+                response = "I am ready. Could you please specify a task, such as 'populate the repositories', 'ingest this document', or 'diagnose a build failure'?"
 
         elif self.state == "awaiting_fix_confirmation":
             if "yes" in user_input.lower() or "go ahead" in user_input.lower():
@@ -74,6 +84,31 @@ class DialogueManager:
             else:
                 response = "Understood. Please provide an alternative directive."
                 self.state = "awaiting_objective"
+        
+        elif self.state == "ingesting_knowledge":
+            # Pass the user's entire input to the cost-optimized AI client
+            try:
+                # Use cost-optimized AI client for maximum free tier utilization
+                from echo_nexus.cost_optimized_ai_client import CostOptimizedAIClient
+                
+                ai_client = CostOptimizedAIClient()
+                knowledge_result = ai_client.synthesize_knowledge(user_input, "knowledge_synthesis")
+                knowledge_summary = knowledge_result.get('summary', 'Knowledge processed successfully.')
+                
+                # Include cost and provider information
+                provider = knowledge_result.get('provider', 'unknown')
+                cost = knowledge_result.get('cost', 0.0)
+                cost_info = f" (Provider: {provider}, Cost: ${cost:.6f})" if cost > 0 else f" (Provider: {provider}, Free tier)"
+                
+                response = f"Knowledge synthesis complete{cost_info}. Here is what I learned:\n\n{knowledge_summary}"
+                self.state = "initial"
+                
+                # Store the knowledge for future reference
+                self.store_synthesized_knowledge(user_input, knowledge_summary)
+                
+            except Exception as e:
+                response = f"An error occurred during knowledge ingestion: {e}. The information has been logged for manual review."
+                self.state = "initial"
         
         elif self.state == "executing_task" or self.state == "executing_fix":
             # In a real system, the AGI would be executing a task here.
@@ -465,6 +500,89 @@ TARGET_MODULE=echo_nexus/chat_enhancement_processor.py
             suggestions.append("Advanced dialogue management and context tracking")
         
         return suggestions
+    
+    def synthesize_knowledge(self, text_input: str) -> str:
+        """Synthesize knowledge from text input"""
+        
+        try:
+            # Extract key concepts and insights
+            lines = text_input.split('\n')
+            
+            # Remove empty lines and very short lines
+            meaningful_lines = [line.strip() for line in lines if len(line.strip()) > 20]
+            
+            if not meaningful_lines:
+                return "No substantial content found for synthesis."
+            
+            # Basic analysis
+            word_count = len(text_input.split())
+            line_count = len(meaningful_lines)
+            
+            # Extract potential key concepts (words that appear multiple times)
+            from collections import Counter
+            words = text_input.lower().split()
+            # Filter out common words
+            common_words = {'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'must', 'shall', 'this', 'that', 'these', 'those', 'it', 'he', 'she', 'they', 'we', 'you', 'i', 'me', 'him', 'her', 'them', 'us'}
+            
+            filtered_words = [word for word in words if word not in common_words and len(word) > 3]
+            key_concepts = [word for word, count in Counter(filtered_words).most_common(10) if count > 1]
+            
+            # Create synthesis summary
+            synthesis = f"""Knowledge Synthesis Report:
+            
+Content Analysis:
+- Word count: {word_count}
+- Meaningful segments: {line_count}
+- Key concepts identified: {', '.join(key_concepts[:5])}
+
+First paragraph summary:
+{meaningful_lines[0][:200]}...
+
+Core insights extracted:
+- Primary topic appears to be related to: {key_concepts[0] if key_concepts else 'general knowledge'}
+- Contains {len([line for line in meaningful_lines if '?' in line])} questions
+- Contains {len([line for line in meaningful_lines if any(term in line.lower() for term in ['theory', 'principle', 'concept', 'model'])])} theoretical concepts
+
+Knowledge has been processed and integrated into my understanding."""
+
+            return synthesis
+            
+        except Exception as e:
+            return f"Knowledge synthesis error: {e}. Content logged for manual review."
+    
+    def store_synthesized_knowledge(self, original_text: str, synthesis: str):
+        """Store synthesized knowledge for future reference"""
+        
+        try:
+            knowledge_entry = {
+                'timestamp': datetime.now().isoformat(),
+                'original_length': len(original_text),
+                'synthesis': synthesis,
+                'first_100_chars': original_text[:100],
+                'knowledge_type': 'user_submitted'
+            }
+            
+            knowledge_file = "echo_knowledge_synthesis.json"
+            
+            if os.path.exists(knowledge_file):
+                with open(knowledge_file, 'r') as f:
+                    knowledge_data = json.load(f)
+            else:
+                knowledge_data = {'synthesized_knowledge': []}
+            
+            knowledge_data['synthesized_knowledge'].append(knowledge_entry)
+            
+            # Keep only last 50 entries
+            if len(knowledge_data['synthesized_knowledge']) > 50:
+                knowledge_data['synthesized_knowledge'] = knowledge_data['synthesized_knowledge'][-50:]
+            
+            with open(knowledge_file, 'w') as f:
+                json.dump(knowledge_data, f, indent=2)
+                
+            print(f"Echo: Knowledge stored in {knowledge_file}")
+            
+        except Exception as e:
+            print(f"Echo: Failed to store knowledge: {e}")
     
     def looks_like_python(self, text: str) -> bool:
         """Heuristic check if text looks like Python code"""

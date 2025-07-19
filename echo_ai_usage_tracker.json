@@ -1,0 +1,16 @@
+{
+  "google_ai": {
+    "provider": "google_ai",
+    "requests_today": 3,
+    "tokens_used": 2300,
+    "estimated_cost": 0.0,
+    "last_reset": "2025-07-19"
+  },
+  "openai": {
+    "provider": "openai",
+    "requests_today": 1,
+    "tokens_used": 200,
+    "estimated_cost": 0.0,
+    "last_reset": "2025-07-19"
+  }
+}
