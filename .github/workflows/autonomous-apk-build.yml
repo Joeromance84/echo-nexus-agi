@@ -1,0 +1,83 @@
+name: Autonomous APK Build with AI Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '*.py'
+      - 'buildozer.spec'
+      - 'requirements.txt'
+
+jobs:
+  autonomous-apk-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Setup Android Environment
+        uses: android-actions/setup-android@v2
+        
+      - name: Cache Build Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.buildozer
+            .buildozer
+          key: buildozer-${{ hashFiles('buildozer.spec', 'requirements.txt') }}
+          
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython kivy
+          
+      - name: Run Autonomous APK Packager
+        run: python autonomous_apk_packager.py
+        
+      - name: Validate APK Creation
+        run: |
+          if find . -name "*.apk" -type f | head -1; then
+            echo "✅ APK build validation passed"
+            find . -name "*.apk" -type f -exec ls -la {} \;
+          else
+            echo "❌ APK build validation failed"
+            exit 1
+          fi
+          
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: echocorecb-autonomous-apk
+          path: |
+            bin/*.apk
+            **/*.apk
+          retention-days: 30
+          
+      - name: Upload Build Diagnostics
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-diagnostics
+          path: |
+            .apkbuilder_manifest.json
+            apk_build_diagnostic.json
+            .buildozer/android/platform/*/build.log
+          retention-days: 7
+          
+      - name: Notify Build Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "🎯 AUTONOMOUS APK BUILD SUCCESSFUL"
+            echo "📱 EchoCoreCB mobile AGI platform ready"
+          else
+            echo "❌ AUTONOMOUS BUILD FAILED"
+            echo "📊 Check diagnostics artifact for troubleshooting"
+          fi
