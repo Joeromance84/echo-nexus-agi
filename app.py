@@ -449,9 +449,12 @@ elif page == "🧠 Workflow Diagnostics":
                 st.write(f"**Repository:** {owner}/{repo}")
                 
                 # Run diagnostic
-                if st.button("🔍 Run EchoNexus Diagnostic", type="primary"):
-                    with st.spinner("EchoNexus AGI analyzing workflow structure..."):
-                        diagnostic_result = st.session_state.github_helper.intelligent_workflow_diagnostic(owner, repo)
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    if st.button("🔍 Run Diagnostic", type="primary"):
+                        with st.spinner("EchoNexus AGI analyzing workflow structure..."):
+                            diagnostic_result = st.session_state.github_helper.intelligent_workflow_diagnostic(owner, repo)
                         
                         if diagnostic_result['success']:
                             st.success("✅ EchoNexus diagnostic completed!")

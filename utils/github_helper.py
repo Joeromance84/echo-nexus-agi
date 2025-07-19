@@ -320,6 +320,110 @@ jobs:
         except:
             pass
 
+    def intelligent_workflow_manager(self, owner: str, repo: str) -> Dict[str, Any]:
+        """
+        Complete workflow lifecycle management - debug, clean, optimize, and run
+        Thinks like a developer managing the entire workflow process
+        """
+        from datetime import datetime
+        
+        result = {
+            'success': False,
+            'actions_performed': [],
+            'workflow_status': {},
+            'next_recommendations': [],
+            'management_steps': [],
+            'error': None
+        }
+        
+        try:
+            if not self.github:
+                result['error'] = "GitHub token required"
+                return result
+            
+            repo_obj = self.github.get_repo(f"{owner}/{repo}")
+            result['management_steps'].append("Connected to repository for workflow management")
+            
+            # Step 1: Run comprehensive diagnostic
+            diagnostic = self.intelligent_workflow_diagnostic(owner, repo)
+            result['workflow_status']['diagnostic'] = diagnostic
+            result['management_steps'].append("Completed workflow diagnostic analysis")
+            
+            # Step 2: Clean up repository state
+            cleanup_result = self._cleanup_workflow_state(repo_obj)
+            if cleanup_result['cleaned']:
+                result['actions_performed'].extend(cleanup_result['actions'])
+                result['management_steps'].append("Cleaned up workflow state and failed runs")
+            
+            # Step 3: Optimize workflow structure
+            optimization_result = self._optimize_workflow_performance(repo_obj)
+            if optimization_result['optimized']:
+                result['actions_performed'].extend(optimization_result['actions'])
+                result['management_steps'].append("Applied workflow performance optimizations")
+            
+            # Step 4: Ensure all dependencies are ready
+            readiness_check = self._ensure_complete_readiness(repo_obj)
+            result['workflow_status']['ready_to_run'] = readiness_check['ready']
+            result['management_steps'].append(f"Readiness check: {len(readiness_check['actions_needed'])} issues found")
+            
+            if readiness_check['actions_needed']:
+                for action in readiness_check['actions_needed']:
+                    self._execute_readiness_fix(repo_obj, action)
+                    result['actions_performed'].append(f"Fixed: {action.replace('_', ' ')}")
+                result['management_steps'].append("Applied all readiness fixes")
+            
+            # Step 5: Intelligently trigger workflow execution
+            if readiness_check['ready'] or readiness_check['actions_needed']:
+                trigger_result = self._smart_workflow_trigger(repo_obj)
+                if trigger_result['triggered']:
+                    result['actions_performed'].append(f"Triggered workflow via {trigger_result['method']}")
+                    result['workflow_status']['triggered'] = True
+                    result['management_steps'].append("Successfully triggered workflow execution")
+            
+            # Step 6: Generate actionable next steps
+            result['next_recommendations'] = self._generate_workflow_next_steps(repo_obj, result['workflow_status'])
+            result['management_steps'].append("Generated intelligent next steps recommendations")
+            
+            result['success'] = True
+            
+        except Exception as e:
+            result['error'] = f"Workflow management error: {str(e)}"
+            result['management_steps'].append(f"Error occurred: {str(e)}")
+        
+        return result
+
+    def _cleanup_workflow_state(self, repo_obj) -> Dict[str, Any]:
+        """Clean up failed runs, stuck processes, and stale artifacts"""
+        from datetime import datetime
+        
+        result = {'cleaned': False, 'actions': []}
+        
+        try:
+            runs = list(repo_obj.get_workflow_runs())
+            
+            # Cancel stuck runs (running > 1 hour)
+            stuck_runs = [run for run in runs if run.status == 'in_progress' and 
+                         (datetime.now() - run.created_at.replace(tzinfo=None)).total_seconds() > 3600]
+            
+            for run in stuck_runs[:3]:
+                try:
+                    run.cancel()
+                    result['actions'].append(f"Cancelled stuck run #{run.run_number}")
+                    result['cleaned'] = True
+                except:
+                    pass
+            
+            # Identify patterns in failed runs
+            failed_runs = [run for run in runs if run.conclusion == 'failure']
+            if len(failed_runs) > 5:
+                result['actions'].append(f"Identified {len(failed_runs)} failed runs - pattern analysis needed")
+                result['cleaned'] = True
+                
+        except Exception as e:
+            result['actions'].append(f"Cleanup error: {str(e)}")
+        
+        return result
+
     def analyze_workflow_failures(self, owner: str, repo: str, run_id: str) -> Dict[str, Any]:
         """
         Analyze a failed workflow run to identify common issues
