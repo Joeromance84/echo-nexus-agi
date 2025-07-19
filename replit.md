@@ -94,4 +94,25 @@ The application follows a modular architecture built on Streamlit as the web fra
 - **Policy Enforcement**: Built-in compliance checking against GitHub security policies
 - **Input Validation**: Comprehensive validation of user inputs and generated workflows
 
-The application is designed to be self-contained while providing integration points for external services. The modular architecture allows for easy extension and maintenance, with clear separation of concerns between UI, AI processing, validation, and external integrations.
+## Recent Changes
+
+**July 19, 2025 - Major Architecture Enhancement: PyGithub Integration**
+- Removed OpenAI dependency - app now fully functional without AI features
+- Added PyGithub library for advanced GitHub API operations
+- Implemented hybrid approach: simple text commands + sophisticated backend API calls
+- Added new "Command Builder" page with natural language command processing
+- Enhanced GitHub Helper with 5 new advanced API methods:
+  * `smart_file_check()` - checks files without cloning entire repository
+  * `smart_workflow_deploy()` - creates/updates workflow files with conflict resolution
+  * `monitor_build_status()` - real-time monitoring of GitHub Actions builds
+  * `auto_setup_repository()` - automated repository setup for APK building
+  * `check_github_connection()` - verifies GitHub token authentication and user identity
+- Converted Chat Assistant to template-based help system with troubleshooting guides
+- App now operates in "Template & Validation Based" mode instead of AI-dependent mode
+
+**Evolution Summary:**
+- **Before**: Shell commands + OpenAI chat for workflow generation
+- **Now**: Advanced GitHub API integration + template system + command interface
+- **Benefit**: More precise control, faster operations, no dependency on external AI services
+
+The application is designed to be self-contained while providing integration points for external services. The modular architecture allows for easy extension and maintenance, with clear separation of concerns between UI, GitHub API processing, validation, and external integrations.

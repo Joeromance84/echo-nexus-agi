@@ -45,7 +45,7 @@ with st.sidebar:
     st.header("Navigation")
     page = st.selectbox(
         "Select Page",
-        ["Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["Command Builder", "Chat Assistant", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
@@ -53,6 +53,16 @@ with st.sidebar:
     # App mode (without AI dependency)
     st.write("🤖 Mode: Template & Validation Based")
     st.info("AI features disabled - using pre-built templates and validation tools")
+    
+    # GitHub connection status
+    try:
+        github_status = st.session_state.github_helper.check_github_connection()
+        if github_status['connected']:
+            st.write(f"🔗 GitHub: ✅ {github_status['authenticated_user']}")
+        else:
+            st.write("🔗 GitHub: ❌ Not Connected")
+    except Exception:
+        st.write("🔗 GitHub: ❓ Unknown")
     
     # Database status
     try:
@@ -68,7 +78,240 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-if page == "Chat Assistant":
+if page == "Command Builder":
+    st.header("⚡ Simple Commands → Advanced Actions")
+    
+    st.info("💡 Type simple commands - I'll use advanced GitHub APIs to execute them precisely!")
+    
+    # Initialize command history
+    if 'command_history' not in st.session_state:
+        st.session_state.command_history = []
+    
+    # Repository input section
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        repo_url = st.text_input(
+            "GitHub Repository URL",
+            placeholder="https://github.com/username/my-app",
+            help="Enter your GitHub repository URL"
+        )
+    
+    with col2:
+        if st.button("🔍 Check Repo"):
+            if repo_url:
+                with st.spinner("Checking repository..."):
+                    result = st.session_state.github_helper.validate_repository(repo_url)
+                    
+                    if result['valid']:
+                        st.success("✅ Repository found!")
+                        if result['has_buildozer_spec']:
+                            st.info("📱 buildozer.spec detected")
+                        if result['has_workflows']:
+                            st.info("⚙️ GitHub Actions workflows found")
+                    else:
+                        st.error(f"❌ {result['error']}")
+            else:
+                st.warning("Please enter a repository URL")
+    
+    # Command input section
+    st.markdown("---")
+    st.subheader("💬 Command Interface")
+    
+    # Command examples
+    with st.expander("📖 Example Commands"):
+        st.write("**Simple commands you can try:**")
+        st.code("""
+• "verify my github connection"
+• "check connection to username"
+• "setup my repo"
+• "build my app" 
+• "check build status"
+• "deploy workflow"
+• "fix my build"
+• "show me the logs"
+        """)
+    
+    # Command input
+    command = st.text_input(
+        "Enter your command:",
+        placeholder="Type a simple command like 'setup my repo' or 'build my app'",
+        help="Use natural language - I'll translate it to precise GitHub API calls"
+    )
+    
+    if st.button("🚀 Execute Command") and command:
+        with st.spinner("Processing command..."):
+            # Parse command and execute appropriate GitHub API calls
+            command_lower = command.lower().strip()
+            
+            st.markdown("---")
+            st.subheader("🔧 Execution Details")
+            
+            # GitHub connection verification commands
+            if any(word in command_lower for word in ['verify', 'connection', 'check connection', 'authenticate']):
+                st.write("**Command Recognized:** GitHub Authentication Verification")
+                st.write("**Backend Action:** Using PyGithub to verify GitHub token and user identity")
+                
+                # Extract username if specified in command
+                target_username = None
+                words = command_lower.split()
+                for i, word in enumerate(words):
+                    if word in ['to', 'for', 'user', 'username'] and i + 1 < len(words):
+                        target_username = words[i + 1]
+                        break
+                
+                # Execute GitHub connection check
+                connection_result = st.session_state.github_helper.check_github_connection(target_username)
+                
+                if connection_result['connected']:
+                    st.success(connection_result['message'])
+                    st.write(f"**Authenticated User:** {connection_result['authenticated_user']}")
+                    
+                    if target_username:
+                        if connection_result['correct_user']:
+                            st.success("✅ User verification successful!")
+                        else:
+                            st.error("❌ User mismatch detected!")
+                            st.write("**Solution:** Update your GITHUB_TOKEN to match the correct user")
+                    
+                    # Show token permissions info
+                    st.info("🔐 Your GitHub token is working correctly and ready for repository operations")
+                    
+                else:
+                    st.error(connection_result['message'])
+                    if "GITHUB_TOKEN" in connection_result['error']:
+                        st.warning("**Action Required:** Add your GitHub token to Replit secrets")
+                        st.write("1. Go to Replit Secrets (lock icon in sidebar)")
+                        st.write("2. Add key: `GITHUB_TOKEN`")
+                        st.write("3. Add your GitHub personal access token as the value")
+                        st.write("4. Restart the app")
+            
+            # Repository operations (require both command and repo_url)
+            elif not repo_url:
+                st.warning("Please enter a GitHub repository URL for this command")
+            
+            elif any(word in command_lower for word in ['setup', 'initialize', 'create']):
+                st.write("**Command Recognized:** Repository Setup")
+                st.write("**Backend Action:** Using PyGithub to check/create required files")
+                
+                # Execute advanced setup using PyGithub
+                setup_result = st.session_state.github_helper.auto_setup_repository(repo_url)
+                
+                if setup_result['success']:
+                    st.success("✅ Repository setup completed!")
+                    
+                    if setup_result['files_created']:
+                        st.write("**Files Created:**")
+                        for file in setup_result['files_created']:
+                            st.write(f"• {file}")
+                    
+                    if setup_result['files_updated']:
+                        st.write("**Files Updated:**")
+                        for file in setup_result['files_updated']:
+                            st.write(f"• {file}")
+                    
+                    if not setup_result['setup_complete']:
+                        st.info("Repository already has all required files")
+                        
+                else:
+                    st.error(f"❌ Setup failed: {setup_result['error']}")
+            
+            elif any(word in command_lower for word in ['build', 'compile', 'apk']):
+                st.write("**Command Recognized:** Build Trigger")
+                st.write("**Backend Action:** Using PyGithub to check workflow files and monitor builds")
+                
+                # Check for workflow files
+                workflow_check = st.session_state.github_helper.smart_file_check(repo_url, ".github/workflows/build-apk.yml")
+                
+                if workflow_check['exists']:
+                    st.success("✅ Build workflow found!")
+                    
+                    # Monitor build status
+                    build_status = st.session_state.github_helper.monitor_build_status(repo_url)
+                    
+                    if build_status['success']:
+                        if build_status['active_runs']:
+                            st.info(f"🔄 {len(build_status['active_runs'])} build(s) currently running")
+                            for run in build_status['active_runs'][:3]:
+                                st.write(f"• {run['name']} - {run['status']} ({run['head_sha']})")
+                        
+                        if build_status['latest_run']:
+                            latest = build_status['latest_run']
+                            status_emoji = "✅" if latest['conclusion'] == 'success' else "❌" if latest['conclusion'] == 'failure' else "🔄"
+                            st.write(f"**Latest Build:** {status_emoji} {latest['name']} - {latest['conclusion'] or latest['status']}")
+                            st.write(f"[View Details]({latest['html_url']})")
+                    else:
+                        st.warning(f"Could not check build status: {build_status['error']}")
+                else:
+                    st.warning("❌ No build workflow found. Try 'setup my repo' first.")
+            
+            elif any(word in command_lower for word in ['status', 'check', 'monitor']):
+                st.write("**Command Recognized:** Status Check")
+                st.write("**Backend Action:** Using PyGithub to query workflow run status")
+                
+                build_status = st.session_state.github_helper.monitor_build_status(repo_url)
+                
+                if build_status['success']:
+                    st.success("✅ Status check completed!")
+                    
+                    if build_status['active_runs']:
+                        st.subheader("🔄 Active Builds")
+                        for run in build_status['active_runs']:
+                            st.write(f"• **{run['name']}** - {run['status']} (Branch: {run['head_branch']})")
+                            st.write(f"  Started: {run['created_at']}")
+                            st.write(f"  [View Live]({run['html_url']})")
+                    
+                    if build_status['runs']:
+                        st.subheader("📊 Recent Builds")
+                        for run in build_status['runs'][:5]:
+                            status_emoji = "✅" if run['conclusion'] == 'success' else "❌" if run['conclusion'] == 'failure' else "🔄"
+                            st.write(f"{status_emoji} **{run['name']}** - {run['conclusion'] or run['status']} ({run['head_sha']})")
+                else:
+                    st.error(f"❌ Status check failed: {build_status['error']}")
+            
+            elif any(word in command_lower for word in ['deploy', 'workflow', 'add']):
+                st.write("**Command Recognized:** Workflow Deployment")
+                st.write("**Backend Action:** Using PyGithub to create/update workflow files")
+                
+                # Show template selection
+                templates = st.session_state.workflow_templates.get_all_templates()
+                template_names = list(templates.keys())
+                
+                selected_template = st.selectbox("Choose workflow template:", template_names)
+                
+                if st.button("Deploy Workflow"):
+                    template_content = templates[selected_template]['content']
+                    
+                    deploy_result = st.session_state.github_helper.smart_workflow_deploy(
+                        repo_url, template_content, f"{selected_template}.yml"
+                    )
+                    
+                    if deploy_result['success']:
+                        st.success(f"✅ Workflow {deploy_result['action']}!")
+                        st.write(f"**File:** {deploy_result['workflow_path']}")
+                        st.info("Your workflow is now active and will run on the next push to your repository.")
+                    else:
+                        st.error(f"❌ Deployment failed: {deploy_result['error']}")
+            
+            else:
+                st.warning("🤔 Command not recognized. Try one of the example commands above.")
+                st.write("**Supported commands:** setup, build, status, deploy")
+            
+            # Save command to history
+            st.session_state.command_history.append({
+                'command': command,
+                'repo': repo_url,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            })
+    
+    # Command history
+    if st.session_state.command_history:
+        st.markdown("---")
+        st.subheader("📜 Command History")
+        with st.expander("View Recent Commands"):
+            for cmd in reversed(st.session_state.command_history[-10:]):
+                st.write(f"**{cmd['timestamp']}:** `{cmd['command']}` → {cmd['repo']}")
+
+elif page == "Chat Assistant":
     st.header("🛠️ Workflow Assistant (Template-Based)")
     
     st.info("💡 AI features are disabled. Use this page to get help with templates and guidance!")
