@@ -6,6 +6,9 @@ This is a Streamlit-based web application that serves as an interactive AI assis
 
 ## User Preferences
 
+**User Identity**: Logan Lorentz (Logan.lorentz9@gmail.com)
+**GitHub User**: Joeromance84
+**Google Cloud**: Logan.lorentz9@gmail.com
 Preferred communication style: Simple, everyday language.
 
 ## System Architecture

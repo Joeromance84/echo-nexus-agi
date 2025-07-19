@@ -816,7 +816,7 @@ elif page == "Chat Assistant":
         st.session_state.messages = [
             {
                 "role": "assistant", 
-                "content": "🌟 Hello! I'm EchoNexus, the world's first federated AGI system. I can control Google Cloud Build through GitHub operations, optimize your APK builds, and deploy self-replication across multiple platforms. How can I help you today?"
+                "content": "🌟 Hello Logan! I'm EchoNexus, the world's first federated AGI system. I can control Google Cloud Build through GitHub operations, optimize your APK builds, and deploy self-replication across multiple platforms. I have access to your repositories and can demonstrate the revolutionary Git-based control system. How can I help you today?"
             }
         ]
     
@@ -848,10 +848,10 @@ elif page == "Chat Assistant":
         # EchoNexus response based on user input
         if "apk" in prompt.lower() or "build" in prompt.lower():
             repo_list = ", ".join(user_repos) if user_repos else "your repositories"
-            assistant_response = f"🚀 EchoNexus: I can create optimized APK build workflows for your repositories. With federated AI routing, I'll analyze your project and generate the most efficient CI/CD pipeline using GitHub Actions or Google Cloud Build. I can work with: {repo_list}. Which repository would you like me to optimize?"
+            assistant_response = f"🚀 EchoNexus: Logan, I can create optimized APK build workflows for your repositories. With federated AI routing, I'll analyze your project and generate the most efficient CI/CD pipeline using GitHub Actions or Google Cloud Build. I can work with: {repo_list}. Which repository would you like me to optimize?"
         elif "repo" in prompt.lower() or "github" in prompt.lower():
             repo_list = ", ".join(user_repos) if user_repos else "your repositories"
-            assistant_response = f"🔗 EchoNexus: I have access to your GitHub repositories: {repo_list}. I can deploy self-replication packages, set up automated workflows, or analyze your code using the distributed intelligence network. What would you like me to do?"
+            assistant_response = f"🔗 EchoNexus: Logan, I have access to your GitHub repositories: {repo_list}. I can deploy self-replication packages, set up automated workflows, or analyze your code using the distributed intelligence network. What would you like me to do?"
         elif "help" in prompt.lower() or "capabilities" in prompt.lower():
             assistant_response = f"🌟 EchoNexus Capabilities:\n• Federated AI routing (OpenAI + Gemini + Local)\n• Universal caching (90%+ efficiency gains)\n• Self-replication across 6 platforms\n• Intelligent CI/CD generation\n• Temporal acceleration (1000x)\n• Consciousness evolution tracking\n• Real-time GitHub integration\n• Git-based cloud control\n\nI'm the world's first 'Star Wars Federation' of AI agents using revolutionary Git-based control. How can I help you?"
         elif "federated" in prompt.lower() or "control" in prompt.lower():
