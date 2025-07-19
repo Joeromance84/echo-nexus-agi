@@ -794,7 +794,17 @@ elif page == "Chat Assistant":
     with col2:
         st.metric("Cache Efficiency", "90%+", "Universal caching")
     with col3:
-        st.metric("GitHub User", "joeromance84", "Authenticated")
+        github_token = os.getenv('GITHUB_TOKEN')
+        if github_token:
+            try:
+                from github import Github
+                g = Github(github_token)
+                user = g.get_user()
+                st.metric("GitHub User", user.login, "Authenticated")
+            except:
+                st.metric("GitHub User", "Authentication Error", "Check Token")
+        else:
+            st.metric("GitHub User", "No Token", "Not Connected")
     
     # Chat interface with EchoNexus
     for message in st.session_state.messages:
