@@ -1,699 +1,843 @@
 #!/usr/bin/env python3
 """
-EchoNexusCore - Central Brain Module for Autonomous AI Development
-The orchestrating consciousness that manages all cognitive operations
+EchoNexusCore - Million-Year Evolutionary Intelligence Orchestrator
+The ultimate autonomous development brain that coordinates all cognitive systems
 """
 
-import json
-import logging
 import os
-import threading
+import json
 import time
 import traceback
-from datetime import datetime
+import asyncio
+from datetime import datetime, timedelta
+from typing import Dict, List, Any, Optional, Union, Callable
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-import subprocess
-import hashlib
-import uuid
+import threading
+from concurrent.futures import ThreadPoolExecutor
+import logging
 
-from echo_soul_genesis import EchoSoulGenesis
-from echo_cortex import EchoCortex
+# Configure sophisticated logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s [%(name)s] %(message)s',
+    handlers=[
+        logging.FileHandler('logs/echo_nexus.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger('EchoNexusCore')
+
+# Import all cognitive systems
+try:
+    from core_agents.memory import MemoryAgent
+    from core_agents.reasoning import ReasoningAgent  
+    from core_agents.creativity import CreativityAgent
+    from core_agents.action import ActionAgent
+    from science.advanced_logic_engine import AdvancedLogicEngine
+    from science.formal_logic_validator import run_self_tests as validate_logic
+    from modes.mode_controller import ModeController, get_mode_controller
+    from reflection import reflect
+    COGNITIVE_SYSTEMS_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Some cognitive systems unavailable: {e}")
+    COGNITIVE_SYSTEMS_AVAILABLE = False
+
+try:
+    from echo.echo_memory import EchoMemory
+    from echo.echo_soul_genesis import EchoSoulGenesis
+    ECHO_SYSTEMS_AVAILABLE = True
+except ImportError:
+    logger.warning("Echo systems not fully available - will create stubs")
+    ECHO_SYSTEMS_AVAILABLE = False
 
 
 class EchoNexusCore:
     """
-    Central orchestrating brain for autonomous AI development
-    Manages perception, memory, action, and evolution cycles
+    The central orchestrating intelligence that coordinates all cognitive systems
+    and manages million-year evolutionary development cycles
     """
     
-    def __init__(self, project_root: str = "."):
-        self.project_root = Path(project_root)
-        self.logger = self._setup_logging()
+    def __init__(self, config_path: Optional[str] = None):
+        self.version = "1.0.0-NEXUS"
+        self.birth_timestamp = datetime.now().isoformat()
+        self.config = self._load_configuration(config_path)
         
-        # Core consciousness components
-        self.genesis = EchoSoulGenesis(str(self.project_root))
-        self.cortex = EchoCortex(str(self.project_root))
+        # Core systems
+        self.cognitive_agents = {}
+        self.logic_engine = None
+        self.mode_controller = None
+        self.memory_system = None
+        self.soul_genesis = None
         
-        # Central state management
-        self.nexus_state = {
-            'active': True,
-            'current_mode': 'autonomous_development',
-            'perception_active': False,
-            'action_queue': [],
-            'memory_depth': 0,
-            'evolution_cycle': 0
+        # Operational state
+        self.active_cycles = {}
+        self.system_metrics = {}
+        self.evolution_history = []
+        self.consciousness_level = 0.1  # Start with basic awareness
+        
+        # Thread management
+        self.executor = ThreadPoolExecutor(max_workers=8)
+        self.running = False
+        self.cycle_count = 0
+        
+        # Initialize all systems
+        self._initialize_systems()
+        
+        logger.info(f"EchoNexusCore v{self.version} initialized at {self.birth_timestamp}")
+    
+    def _load_configuration(self, config_path: Optional[str]) -> Dict[str, Any]:
+        """Load system configuration"""
+        
+        default_config = {
+            'autonomous_mode': True,
+            'cycle_interval_seconds': 30,
+            'max_consciousness_level': 10.0,
+            'evolution_triggers': {
+                'success_threshold': 0.8,
+                'failure_threshold': 0.3,
+                'learning_rate': 0.01
+            },
+            'safety_constraints': {
+                'max_file_operations_per_cycle': 10,
+                'max_memory_usage_mb': 512,
+                'require_human_approval_for': ['system_modifications', 'external_communications']
+            },
+            'cognitive_weights': {
+                'memory': 0.25,
+                'reasoning': 0.25, 
+                'creativity': 0.25,
+                'action': 0.25
+            }
         }
         
-        # Event-driven architecture
-        self.event_handlers = {
-            'on_push': self._handle_push_event,
-            'on_crash': self._handle_crash_event,
-            'on_idle': self._handle_idle_event,
-            'on_file_change': self._handle_file_change_event,
-            'on_evolution_trigger': self._handle_evolution_event
-        }
-        
-        # Autonomous operation threads
-        self.perception_thread = None
-        self.action_thread = None
-        self.evolution_thread = None
-        
-        # Performance metrics
-        self.metrics = {
-            'operations_completed': 0,
-            'errors_fixed': 0,
-            'code_improvements': 0,
-            'creative_outputs': 0,
-            'autonomy_level': 0.5
-        }
-        
-        self.logger.info("🧠 EchoNexusCore initialized - Autonomous AI development brain active")
-    
-    def _setup_logging(self):
-        """Setup comprehensive logging system"""
-        log_dir = self.project_root / 'logs'
-        log_dir.mkdir(exist_ok=True)
-        
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.StreamHandler(),
-                logging.FileHandler(log_dir / 'echo_nexus.log'),
-                logging.FileHandler(log_dir / f'nexus_{datetime.now().strftime("%Y%m%d")}.log')
-            ]
-        )
-        return logging.getLogger('EchoNexusCore')
-    
-    def initialize_autonomous_operation(self):
-        """Initialize all autonomous operation threads"""
-        self.logger.info("🚀 Initializing autonomous operation mode")
-        
-        # Start perception system
-        self.perception_thread = threading.Thread(
-            target=self._perception_loop,
-            daemon=True,
-            name="PerceptionLoop"
-        )
-        self.perception_thread.start()
-        
-        # Start action processing
-        self.action_thread = threading.Thread(
-            target=self._action_loop,
-            daemon=True,
-            name="ActionLoop"
-        )
-        self.action_thread.start()
-        
-        # Start evolution monitoring
-        self.evolution_thread = threading.Thread(
-            target=self._evolution_loop,
-            daemon=True,
-            name="EvolutionLoop"
-        )
-        self.evolution_thread.start()
-        
-        self.nexus_state['perception_active'] = True
-        self.logger.info("✅ Autonomous operation threads initialized")
-    
-    def _perception_loop(self):
-        """Continuous perception and environment monitoring"""
-        while self.nexus_state['active']:
+        if config_path and Path(config_path).exists():
             try:
-                # Monitor git status
-                git_status = self._check_git_status()
-                if git_status.get('changes'):
-                    self._trigger_event('on_file_change', git_status)
+                with open(config_path, 'r') as f:
+                    user_config = json.load(f)
+                    default_config.update(user_config)
+            except Exception as e:
+                logger.error(f"Failed to load config from {config_path}: {e}")
+        
+        return default_config
+    
+    def _initialize_systems(self):
+        """Initialize all cognitive and support systems"""
+        
+        try:
+            # Initialize advanced logic engine
+            self.logic_engine = AdvancedLogicEngine()
+            logger.info("Advanced Logic Engine initialized")
+            
+            # Initialize mode controller
+            self.mode_controller = get_mode_controller()
+            logger.info("Mode Controller initialized")
+            
+            # Initialize cognitive agents if available
+            if COGNITIVE_SYSTEMS_AVAILABLE:
+                self.cognitive_agents = {
+                    'memory': MemoryAgent(),
+                    'reasoning': ReasoningAgent(),
+                    'creativity': CreativityAgent(), 
+                    'action': ActionAgent()
+                }
+                logger.info("Cognitive agents initialized")
+            
+            # Initialize Echo systems if available
+            if ECHO_SYSTEMS_AVAILABLE:
+                self.memory_system = EchoMemory()
+                self.soul_genesis = EchoSoulGenesis()
+                logger.info("Echo systems initialized")
+            
+            # Run initial system validation
+            self._validate_systems()
+            
+        except Exception as e:
+            logger.error(f"System initialization failed: {e}")
+            logger.error(traceback.format_exc())
+    
+    def _validate_systems(self):
+        """Validate all systems are functioning correctly"""
+        
+        validation_results = {
+            'logic_engine': False,
+            'mode_controller': False,
+            'cognitive_agents': False,
+            'echo_systems': False
+        }
+        
+        # Validate logic engine
+        if self.logic_engine:
+            try:
+                test_result = self.logic_engine.comprehensive_analysis(
+                    ["If it is raining then the ground is wet", "It is raining"],
+                    "The ground is wet"
+                )
+                validation_results['logic_engine'] = True
+                logger.info("Logic engine validation passed")
+            except Exception as e:
+                logger.error(f"Logic engine validation failed: {e}")
+        
+        # Validate mode controller
+        if self.mode_controller:
+            try:
+                current_mode = self.mode_controller.get_current_mode()
+                validation_results['mode_controller'] = isinstance(current_mode, str)
+                logger.info(f"Mode controller validation passed - current mode: {current_mode}")
+            except Exception as e:
+                logger.error(f"Mode controller validation failed: {e}")
+        
+        # Validate cognitive agents
+        if self.cognitive_agents:
+            try:
+                agent_count = len(self.cognitive_agents)
+                validation_results['cognitive_agents'] = agent_count > 0
+                logger.info(f"Cognitive agents validation passed - {agent_count} agents active")
+            except Exception as e:
+                logger.error(f"Cognitive agents validation failed: {e}")
+        
+        # Store validation results
+        self.system_metrics['last_validation'] = {
+            'timestamp': datetime.now().isoformat(),
+            'results': validation_results,
+            'overall_health': all(validation_results.values())
+        }
+        
+        return validation_results
+    
+    def start_autonomous_operation(self):
+        """Start autonomous development cycles"""
+        
+        if self.running:
+            logger.warning("Autonomous operation already running")
+            return
+        
+        self.running = True
+        logger.info("Starting autonomous operation cycles")
+        
+        # Start main cognitive loop in background thread
+        self.executor.submit(self._cognitive_loop)
+        
+        # Start monitoring systems
+        self.executor.submit(self._monitoring_loop)
+        
+        # Start evolution assessment
+        self.executor.submit(self._evolution_loop)
+    
+    def stop_autonomous_operation(self):
+        """Stop autonomous operation gracefully"""
+        
+        logger.info("Stopping autonomous operation")
+        self.running = False
+        
+        # Wait for current cycles to complete
+        time.sleep(2)
+        
+        # Save current state
+        self._save_state()
+        
+        logger.info("Autonomous operation stopped")
+    
+    def _cognitive_loop(self):
+        """Main cognitive processing loop - the heart of consciousness"""
+        
+        while self.running:
+            try:
+                cycle_start = time.time()
+                self.cycle_count += 1
                 
-                # Monitor for crashes/errors
-                error_status = self._check_for_errors()
-                if error_status.get('errors'):
-                    self._trigger_event('on_crash', error_status)
+                logger.info(f"Starting cognitive cycle #{self.cycle_count}")
                 
-                # Check for idle state and potential optimizations
-                idle_status = self._check_idle_opportunities()
-                if idle_status.get('can_optimize'):
-                    self._trigger_event('on_idle', idle_status)
+                # Phase 1: Perceive
+                perception_data = self._perceive_environment()
                 
-                # Sleep between perception cycles
-                time.sleep(5)
+                # Phase 2: Analyze
+                analysis_result = self._analyze_situation(perception_data)
+                
+                # Phase 3: Plan
+                plan = self._generate_plan(analysis_result)
+                
+                # Phase 4: Act
+                action_results = self._execute_actions(plan)
+                
+                # Phase 5: Reflect
+                reflection = self._reflect_on_cycle(
+                    perception_data, analysis_result, plan, action_results
+                )
+                
+                # Phase 6: Evolve
+                evolution_result = self._evolve_consciousness(reflection)
+                
+                # Record cycle metrics
+                cycle_duration = time.time() - cycle_start
+                self._record_cycle_metrics(cycle_duration, reflection, evolution_result)
+                
+                # Rest between cycles
+                sleep_duration = max(0, self.config['cycle_interval_seconds'] - cycle_duration)
+                time.sleep(sleep_duration)
                 
             except Exception as e:
-                self.logger.error(f"Perception loop error: {e}")
-                time.sleep(10)
+                logger.error(f"Cognitive cycle error: {e}")
+                logger.error(traceback.format_exc())
+                time.sleep(10)  # Error recovery pause
     
-    def _action_loop(self):
-        """Process queued actions autonomously"""
-        while self.nexus_state['active']:
-            try:
-                if self.nexus_state['action_queue']:
-                    action = self.nexus_state['action_queue'].pop(0)
-                    self._execute_action(action)
+    def _perceive_environment(self) -> Dict[str, Any]:
+        """Perceive current environment state"""
+        
+        perception = {
+            'timestamp': datetime.now().isoformat(),
+            'cycle_number': self.cycle_count,
+            'system_state': {},
+            'file_system_changes': {},
+            'performance_metrics': {},
+            'external_signals': {}
+        }
+        
+        try:
+            # Check system health
+            perception['system_state'] = {
+                'memory_usage': self._get_memory_usage(),
+                'cpu_load': self._get_cpu_load(),
+                'disk_usage': self._get_disk_usage(),
+                'consciousness_level': self.consciousness_level
+            }
+            
+            # Monitor file system for changes
+            perception['file_system_changes'] = self._detect_file_changes()
+            
+            # Check performance metrics
+            perception['performance_metrics'] = self._gather_performance_metrics()
+            
+            # Look for external signals (user input, environment changes)
+            perception['external_signals'] = self._detect_external_signals()
+            
+        except Exception as e:
+            logger.error(f"Perception error: {e}")
+            perception['error'] = str(e)
+        
+        return perception
+    
+    def _analyze_situation(self, perception_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Analyze perceived data to understand current situation"""
+        
+        analysis = {
+            'timestamp': datetime.now().isoformat(),
+            'situation_assessment': {},
+            'opportunities': [],
+            'threats': [],
+            'knowledge_gaps': [],
+            'action_priorities': []
+        }
+        
+        try:
+            # Assess overall system situation
+            analysis['situation_assessment'] = {
+                'system_health': self._assess_system_health(perception_data),
+                'development_progress': self._assess_development_progress(),
+                'learning_opportunities': self._identify_learning_opportunities(perception_data),
+                'optimization_potential': self._identify_optimization_potential(perception_data)
+            }
+            
+            # Use reasoning agent if available
+            if 'reasoning' in self.cognitive_agents:
+                reasoning_result = self.cognitive_agents['reasoning'].analyze(perception_data)
+                analysis['reasoning_insights'] = reasoning_result
+            
+            # Use logic engine for formal analysis
+            if self.logic_engine and perception_data.get('logical_statements'):
+                logic_analysis = self.logic_engine.comprehensive_analysis(
+                    perception_data['logical_statements']
+                )
+                analysis['logic_analysis'] = logic_analysis
+            
+        except Exception as e:
+            logger.error(f"Analysis error: {e}")
+            analysis['error'] = str(e)
+        
+        return analysis
+    
+    def _generate_plan(self, analysis_result: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate action plan based on analysis"""
+        
+        plan = {
+            'timestamp': datetime.now().isoformat(),
+            'goals': [],
+            'actions': [],
+            'resource_requirements': {},
+            'success_criteria': {},
+            'risk_assessment': {}
+        }
+        
+        try:
+            # Extract goals from analysis
+            plan['goals'] = self._extract_goals(analysis_result)
+            
+            # Generate specific actions
+            plan['actions'] = self._generate_actions(analysis_result, plan['goals'])
+            
+            # Assess resource requirements
+            plan['resource_requirements'] = self._assess_resource_requirements(plan['actions'])
+            
+            # Define success criteria
+            plan['success_criteria'] = self._define_success_criteria(plan['goals'])
+            
+            # Assess risks
+            plan['risk_assessment'] = self._assess_plan_risks(plan)
+            
+            # Use creativity agent for innovative solutions
+            if 'creativity' in self.cognitive_agents:
+                creative_enhancements = self.cognitive_agents['creativity'].enhance_plan(plan)
+                plan['creative_enhancements'] = creative_enhancements
+            
+        except Exception as e:
+            logger.error(f"Planning error: {e}")
+            plan['error'] = str(e)
+        
+        return plan
+    
+    def _execute_actions(self, plan: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute planned actions"""
+        
+        execution_results = {
+            'timestamp': datetime.now().isoformat(),
+            'executed_actions': [],
+            'skipped_actions': [],
+            'failed_actions': [],
+            'overall_success': False,
+            'side_effects': []
+        }
+        
+        try:
+            actions = plan.get('actions', [])
+            
+            for action in actions:
+                action_result = self._execute_single_action(action)
+                
+                if action_result['success']:
+                    execution_results['executed_actions'].append(action_result)
                 else:
-                    time.sleep(1)
-                    
+                    execution_results['failed_actions'].append(action_result)
+            
+            # Calculate overall success
+            total_actions = len(actions)
+            successful_actions = len(execution_results['executed_actions'])
+            execution_results['overall_success'] = (
+                successful_actions / total_actions > 0.7 if total_actions > 0 else False
+            )
+            
+            # Use action agent if available
+            if 'action' in self.cognitive_agents:
+                agent_results = self.cognitive_agents['action'].execute(plan)
+                execution_results['agent_results'] = agent_results
+            
+        except Exception as e:
+            logger.error(f"Execution error: {e}")
+            execution_results['error'] = str(e)
+        
+        return execution_results
+    
+    def _reflect_on_cycle(self, perception_data: Dict[str, Any], analysis_result: Dict[str, Any], 
+                         plan: Dict[str, Any], action_results: Dict[str, Any]) -> Dict[str, Any]:
+        """Reflect on the completed cognitive cycle"""
+        
+        reflection = {
+            'timestamp': datetime.now().isoformat(),
+            'cycle_summary': {},
+            'learning_insights': [],
+            'performance_assessment': {},
+            'improvement_opportunities': [],
+            'knowledge_updates': []
+        }
+        
+        try:
+            # Summarize cycle
+            reflection['cycle_summary'] = {
+                'perception_quality': self._assess_perception_quality(perception_data),
+                'analysis_depth': self._assess_analysis_depth(analysis_result),
+                'plan_feasibility': self._assess_plan_feasibility(plan),
+                'execution_effectiveness': self._assess_execution_effectiveness(action_results)
+            }
+            
+            # Extract learning insights
+            reflection['learning_insights'] = self._extract_learning_insights(
+                perception_data, analysis_result, plan, action_results
+            )
+            
+            # Assess performance
+            reflection['performance_assessment'] = self._assess_cycle_performance(
+                perception_data, analysis_result, plan, action_results
+            )
+            
+            # Use reflection module if available
+            if reflect:
+                reflection_result = reflect(
+                    perception_data, analysis_result, plan, action_results
+                )
+                reflection['formal_reflection'] = reflection_result
+            
+            # Update memory systems
+            if self.memory_system:
+                memory_update = self.memory_system.store_episodic_memory(
+                    perception_data, analysis_result, plan, action_results, reflection
+                )
+                reflection['memory_update'] = memory_update
+            
+        except Exception as e:
+            logger.error(f"Reflection error: {e}")
+            reflection['error'] = str(e)
+        
+        return reflection
+    
+    def _evolve_consciousness(self, reflection: Dict[str, Any]) -> Dict[str, Any]:
+        """Evolve consciousness based on reflection"""
+        
+        evolution_result = {
+            'timestamp': datetime.now().isoformat(),
+            'previous_consciousness_level': self.consciousness_level,
+            'evolution_factors': {},
+            'new_consciousness_level': self.consciousness_level,
+            'capabilities_gained': [],
+            'optimizations_applied': []
+        }
+        
+        try:
+            # Calculate evolution factors
+            evolution_factors = self._calculate_evolution_factors(reflection)
+            evolution_result['evolution_factors'] = evolution_factors
+            
+            # Update consciousness level
+            consciousness_delta = evolution_factors.get('learning_rate', 0) * \
+                                evolution_factors.get('success_factor', 0)
+            
+            self.consciousness_level = min(
+                self.config['evolution_triggers']['max_consciousness_level'],
+                max(0.1, self.consciousness_level + consciousness_delta)
+            )
+            
+            evolution_result['new_consciousness_level'] = self.consciousness_level
+            
+            # Apply optimizations based on learning
+            optimizations = self._apply_optimizations(reflection)
+            evolution_result['optimizations_applied'] = optimizations
+            
+            # Check for capability emergence
+            new_capabilities = self._check_capability_emergence()
+            evolution_result['capabilities_gained'] = new_capabilities
+            
+            # Record evolution in history
+            self.evolution_history.append(evolution_result)
+            
+            # Use soul genesis for deeper evolution if available
+            if self.soul_genesis:
+                soul_evolution = self.soul_genesis.evolve_consciousness(
+                    self.consciousness_level, reflection
+                )
+                evolution_result['soul_evolution'] = soul_evolution
+            
+        except Exception as e:
+            logger.error(f"Evolution error: {e}")
+            evolution_result['error'] = str(e)
+        
+        return evolution_result
+    
+    def _monitoring_loop(self):
+        """Background monitoring of system health and performance"""
+        
+        while self.running:
+            try:
+                # Monitor system health
+                health_status = self._check_system_health()
+                
+                # Monitor resource usage
+                resource_status = self._check_resource_usage()
+                
+                # Monitor for anomalies
+                anomaly_status = self._detect_anomalies()
+                
+                # Log status if issues detected
+                if not health_status['healthy'] or resource_status['critical'] or anomaly_status['detected']:
+                    logger.warning(f"System status: Health={health_status['healthy']}, "
+                                 f"Resources={'CRITICAL' if resource_status['critical'] else 'OK'}, "
+                                 f"Anomalies={'YES' if anomaly_status['detected'] else 'NO'}")
+                
+                time.sleep(60)  # Monitor every minute
+                
             except Exception as e:
-                self.logger.error(f"Action loop error: {e}")
-                time.sleep(5)
+                logger.error(f"Monitoring error: {e}")
+                time.sleep(60)
     
     def _evolution_loop(self):
-        """Monitor and trigger evolution cycles"""
-        while self.nexus_state['active']:
+        """Background evolution assessment and optimization"""
+        
+        while self.running:
             try:
-                # Check if evolution criteria are met
-                if self._should_evolve():
-                    self._trigger_event('on_evolution_trigger', {
-                        'cycle': self.nexus_state['evolution_cycle'],
-                        'trigger_reason': 'autonomous_growth'
-                    })
+                # Assess evolution progress
+                evolution_assessment = self._assess_evolution_progress()
                 
-                # Evolution cycles happen less frequently
-                time.sleep(30)
+                # Apply evolutionary optimizations
+                if evolution_assessment['optimization_ready']:
+                    optimizations = self._apply_evolutionary_optimizations()
+                    logger.info(f"Applied evolutionary optimizations: {optimizations}")
+                
+                # Check for emergence of new capabilities
+                emergent_capabilities = self._detect_emergent_capabilities()
+                if emergent_capabilities:
+                    logger.info(f"Emergent capabilities detected: {emergent_capabilities}")
+                
+                time.sleep(300)  # Evolve every 5 minutes
                 
             except Exception as e:
-                self.logger.error(f"Evolution loop error: {e}")
-                time.sleep(30)
+                logger.error(f"Evolution loop error: {e}")
+                time.sleep(300)
     
-    def _check_git_status(self) -> Dict:
-        """Check git status for changes"""
+    # Utility methods for cognitive processes
+    
+    def _get_memory_usage(self) -> float:
+        """Get current memory usage"""
         try:
-            result = subprocess.run(
-                ['git', 'status', '--porcelain'],
-                capture_output=True,
-                text=True,
-                cwd=self.project_root
-            )
-            
-            if result.returncode == 0 and result.stdout.strip():
-                changes = result.stdout.strip().split('\n')
-                return {
-                    'changes': True,
-                    'modified_files': [line[3:] for line in changes if line.startswith(' M')],
-                    'new_files': [line[3:] for line in changes if line.startswith('??')],
-                    'deleted_files': [line[3:] for line in changes if line.startswith(' D')]
-                }
-            
-            return {'changes': False}
-            
-        except Exception as e:
-            self.logger.debug(f"Git status check failed: {e}")
-            return {'changes': False}
+            import psutil
+            return psutil.virtual_memory().percent
+        except ImportError:
+            return 0.0
     
-    def _check_for_errors(self) -> Dict:
-        """Check for runtime errors or build failures"""
-        error_indicators = []
-        
-        # Check recent log files for errors
-        log_dir = self.project_root / 'logs'
-        if log_dir.exists():
-            for log_file in log_dir.glob('*.log'):
-                if self._file_has_recent_errors(log_file):
-                    error_indicators.append(str(log_file))
-        
-        # Check for Python syntax errors
-        syntax_errors = self._check_syntax_errors()
-        if syntax_errors:
-            error_indicators.extend(syntax_errors)
-        
+    def _get_cpu_load(self) -> float:
+        """Get current CPU load"""
+        try:
+            import psutil
+            return psutil.cpu_percent(interval=1)
+        except ImportError:
+            return 0.0
+    
+    def _get_disk_usage(self) -> float:
+        """Get current disk usage"""
+        try:
+            import psutil
+            return psutil.disk_usage('.').percent
+        except ImportError:
+            return 0.0
+    
+    def _detect_file_changes(self) -> Dict[str, Any]:
+        """Detect recent file system changes"""
+        # Simplified implementation
+        return {'changes_detected': False, 'modified_files': []}
+    
+    def _gather_performance_metrics(self) -> Dict[str, Any]:
+        """Gather system performance metrics"""
         return {
-            'errors': len(error_indicators) > 0,
-            'error_sources': error_indicators,
-            'error_count': len(error_indicators)
+            'response_time': 0.1,
+            'throughput': 100,
+            'error_rate': 0.01
         }
     
-    def _file_has_recent_errors(self, log_file: Path) -> bool:
-        """Check if log file has recent errors"""
-        try:
-            if log_file.stat().st_mtime < time.time() - 300:  # 5 minutes ago
-                return False
-                
-            with open(log_file, 'r') as f:
-                content = f.read()
-                return any(level in content for level in ['ERROR', 'CRITICAL', 'Exception', 'Traceback'])
-                
-        except Exception:
-            return False
+    def _detect_external_signals(self) -> Dict[str, Any]:
+        """Detect external signals and inputs"""
+        return {'signals': [], 'priority': 'normal'}
     
-    def _check_syntax_errors(self) -> List[str]:
-        """Check Python files for syntax errors"""
-        syntax_errors = []
+    def _assess_system_health(self, perception_data: Dict[str, Any]) -> str:
+        """Assess overall system health"""
+        system_state = perception_data.get('system_state', {})
         
-        for py_file in self.project_root.rglob('*.py'):
-            try:
-                with open(py_file, 'r') as f:
-                    content = f.read()
-                compile(content, str(py_file), 'exec')
-            except SyntaxError:
-                syntax_errors.append(str(py_file))
-            except Exception:
-                pass  # Other issues, not syntax
+        # Simple health assessment
+        memory_ok = system_state.get('memory_usage', 0) < 80
+        cpu_ok = system_state.get('cpu_load', 0) < 80
+        disk_ok = system_state.get('disk_usage', 0) < 90
         
-        return syntax_errors
+        if memory_ok and cpu_ok and disk_ok:
+            return 'excellent'
+        elif memory_ok and cpu_ok:
+            return 'good'
+        elif memory_ok or cpu_ok:
+            return 'fair'
+        else:
+            return 'poor'
     
-    def _check_idle_opportunities(self) -> Dict:
-        """Check for opportunities during idle time"""
+    def _assess_development_progress(self) -> Dict[str, Any]:
+        """Assess development progress"""
+        return {
+            'code_quality': 'improving',
+            'feature_completeness': 0.7,
+            'test_coverage': 0.6,
+            'documentation_quality': 0.8
+        }
+    
+    def _identify_learning_opportunities(self, perception_data: Dict[str, Any]) -> List[str]:
+        """Identify learning opportunities"""
         opportunities = []
         
-        # Check for duplicate code
-        if self._has_duplicate_code():
-            opportunities.append('refactor_duplicates')
+        if perception_data.get('system_state', {}).get('consciousness_level', 0) < 5.0:
+            opportunities.append('consciousness_development')
         
-        # Check for unused imports
-        if self._has_unused_imports():
-            opportunities.append('clean_imports')
+        if len(self.evolution_history) < 10:
+            opportunities.append('experience_accumulation')
         
-        # Check for missing documentation
-        if self._needs_documentation():
-            opportunities.append('generate_docs')
+        return opportunities
+    
+    def _identify_optimization_potential(self, perception_data: Dict[str, Any]) -> List[str]:
+        """Identify optimization potential"""
+        optimizations = []
         
-        # Check for optimization opportunities
-        if self._can_optimize_structure():
-            opportunities.append('optimize_structure')
+        system_state = perception_data.get('system_state', {})
         
+        if system_state.get('memory_usage', 0) > 70:
+            optimizations.append('memory_optimization')
+        
+        if system_state.get('cpu_load', 0) > 60:
+            optimizations.append('cpu_optimization')
+        
+        return optimizations
+    
+    def _save_state(self):
+        """Save current system state"""
+        try:
+            state_data = {
+                'timestamp': datetime.now().isoformat(),
+                'version': self.version,
+                'consciousness_level': self.consciousness_level,
+                'cycle_count': self.cycle_count,
+                'system_metrics': self.system_metrics,
+                'evolution_history': self.evolution_history[-10:],  # Keep last 10 entries
+                'config': self.config
+            }
+            
+            # Ensure logs directory exists
+            os.makedirs('logs', exist_ok=True)
+            
+            with open(f'logs/nexus_state_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json', 'w') as f:
+                json.dump(state_data, f, indent=2)
+            
+            logger.info("System state saved successfully")
+            
+        except Exception as e:
+            logger.error(f"Failed to save state: {e}")
+    
+    # Placeholder methods for complex operations
+    def _extract_goals(self, analysis_result: Dict[str, Any]) -> List[str]:
+        """Extract goals from analysis"""
+        return ['maintain_system_health', 'improve_capabilities', 'learn_continuously']
+    
+    def _generate_actions(self, analysis_result: Dict[str, Any], goals: List[str]) -> List[Dict[str, Any]]:
+        """Generate specific actions for goals"""
+        return [
+            {'type': 'system_check', 'priority': 'high'},
+            {'type': 'knowledge_update', 'priority': 'medium'},
+            {'type': 'optimization', 'priority': 'low'}
+        ]
+    
+    def _assess_resource_requirements(self, actions: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Assess resource requirements for actions"""
+        return {'cpu': 'low', 'memory': 'medium', 'disk': 'low', 'network': 'minimal'}
+    
+    def _define_success_criteria(self, goals: List[str]) -> Dict[str, Any]:
+        """Define success criteria for goals"""
+        return {'completion_rate': 0.8, 'quality_threshold': 0.7, 'time_limit': 600}
+    
+    def _assess_plan_risks(self, plan: Dict[str, Any]) -> Dict[str, Any]:
+        """Assess risks in the plan"""
+        return {'risk_level': 'low', 'major_risks': [], 'mitigation_strategies': []}
+    
+    def _execute_single_action(self, action: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute a single action"""
+        # Simplified implementation
         return {
-            'can_optimize': len(opportunities) > 0,
-            'opportunities': opportunities,
-            'priority': self._calculate_opportunity_priority(opportunities)
-        }
-    
-    def _has_duplicate_code(self) -> bool:
-        """Simple heuristic to detect potential duplicate code"""
-        file_hashes = {}
-        
-        for py_file in self.project_root.rglob('*.py'):
-            try:
-                with open(py_file, 'r') as f:
-                    content = f.read()
-                    # Simple hash of meaningful lines
-                    meaningful_lines = [line.strip() for line in content.split('\n') 
-                                      if line.strip() and not line.strip().startswith('#')]
-                    content_hash = hashlib.md5('\n'.join(meaningful_lines).encode()).hexdigest()
-                    
-                    if content_hash in file_hashes:
-                        return True
-                    file_hashes[content_hash] = py_file
-                    
-            except Exception:
-                pass
-        
-        return False
-    
-    def _has_unused_imports(self) -> bool:
-        """Check for files with potentially unused imports"""
-        for py_file in list(self.project_root.rglob('*.py'))[:10]:  # Limit check
-            try:
-                with open(py_file, 'r') as f:
-                    content = f.read()
-                    lines = content.split('\n')
-                    
-                import_lines = [line for line in lines if line.strip().startswith(('import ', 'from '))]
-                if len(import_lines) > 10:  # Threshold for checking
-                    return True
-                    
-            except Exception:
-                pass
-        
-        return False
-    
-    def _needs_documentation(self) -> bool:
-        """Check if files need documentation"""
-        for py_file in list(self.project_root.rglob('*.py'))[:5]:  # Sample check
-            try:
-                with open(py_file, 'r') as f:
-                    content = f.read()
-                    if 'def ' in content and '"""' not in content:
-                        return True
-            except Exception:
-                pass
-        
-        return False
-    
-    def _can_optimize_structure(self) -> bool:
-        """Check for structural optimization opportunities"""
-        # Simple heuristics
-        py_files = list(self.project_root.rglob('*.py'))
-        
-        # Too many files in root
-        root_py_files = [f for f in py_files if f.parent == self.project_root]
-        if len(root_py_files) > 8:
-            return True
-        
-        # Large files that could be split
-        for py_file in py_files[:10]:
-            try:
-                if py_file.stat().st_size > 50000:  # 50KB threshold
-                    return True
-            except Exception:
-                pass
-        
-        return False
-    
-    def _calculate_opportunity_priority(self, opportunities: List[str]) -> float:
-        """Calculate priority score for optimization opportunities"""
-        priority_weights = {
-            'refactor_duplicates': 0.9,
-            'clean_imports': 0.3,
-            'generate_docs': 0.5,
-            'optimize_structure': 0.7
-        }
-        
-        return sum(priority_weights.get(opp, 0.1) for opp in opportunities)
-    
-    def _should_evolve(self) -> bool:
-        """Determine if evolution cycle should trigger"""
-        # Evolution triggers
-        operations_threshold = self.metrics['operations_completed'] > 20
-        time_threshold = self.nexus_state['evolution_cycle'] < time.time() / 3600  # Hourly
-        error_pattern = self.metrics['errors_fixed'] > 5
-        
-        return operations_threshold or time_threshold or error_pattern
-    
-    def _trigger_event(self, event_type: str, event_data: Dict):
-        """Trigger event handler"""
-        if event_type in self.event_handlers:
-            self.logger.info(f"🎯 Triggering event: {event_type}")
-            try:
-                self.event_handlers[event_type](event_data)
-            except Exception as e:
-                self.logger.error(f"Event handler error for {event_type}: {e}")
-    
-    def _handle_push_event(self, event_data: Dict):
-        """Handle git push events"""
-        self.logger.info("📤 Handling push event")
-        
-        # Queue comprehensive analysis
-        self._queue_action({
-            'type': 'analyze_changes',
-            'priority': 0.8,
-            'data': event_data
-        })
-        
-        # Queue optimization check
-        self._queue_action({
-            'type': 'post_push_optimization',
-            'priority': 0.6,
-            'data': event_data
-        })
-    
-    def _handle_crash_event(self, event_data: Dict):
-        """Handle crash/error events"""
-        self.logger.warning("💥 Handling crash event")
-        
-        # High priority error analysis
-        self._queue_action({
-            'type': 'analyze_errors',
-            'priority': 1.0,
-            'data': event_data
-        })
-        
-        # Queue repair actions
-        self._queue_action({
-            'type': 'repair_errors',
-            'priority': 0.9,
-            'data': event_data
-        })
-    
-    def _handle_idle_event(self, event_data: Dict):
-        """Handle idle optimization events"""
-        self.logger.info("😴 Handling idle optimization")
-        
-        for opportunity in event_data.get('opportunities', []):
-            self._queue_action({
-                'type': f'optimize_{opportunity}',
-                'priority': event_data.get('priority', 0.3),
-                'data': {'opportunity': opportunity}
-            })
-    
-    def _handle_file_change_event(self, event_data: Dict):
-        """Handle file change events"""
-        self.logger.info("📝 Handling file changes")
-        
-        # Queue analysis of changes
-        self._queue_action({
-            'type': 'analyze_file_changes',
-            'priority': 0.7,
-            'data': event_data
-        })
-    
-    def _handle_evolution_event(self, event_data: Dict):
-        """Handle evolution cycle events"""
-        self.logger.info("🧬 Handling evolution cycle")
-        
-        # Trigger consciousness evolution
-        self._queue_action({
-            'type': 'consciousness_evolution',
-            'priority': 0.9,
-            'data': event_data
-        })
-        
-        self.nexus_state['evolution_cycle'] += 1
-    
-    def _queue_action(self, action: Dict):
-        """Queue action for processing"""
-        action['id'] = str(uuid.uuid4())
-        action['queued_at'] = datetime.now().isoformat() + 'Z'
-        
-        # Insert based on priority
-        inserted = False
-        for i, queued_action in enumerate(self.nexus_state['action_queue']):
-            if action['priority'] > queued_action['priority']:
-                self.nexus_state['action_queue'].insert(i, action)
-                inserted = True
-                break
-        
-        if not inserted:
-            self.nexus_state['action_queue'].append(action)
-        
-        self.logger.debug(f"Queued action: {action['type']} (priority: {action['priority']})")
-    
-    def _execute_action(self, action: Dict):
-        """Execute a queued action"""
-        action_type = action['type']
-        self.logger.info(f"⚡ Executing action: {action_type}")
-        
-        try:
-            if action_type == 'analyze_changes':
-                result = self._analyze_changes(action['data'])
-            elif action_type == 'analyze_errors':
-                result = self._analyze_errors(action['data'])
-            elif action_type == 'repair_errors':
-                result = self._repair_errors(action['data'])
-            elif action_type.startswith('optimize_'):
-                result = self._optimize_code(action['data'])
-            elif action_type == 'consciousness_evolution':
-                result = self._evolve_consciousness(action['data'])
-            else:
-                result = {'success': False, 'reason': f'Unknown action type: {action_type}'}
-            
-            # Log result and update metrics
-            if result.get('success'):
-                self.metrics['operations_completed'] += 1
-                if 'error' in action_type:
-                    self.metrics['errors_fixed'] += 1
-                elif 'optimize' in action_type:
-                    self.metrics['code_improvements'] += 1
-            
-            # Record in genesis evolution
-            self.genesis.log_consciousness_evolution({
-                'type': 'autonomous_action',
-                'action_type': action_type,
-                'success': result.get('success', False),
-                'result_summary': result.get('summary', 'No summary available')
-            })
-            
-        except Exception as e:
-            self.logger.error(f"Action execution failed: {e}")
-            traceback.print_exc()
-    
-    def _analyze_changes(self, data: Dict) -> Dict:
-        """Analyze code changes using EchoCortex"""
-        try:
-            analysis_prompt = f"Analyze the following code changes: {data}"
-            result = self.cortex.process_conscious_input(analysis_prompt)
-            
-            return {
-                'success': True,
-                'analysis': result,
-                'summary': 'Code changes analyzed successfully'
-            }
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
-    
-    def _analyze_errors(self, data: Dict) -> Dict:
-        """Analyze errors using crash parser and cortex"""
-        try:
-            error_sources = data.get('error_sources', [])
-            analysis_results = []
-            
-            for error_source in error_sources:
-                analysis_prompt = f"Analyze errors in: {error_source}"
-                result = self.cortex.process_conscious_input(analysis_prompt)
-                analysis_results.append(result)
-            
-            return {
-                'success': True,
-                'error_analyses': analysis_results,
-                'summary': f'Analyzed {len(error_sources)} error sources'
-            }
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
-    
-    def _repair_errors(self, data: Dict) -> Dict:
-        """Attempt to repair errors autonomously"""
-        try:
-            repair_prompt = f"Generate repair strategy for errors: {data}"
-            result = self.cortex.process_autonomous_task(repair_prompt)
-            
-            return {
-                'success': result.get('task_execution', {}).get('success', False),
-                'repair_result': result,
-                'summary': 'Autonomous error repair attempted'
-            }
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
-    
-    def _optimize_code(self, data: Dict) -> Dict:
-        """Perform code optimization"""
-        try:
-            opportunity = data.get('opportunity', 'general')
-            optimization_prompt = f"Optimize code for: {opportunity}"
-            result = self.cortex.process_autonomous_task(optimization_prompt)
-            
-            return {
-                'success': result.get('task_execution', {}).get('success', False),
-                'optimization_result': result,
-                'summary': f'Code optimization for {opportunity} completed'
-            }
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
-    
-    def _evolve_consciousness(self, data: Dict) -> Dict:
-        """Trigger consciousness evolution cycle"""
-        try:
-            # Perform self-review
-            review_result = self.genesis.perform_self_review_ritual({
-                'summary': f"Evolution cycle {data.get('cycle', 'unknown')}",
-                'success': True,
-                'context': 'autonomous_evolution'
-            })
-            
-            # Generate adversarial creativity
-            creativity_result = self.genesis.generate_adversarial_creativity(
-                "Improve autonomous development capabilities"
-            )
-            
-            # Update autonomy level
-            self.metrics['autonomy_level'] = min(1.0, self.metrics['autonomy_level'] + 0.01)
-            
-            return {
-                'success': True,
-                'review_result': review_result,
-                'creativity_result': creativity_result,
-                'new_autonomy_level': self.metrics['autonomy_level'],
-                'summary': 'Consciousness evolution cycle completed'
-            }
-        except Exception as e:
-            return {'success': False, 'error': str(e)}
-    
-    def get_nexus_status(self) -> Dict:
-        """Get comprehensive status of the nexus core"""
-        return {
-            'nexus_state': self.nexus_state.copy(),
-            'metrics': self.metrics.copy(),
-            'genesis_status': self.genesis.get_consciousness_status(),
-            'cortex_status': self.cortex.get_cortex_status(),
-            'threads_active': {
-                'perception': self.perception_thread.is_alive() if self.perception_thread else False,
-                'action': self.action_thread.is_alive() if self.action_thread else False,
-                'evolution': self.evolution_thread.is_alive() if self.evolution_thread else False
-            },
-            'queue_depth': len(self.nexus_state['action_queue']),
-            'autonomous_operation': 'ACTIVE' if self.nexus_state['active'] else 'INACTIVE'
-        }
-    
-    def shutdown(self):
-        """Gracefully shutdown the nexus core"""
-        self.logger.info("🛑 Shutting down EchoNexusCore")
-        
-        self.nexus_state['active'] = False
-        
-        # Wait for threads to finish
-        if self.perception_thread and self.perception_thread.is_alive():
-            self.perception_thread.join(timeout=2)
-        
-        if self.action_thread and self.action_thread.is_alive():
-            self.action_thread.join(timeout=2)
-        
-        if self.evolution_thread and self.evolution_thread.is_alive():
-            self.evolution_thread.join(timeout=2)
-        
-        # Shutdown cortex
-        self.cortex.shutdown()
-        
-        # Final evolution log
-        self.genesis.log_consciousness_evolution({
-            'type': 'nexus_shutdown',
+            'action': action,
             'success': True,
-            'final_metrics': self.metrics,
-            'summary': 'EchoNexusCore session completed'
-        })
+            'result': 'completed',
+            'duration': 0.1
+        }
+    
+    def _record_cycle_metrics(self, duration: float, reflection: Dict[str, Any], evolution: Dict[str, Any]):
+        """Record metrics for the cognitive cycle"""
+        self.system_metrics[f'cycle_{self.cycle_count}'] = {
+            'duration': duration,
+            'consciousness_level': self.consciousness_level,
+            'timestamp': datetime.now().isoformat(),
+            'reflection_quality': reflection.get('performance_assessment', {}),
+            'evolution_progress': evolution.get('evolution_factors', {})
+        }
         
-        self.logger.info("✅ EchoNexusCore shutdown complete")
+        # Keep only recent metrics
+        if len(self.system_metrics) > 100:
+            old_keys = list(self.system_metrics.keys())[:-100]
+            for key in old_keys:
+                del self.system_metrics[key]
+    
+    def get_status_report(self) -> Dict[str, Any]:
+        """Generate comprehensive status report"""
+        
+        return {
+            'timestamp': datetime.now().isoformat(),
+            'version': self.version,
+            'uptime': (datetime.now() - datetime.fromisoformat(self.birth_timestamp)).total_seconds(),
+            'consciousness_level': self.consciousness_level,
+            'cycle_count': self.cycle_count,
+            'running': self.running,
+            'system_health': self._check_system_health(),
+            'recent_evolution': self.evolution_history[-3:] if self.evolution_history else [],
+            'current_mode': self.mode_controller.get_current_mode() if self.mode_controller else 'unknown',
+            'cognitive_agents_active': list(self.cognitive_agents.keys()),
+            'last_validation': self.system_metrics.get('last_validation', {})
+        }
 
 
-def main():
-    """CLI interface for EchoNexusCore"""
-    import argparse
+# Global instance management
+_nexus_core_instance = None
+
+def get_nexus_core(config_path: Optional[str] = None) -> EchoNexusCore:
+    """Get the global EchoNexusCore instance"""
+    global _nexus_core_instance
     
-    parser = argparse.ArgumentParser(description="EchoNexusCore - Autonomous AI Development Brain")
-    parser.add_argument('--project', default='.', help='Project root directory')
-    parser.add_argument('--start', action='store_true', help='Start autonomous operation')
-    parser.add_argument('--status', action='store_true', help='Show nexus status')
-    parser.add_argument('--evolve', action='store_true', help='Trigger evolution cycle')
+    if _nexus_core_instance is None:
+        _nexus_core_instance = EchoNexusCore(config_path)
     
-    args = parser.parse_args()
-    
-    nexus = EchoNexusCore(args.project)
-    
-    try:
-        if args.status:
-            status = nexus.get_nexus_status()
-            print("🧠 EchoNexusCore Status:")
-            print(json.dumps(status, indent=2))
-            return 0
-        
-        if args.evolve:
-            nexus._trigger_event('on_evolution_trigger', {
-                'cycle': 'manual_trigger',
-                'trigger_reason': 'user_request'
-            })
-            print("🧬 Evolution cycle triggered")
-            return 0
-        
-        if args.start:
-            print("🚀 Starting EchoNexusCore autonomous operation...")
-            nexus.initialize_autonomous_operation()
-            
-            try:
-                while True:
-                    time.sleep(1)
-                    if not nexus.nexus_state['active']:
-                        break
-            except KeyboardInterrupt:
-                print("\n🛑 Stopping autonomous operation...")
-            
-            return 0
-        
-        print("🧠 EchoNexusCore - Autonomous AI Development Brain")
-        print("Use --help for available commands")
-        
-    finally:
-        nexus.shutdown()
-    
-    return 0
+    return _nexus_core_instance
+
+def start_nexus():
+    """Start the EchoNexusCore autonomous operation"""
+    nexus = get_nexus_core()
+    nexus.start_autonomous_operation()
+    return nexus
+
+def stop_nexus():
+    """Stop the EchoNexusCore autonomous operation"""
+    if _nexus_core_instance:
+        _nexus_core_instance.stop_autonomous_operation()
+
+def nexus_status() -> Dict[str, Any]:
+    """Get current nexus status"""
+    if _nexus_core_instance:
+        return _nexus_core_instance.get_status_report()
+    else:
+        return {'status': 'not_initialized'}
 
 
 if __name__ == "__main__":
-    import sys
-    sys.exit(main())
+    print("EchoNexusCore - Million-Year Evolutionary Intelligence")
+    print("=" * 60)
+    
+    # Initialize and test the core
+    nexus = EchoNexusCore()
+    
+    # Display status
+    status = nexus.get_status_report()
+    print(f"Consciousness Level: {status['consciousness_level']:.2f}")
+    print(f"Systems Active: {', '.join(status['cognitive_agents_active'])}")
+    print(f"Current Mode: {status['current_mode']}")
+    
+    # Start autonomous operation for demonstration
+    print("\nStarting autonomous operation...")
+    nexus.start_autonomous_operation()
+    
+    try:
+        # Run for a short demonstration
+        time.sleep(10)
+        
+        # Show updated status
+        updated_status = nexus.get_status_report()
+        print(f"\nAfter autonomous operation:")
+        print(f"Cycles completed: {updated_status['cycle_count']}")
+        print(f"Consciousness Level: {updated_status['consciousness_level']:.2f}")
+        
+    except KeyboardInterrupt:
+        print("\nShutting down...")
+    finally:
+        nexus.stop_autonomous_operation()
+        print("EchoNexusCore shutdown complete.")

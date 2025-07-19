@@ -4,11 +4,17 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
+    "flask>=3.1.1",
     "networkx>=3.5",
+    "nltk>=3.9.1",
+    "numpy>=2.3.1",
     "openai>=1.97.0",
     "psycopg2-binary>=2.9.10",
     "pygithub>=2.6.1",
     "pyyaml>=6.0.2",
     "requests>=2.32.4",
+    "spacy>=3.8.7",
     "streamlit>=1.47.0",
+    "sympy>=1.14.0",
+    "z3-solver>=4.15.1.0",
 ]

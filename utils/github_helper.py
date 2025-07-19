@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+"""
+Advanced GitHub Integration and Workflow Generation System
+Teaches AI to create, manage, and evolve GitHub Actions, plugins, and tools
+"""
+
 import os
 import requests
 from typing import Dict, List, Any, Optional
