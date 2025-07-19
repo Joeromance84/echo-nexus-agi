@@ -1,0 +1,12 @@
+{
+  "total_memories": 3,
+  "memories_by_type": {
+    "episodic": 1,
+    "procedural": 1,
+    "semantic": 1,
+    "working": 0
+  },
+  "average_importance": 0.6999999999999998,
+  "last_compression": null,
+  "search_operations": 1
+}

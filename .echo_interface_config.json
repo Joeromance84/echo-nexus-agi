@@ -1,0 +1,6 @@
+{
+  "auto_save_interval": 300,
+  "log_level": "INFO",
+  "memory_persistence": true,
+  "evolution_tracking": true
+}

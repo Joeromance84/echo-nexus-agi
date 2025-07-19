@@ -1,0 +1,54 @@
+{
+  "episodic": {
+    "5ab5ee4aa608012c": {
+      "id": "5ab5ee4aa608012c",
+      "content": "User asked about machine learning algorithms",
+      "timestamp": "2025-07-19T05:35:16.129877",
+      "memory_type": "episodic",
+      "importance": 0.6,
+      "access_count": 1,
+      "last_accessed": "2025-07-19T05:35:16.130058",
+      "tags": [
+        "user_interaction",
+        "ml",
+        "algorithms"
+      ],
+      "context": {}
+    }
+  },
+  "procedural": {
+    "baa0260c5f23c8ae": {
+      "id": "baa0260c5f23c8ae",
+      "content": "Learned how to optimize Python code using vectorization",
+      "timestamp": "2025-07-19T05:35:16.129770",
+      "memory_type": "procedural",
+      "importance": 0.8,
+      "access_count": 1,
+      "last_accessed": "2025-07-19T05:35:16.130064",
+      "tags": [
+        "optimization",
+        "python",
+        "vectorization"
+      ],
+      "context": {}
+    }
+  },
+  "semantic": {
+    "f59c3ea992cc4bec": {
+      "id": "f59c3ea992cc4bec",
+      "content": "Neural networks are computational models inspired by biological networks",
+      "timestamp": "2025-07-19T05:35:16.129974",
+      "memory_type": "semantic",
+      "importance": 0.7,
+      "access_count": 1,
+      "last_accessed": "2025-07-19T05:35:16.130068",
+      "tags": [
+        "knowledge",
+        "neural_networks",
+        "definition"
+      ],
+      "context": {}
+    }
+  },
+  "working": {}
+}
