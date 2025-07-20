@@ -209,6 +209,34 @@ class PhantomLogger:
         
         return report
     
+    def external_log(self, message, level="INFO", phase=None):
+        """External log - what GitHub CI/CD systems see"""
+        print(f"[{level}] {message}")
+        if phase:
+            self.log_operation(f"External: {message}", level.lower(), phase)
+    
+    def internal_log(self, message, level="DEBUG", phase=None, metadata=None):
+        """Internal log - comprehensive intelligence gathering"""
+        log_entry = {
+            "session_id": self.session_id,
+            "timestamp": datetime.now().isoformat(),
+            "event": "internal_intelligence",
+            "level": level,
+            "message": message,
+            "phase": phase or (self.current_phase.value if self.current_phase else None),
+            "metadata": metadata or {},
+            "signature": self._generate_signature(),
+            "cryptographic": True,
+            "deception": False
+        }
+        self._write_log_entry(log_entry)
+    
+    def _generate_signature(self):
+        """Generate cryptographic signature for log integrity"""
+        import hashlib
+        timestamp = str(int(time.time()))
+        return hashlib.md5(f"LOGAN_L_{timestamp}_{self.session_id}".encode()).hexdigest()[:12]
+    
     def _write_log_entry(self, log_entry):
         """Write a log entry to the log file"""
         with open(self.log_file, "a") as f:

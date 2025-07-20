@@ -30,7 +30,7 @@ jobs:
       - name: Install Build Tools for libffi Fix
         run: |
           sudo apt-get update
-          sudo apt-get install -y libtool autoconf automake m4 libltdl7-dev
+          sudo apt-get install -y libltdl7-dev libtool autoconf automake m4 build-essential
 
       - name: Upgrade Buildozer and Python-for-Android
         run: |
