@@ -1,0 +1,19 @@
+libffi:
+  version: 3.4.4
+  error_type: autoconf_macro_undefined
+  error_signature: LT_SYS_SYMBOL_USCORE
+  patch_strategy: recipe_override
+  buildozer_overrides:
+    requirements: python3,kivy,requests,pyyaml
+    android.gradle_dependencies: com.android.support:support-v4:28.0.0
+    android.bootstrap: sdl2
+    android.skip_update: true
+  patch_commands:
+    - export AUTOCONF_VERSION=2.69
+    - export LIBTOOL_VERSION=2.4.6
+    - m4_pattern_allow([LT_SYS_SYMBOL_USCORE])
+    - autoreconf -fiv
+  reason: Fixing known autoconf/libtool version mismatch in libffi build
+  confidence: 0.95
+  applied: false
+  generated_at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")

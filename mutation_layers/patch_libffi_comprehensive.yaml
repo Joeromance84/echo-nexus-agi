@@ -1,0 +1,33 @@
+libffi:
+  version: 3.4.4
+  error_type: autoconf_macro_undefined
+  error_signature: LT_SYS_SYMBOL_USCORE
+  patch_strategy: comprehensive_fix
+  buildozer_overrides:
+    requirements: python3,kivy,requests,pyyaml
+    p4a.local_recipes: ./custom_recipes
+    p4a.bootstrap: sdl2
+    p4a.skip_update: true
+  system_dependencies:
+    - libltdl7-dev
+    - libtool
+    - autoconf
+    - automake
+    - m4
+  patch_commands:
+    - sudo apt-get install -y libltdl7-dev libtool autoconf automake m4
+    - pip install --upgrade buildozer python-for-android cython
+    - m4_pattern_allow([LT_SYS_SYMBOL_USCORE])
+    - autoreconf --install --force || true
+  custom_recipe_created: true
+  patch_script: patches/fix_libffi_autoconf.sh
+  reason: Comprehensive fix for autoconf/libtool version mismatch in libffi build
+  confidence: 0.98
+  applied: false
+  generated_at: 2025-07-19T23:58:27Z
+  instructions: |
+    1. Patch or skip autogen.sh calls in libffi build
+    2. Predefine missing macro with m4_pattern_allow([LT_SYS_SYMBOL_USCORE])
+    3. Use custom libffi recipe with autoconf fixes
+    4. Update build dependencies and python-for-android toolchain
+    5. Configure buildozer.spec with safer requirements and local recipes
