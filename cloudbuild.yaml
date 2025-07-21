@@ -1,205 +1,175 @@
-# Google Cloud Build configuration for EchoCore AGI APK
-# This builds the Echo AGI system into an Android APK using Google Cloud Build
+# Echo Nexus AGI Growth Pipeline
+# Google Cloud Build configuration for automated AGI capability expansion
+# Triggers on GitHub push to main branch for continuous learning and deployment
 
 steps:
-  # Step 1: Set up the build environment
+  # Step 1: Setup Environment and Dependencies
   - name: 'gcr.io/cloud-builders/git'
-    args: ['clone', 'https://github.com/$PROJECT_ID/echo-core-agi.git', '/workspace/source']
-    id: 'clone-source'
+    id: 'clone-repo'
+    args:
+      - 'clone'
+      - 'https://github.com/${_GITHUB_USER}/echo-nexus-agi.git'
+      - 'echo-nexus'
+    dir: '/workspace'
 
-  # Step 2: Set up Python environment
   - name: 'python:3.11'
-    entrypoint: 'bash'
+    id: 'install-dependencies'
+    entrypoint: 'pip'
     args:
-      - '-c'
-      - |
-        cd /workspace/source
-        python -m pip install --upgrade pip
-        pip install buildozer cython==0.29.33 kivy kivymd
-        echo "Python environment ready"
-    id: 'setup-python'
+      - 'install'
+      - '-r'
+      - 'requirements.txt'
+      - '--user'
+    dir: '/workspace/echo-nexus'
 
-  # Step 3: Install Android build dependencies
-  - name: 'ubuntu'
-    entrypoint: 'bash'
+  # Step 2: AGI Knowledge Expansion and Training
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-training-image'
     args:
-      - '-c'
-      - |
-        apt-get update
-        apt-get install -y openjdk-17-jdk wget unzip git
-        
-        # Install Android SDK
-        cd /opt
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip -q commandlinetools-linux-9477386_latest.zip
-        mkdir -p android-sdk/cmdline-tools
-        mv cmdline-tools android-sdk/cmdline-tools/latest
-        
-        export ANDROID_HOME=/opt/android-sdk
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
-        
-        # Accept licenses and install packages
-        yes | sdkmanager --licenses
-        sdkmanager "platforms;android-33" "build-tools;33.0.0" "ndk;25.2.9519653"
-        
-        echo "Android SDK installed"
-    id: 'install-android-sdk'
+      - 'build'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/echo-nexus-training:${BUILD_ID}'
+      - '-f'
+      - 'deployment/Dockerfile.training'
+      - '.'
+    dir: '/workspace/echo-nexus'
 
-  # Step 4: Prepare EchoCore source files
   - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
+    id: 'run-agi-training'
     args:
-      - '-c'
-      - |
-        cd /workspace/source
-        
-        # Verify essential files exist
-        if [ ! -f "main.py" ]; then
-          echo "Creating main.py entry point..."
-          cat > main.py << 'EOF'
-        """EchoCore AGI Mobile Entry Point"""
-        import sys
-        import os
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        
-        try:
-            from kivy.app import App
-            from kivy.uix.label import Label
-            
-            class EchoCoreApp(App):
-                def build(self):
-                    return Label(text='EchoCore AGI\nDistributed Intelligence System\nRevolutionary Mobile AGI')
-            
-            EchoCoreApp().run()
-        except ImportError:
-            print("EchoCore AGI - Console Mode")
-            print("Revolutionary distributed intelligence system active")
-        EOF
-        fi
-        
-        # Verify buildozer.spec
-        if [ ! -f "buildozer.spec" ]; then
-          echo "Creating buildozer.spec..."
-          buildozer init
-          
-          # Customize buildozer.spec for EchoCore
-          sed -i 's/title = My Application/title = EchoCore AGI/' buildozer.spec
-          sed -i 's/package.name = myapp/package.name = echo_core_agi/' buildozer.spec
-          sed -i 's/package.domain = org.example/package.domain = org.echonexus/' buildozer.spec
-        fi
-        
-        echo "EchoCore source preparation completed"
-    id: 'prepare-source'
+      - 'run'
+      - 'jobs'
+      - 'create'
+      - 'echo-nexus-training-${BUILD_ID}'
+      - '--image=gcr.io/${PROJECT_ID}/echo-nexus-training:${BUILD_ID}'
+      - '--task-count=1'
+      - '--memory=16Gi'
+      - '--cpu=8'
+      - '--gpu=1'
+      - '--gpu-type=nvidia-tesla-v100'
+      - '--region=${_REGION}'
+      - '--env-vars-file=deployment/env-vars.yaml'
+    waitFor: ['build-training-image']
 
-  # Step 5: Build APK with buildozer
+  # Step 3: Model Validation and Testing
   - name: 'python:3.11'
-    entrypoint: 'bash'
+    id: 'validate-agi-models'
+    entrypoint: 'python'
     args:
-      - '-c'
-      - |
-        cd /workspace/source
-        
-        # Set Android environment
-        export ANDROID_HOME=/opt/android-sdk
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
-        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-        
-        # Install buildozer if not installed
-        pip install buildozer
-        
-        # Create .buildozer directory
-        mkdir -p ~/.buildozer
-        
-        echo "Starting APK build process..."
-        
-        # Build the APK
-        timeout 3600 buildozer android debug --verbose || echo "Build completed with warnings"
-        
-        # Verify APK was created
-        if [ -d "bin" ] && [ -f bin/*.apk ]; then
-          echo "✅ APK build successful!"
-          ls -la bin/
-        else
-          echo "❌ APK build failed - no APK found"
-          exit 1
-        fi
-    id: 'build-apk'
-    timeout: '3600s'
+      - 'scripts/validate_agi_capabilities.py'
+      - '--model-path=/workspace/models'
+      - '--test-suite=comprehensive'
+    dir: '/workspace/echo-nexus'
+    waitFor: ['run-agi-training']
 
-  # Step 6: Store APK in Cloud Storage
+  # Step 4: Build Production Deployment Image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-production-image'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/echo-nexus-production:${BUILD_ID}'
+      - '-t'
+      - 'gcr.io/${PROJECT_ID}/echo-nexus-production:latest'
+      - '-f'
+      - 'deployment/Dockerfile.production'
+      - '.'
+    dir: '/workspace/echo-nexus'
+    waitFor: ['validate-agi-models']
+
+  # Step 5: Push Images to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-production-image'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'gcr.io/${PROJECT_ID}/echo-nexus-production'
+    waitFor: ['build-production-image']
+
+  # Step 6: Deploy to Cloud Run for Scalable Serving
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy-to-cloud-run'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'echo-nexus-agi'
+      - '--image=gcr.io/${PROJECT_ID}/echo-nexus-production:${BUILD_ID}'
+      - '--platform=managed'
+      - '--region=${_REGION}'
+      - '--memory=8Gi'
+      - '--cpu=4'
+      - '--concurrency=80'
+      - '--min-instances=1'
+      - '--max-instances=10'
+      - '--port=8080'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=ECHO_NEXUS_VERSION=${BUILD_ID}'
+    waitFor: ['push-production-image']
+
+  # Step 7: Update AGI Knowledge Base and Artifacts
   - name: 'gcr.io/cloud-builders/gsutil'
+    id: 'upload-agi-artifacts'
     args:
+      - '-m'
       - 'cp'
-      - '/workspace/source/bin/*.apk'
-      - 'gs://${PROJECT_ID}-echo-apk-builds/echo-core-agi-${BUILD_ID}.apk'
-    id: 'store-apk'
+      - '-r'
+      - '/workspace/echo-nexus/models/*'
+      - 'gs://${_ARTIFACTS_BUCKET}/echo-nexus/models/${BUILD_ID}/'
+    waitFor: ['validate-agi-models']
 
-  # Step 7: Create build manifest
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
+  - name: 'gcr.io/cloud-builders/gsutil'
+    id: 'upload-knowledge-base'
     args:
-      - '-c'
-      - |
-        cd /workspace/source
-        
-        # Create build manifest
-        cat > build-manifest.json << EOF
-        {
-          "build_id": "${BUILD_ID}",
-          "project_id": "${PROJECT_ID}",
-          "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-          "commit_sha": "${COMMIT_SHA}",
-          "branch_name": "${BRANCH_NAME}",
-          "app_name": "EchoCore AGI",
-          "version": "1.0.${SHORT_SHA}",
-          "apk_location": "gs://${PROJECT_ID}-echo-apk-builds/echo-core-agi-${BUILD_ID}.apk",
-          "build_status": "success",
-          "features": [
-            "Federated AGI control",
-            "Self-replication engine", 
-            "Autonomous operation",
-            "Distributed intelligence",
-            "Million-year evolution"
-          ]
-        }
-        EOF
-        
-        # Store manifest
-        gsutil cp build-manifest.json gs://${PROJECT_ID}-echo-apk-builds/manifests/
-        
-        echo "🚀 EchoCore AGI APK build completed successfully!"
-        echo "📱 Revolutionary distributed intelligence system packaged for Android"
-        echo "🧠 Build ID: ${BUILD_ID}"
-        echo "📦 APK Location: gs://${PROJECT_ID}-echo-apk-builds/echo-core-agi-${BUILD_ID}.apk"
-    id: 'create-manifest'
+      - '-m'
+      - 'cp'
+      - '-r'
+      - '/workspace/echo-nexus/knowledge_base/*'
+      - 'gs://${_ARTIFACTS_BUCKET}/echo-nexus/knowledge/${BUILD_ID}/'
+    waitFor: ['validate-agi-models']
 
-# Build options
-options:
-  logging: CLOUD_LOGGING_ONLY
-  machineType: 'E2_HIGHCPU_8'
-  diskSizeGb: '100'
-  env:
-    - 'PYTHONPATH=/workspace/source'
+  # Step 8: Trigger Integration Tests
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'run-integration-tests'
+    args:
+      - 'functions'
+      - 'call'
+      - 'echo-nexus-integration-test'
+      - '--region=${_REGION}'
+      - '--data={"build_id":"${BUILD_ID}","endpoint":"${_CLOUD_RUN_URL}"}'
+    waitFor: ['deploy-to-cloud-run']
 
-# Build artifacts
-artifacts:
-  objects:
-    location: 'gs://${PROJECT_ID}-echo-apk-builds'
-    paths: 
-      - '/workspace/source/bin/*.apk'
-      - '/workspace/source/build-manifest.json'
+  # Step 9: Update Replit Integration Configuration
+  - name: 'gcr.io/cloud-builders/curl'
+    id: 'update-replit-config'
+    args:
+      - '-X'
+      - 'POST'
+      - '${_REPLIT_WEBHOOK_URL}'
+      - '-H'
+      - 'Content-Type: application/json'
+      - '-d'
+      - '{"agi_endpoint":"${_CLOUD_RUN_URL}","version":"${BUILD_ID}","status":"deployed"}'
+    waitFor: ['run-integration-tests']
 
-# Build timeout
-timeout: '3600s'
-
-# Build tags
-tags:
-  - 'echo-core-agi'
-  - 'apk-build'
-  - 'federated-agi'
-  - 'mobile-deployment'
-
-# Substitutions for variables
+# Substitution variables for flexible deployment
 substitutions:
-  _APP_VERSION: '1.0'
-  _BUILD_ENV: 'production'
+  _GITHUB_USER: 'Joeromance84'
+  _REGION: 'us-central1'
+  _ARTIFACTS_BUCKET: 'echo-nexus-artifacts'
+  _CLOUD_RUN_URL: 'https://echo-nexus-agi-${_REGION}-${PROJECT_ID}.a.run.app'
+  _REPLIT_WEBHOOK_URL: 'https://echo-nexus-replit.${_GITHUB_USER}.repl.co/api/update-backend'
+
+# Build configuration
+options:
+  machineType: 'E2_HIGHCPU_32'
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
+
+# Timeout for entire build process
+timeout: 3600s  # 1 hour maximum for AGI growth cycle
+
+# Tags for build organization
+tags:
+  - 'echo-nexus'
+  - 'agi-growth'
+  - 'automated-deployment'
