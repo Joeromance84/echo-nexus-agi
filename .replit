@@ -18,15 +18,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Streamlit App"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "APK Build Monitor"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Deployment Dashboard"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
@@ -35,10 +27,6 @@ args = "AGI Deployment Demo"
 [[workflows.workflow.tasks]]
 task = "workflow.run"
 args = "AGI Trainer Demo"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Document Learning"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
@@ -56,14 +44,13 @@ args = "AGI Learning Backup"
 task = "workflow.run"
 args = "AGI Real-Time Communication"
 
-[[workflows.workflow]]
-name = "Streamlit App"
-author = "agent"
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Main AGI App"
 
 [[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run app.py --server.port 5000"
-waitForPort = 5000
+task = "workflow.run"
+args = "Document Learning"
 
 [[workflows.workflow]]
 name = "APK Build Monitor"
@@ -72,15 +59,6 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 autonomous_agi_monitor.py"
-
-[[workflows.workflow]]
-name = "Deployment Dashboard"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run deployment_app.py --server.port 5001"
-waitForPort = 5001
 
 [[workflows.workflow]]
 name = "AGI Deployment Demo"
@@ -99,15 +77,6 @@ author = "agent"
 task = "shell.exec"
 args = "streamlit run agi_trainer_demo.py --server.port 5003"
 waitForPort = 5003
-
-[[workflows.workflow]]
-name = "Document Learning"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run document_learning_app.py --server.port 5004"
-waitForPort = 5004
 
 [[workflows.workflow]]
 name = "AGI Intelligence Router"
@@ -142,6 +111,24 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 agi_realtime_communication.py"
+
+[[workflows.workflow]]
+name = "Main AGI App"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run app_simple.py --server.port 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Document Learning"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run document_learning_app.py --server.port 5004"
+waitForPort = 5004
 
 [[ports]]
 localPort = 5000
