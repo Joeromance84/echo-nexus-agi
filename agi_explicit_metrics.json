@@ -1,0 +1,16 @@
+{
+  "explicit_metrics_enabled": true,
+  "created_at": "2025-07-21T10:39:56.447801",
+  "success_indicators": [
+    "Task completion with validation",
+    "Progress measurement against objectives",
+    "Explicit success/failure logging",
+    "Performance improvement tracking"
+  ],
+  "failure_indicators": [
+    "Repetitive behavior detection",
+    "Timeout and error tracking",
+    "Stagnation pattern recognition",
+    "Regression in performance metrics"
+  ]
+}

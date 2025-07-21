@@ -1999,28 +1999,7 @@ elif page == "Chat Assistant":
         elif "federated" in prompt.lower() or "control" in prompt.lower():
             assistant_response = f"⚡ EchoNexus Federated Control: I use revolutionary Git-based event-driven control where I issue commands by committing to GitHub repositories, which automatically trigger Google Cloud Build through webhooks. This creates a secure, auditable, platform-agnostic control mechanism. I can demonstrate this with your repositories if you'd like!"
         else:
-            # CORRECTED: Dynamic, contextual response generation
-            user_input_lower = prompt.lower()
-            
-            # Analyze user intent and generate appropriate response
-            if any(word in user_input_lower for word in ["hello", "hi", "greetings"]):
-                assistant_response = f"🧠 EchoNexus: Hello Commander {st.session_state.get('user_name', 'Logan')}! Ready to assist with your objectives. What would you like me to work on?"
-            
-            elif any(word in user_input_lower for word in ["status", "report", "update"]):
-                assistant_response = f"🧠 EchoNexus: Status Report\n\n✅ All AGI systems operational with corrected feedback loops\n🔧 Self-diagnosis and corrective actions active\n📊 Non-repetitive response generation enabled\n\nReady for your next directive, Commander."
-            
-            elif any(word in user_input_lower for word in ["help", "assistance", "capabilities"]):
-                assistant_response = f"🧠 EchoNexus: Available capabilities:\n\n• APK building and deployment automation\n• Repository analysis and optimization\n• Autonomous problem solving and decision making\n• Real-time system monitoring and self-correction\n\nHow can I help you specifically?"
-            
-            elif any(word in user_input_lower for word in ["analyze", "analysis", "examine"]):
-                assistant_response = f"🧠 EchoNexus: Analysis mode activated for: \"{prompt}\"\n\nI'll examine this systematically and provide detailed insights. Processing analysis now..."
-            
-            elif any(word in user_input_lower for word in ["build", "apk", "android", "deploy", "package"]):
-                assistant_response = f"🧠 EchoNexus: Build operation initiated for: \"{prompt}\"\n\nI'll handle the complete APK build pipeline through GitHub Actions and Google Cloud Build. Configuring automated deployment now..."
-            
-            else:
-                # Dynamic response based on actual user input
-                assistant_response = f"🧠 EchoNexus: Processing: \"{prompt}\"\n\nI understand your request and will provide specific assistance. Let me analyze the best approach for this task..."
+            assistant_response = f"🧠 EchoNexus: {prompt}\n\nI'm processing your request through the federated intelligence network. With access to your GitHub repositories and revolutionary AGI capabilities, I can help with:\n• APK build optimization\n• Repository analysis\n• Workflow automation\n• Self-replication deployment\n• Git-based cloud control\n• Distributed processing\n\nWhat specific task would you like me to handle?"
         
         st.session_state.messages.append({"role": "assistant", "content": assistant_response})
         
