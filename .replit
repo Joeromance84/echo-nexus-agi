@@ -32,6 +32,10 @@ args = "Deployment Dashboard"
 task = "workflow.run"
 args = "AGI Deployment Demo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "AGI Trainer Demo"
+
 [[workflows.workflow]]
 name = "Streamlit App"
 author = "agent"
@@ -67,6 +71,15 @@ task = "shell.exec"
 args = "streamlit run deployment_demo.py --server.port 5002"
 waitForPort = 5002
 
+[[workflows.workflow]]
+name = "AGI Trainer Demo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run agi_trainer_demo.py --server.port 5003"
+waitForPort = 5003
+
 [[ports]]
 localPort = 5000
 externalPort = 80
@@ -78,3 +91,7 @@ externalPort = 3000
 [[ports]]
 localPort = 5002
 externalPort = 3001
+
+[[ports]]
+localPort = 5003
+externalPort = 3002
