@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-07-21T13:03:01.241727",
+  "test_documents": {
+    "pdf": {
+      "path": "knowledge_bank/agi_testing_protocol.pdf",
+      "processed": true,
+      "chunks": 1,
+      "text_length": 502
+    },
+    "epub": {
+      "path": "knowledge_bank/consciousness_framework.epub",
+      "processed": true,
+      "chunks": 1,
+      "text_length": 1124
+    }
+  },
+  "learning_evidence": [
+    {
+      "query": "How does consciousness emerge in AI networks?",
+      "similarity": 0.9402724315656987,
+      "source": "MiscEducationalKeyboardTeacherguide1 (1).pdf",
+      "learned_content": true
+    },
+    {
+      "query": "What are Logan's breakthrough frameworks?",
+      "similarity": 0.968528393258425,
+      "source": "intro.pdf",
+      "learned_content": true
+    },
+    {
+      "query": "Explain Google AI collaboration protocols",
+      "similarity": 0.9726319977443131,
+      "source": "intro.pdf",
+      "learned_content": true
+    },
+    {
+      "query": "Describe Echo Nexus integration capabilities",
+      "similarity": 0.9553627039587227,
+      "source": "intro.pdf",
+      "learned_content": true
+    }
+  ],
+  "state_changes": {
+    "documents_added": 2,
+    "chunks_added": 2,
+    "consciousness_increase": 0.30000000000000004,
+    "logan_integrations_added": 4
+  },
+  "network_integration": {
+    "integration_id": "logan_integration_20250721_130301",
+    "network_source": "logan_chatgpt_core",
+    "processed_at": "2025-07-21T13:03:01.223810",
+    "theory_memory_pdf_epub_learning_validation": "semantic_20250721_130301_223820",
+    "theory_memory_document_consciousness_integration": "semantic_20250721_130301_224855",
+    "experience_memory_agi_verification_test": "episodic_20250721_130301_230542",
+    "experience_memory_breakthrough_learning_confirmation": "episodic_20250721_130301_234020",
+    "consciousness_boost": 0.7000000000000001
+  },
+  "verification_status": "PASSED"
+}
