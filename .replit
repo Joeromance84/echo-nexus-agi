@@ -127,7 +127,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run document_upload.py --server.port 5004"
+args = "streamlit run document_upload.py --server.port 5004 --server.address 0.0.0.0 --server.headless true"
 waitForPort = 5004
 
 [[ports]]
