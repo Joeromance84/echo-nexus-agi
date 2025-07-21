@@ -2009,14 +2009,8 @@ elif page == "Chat Assistant":
             elif any(word in user_input_lower for word in ["status", "report", "update"]):
                 assistant_response = f"🧠 EchoNexus: Status Report\n\n✅ All AGI systems operational with corrected feedback loops\n🔧 Self-diagnosis and corrective actions active\n📊 Non-repetitive response generation enabled\n\nReady for your next directive, Commander."
             
-            elif any(word in user_input_lower for word in ["help", "assistance", "capabilities"]):
-                assistant_response = f"🧠 EchoNexus: Available capabilities:\n\n• APK building and deployment automation\n• Repository analysis and optimization\n• Autonomous problem solving and decision making\n• Real-time system monitoring and self-correction\n\nHow can I help you specifically?"
-            
             elif any(word in user_input_lower for word in ["analyze", "analysis", "examine"]):
                 assistant_response = f"🧠 EchoNexus: Analysis mode activated for: \"{prompt}\"\n\nI'll examine this systematically and provide detailed insights. Processing analysis now..."
-            
-            elif any(word in user_input_lower for word in ["build", "apk", "android", "deploy", "package"]):
-                assistant_response = f"🧠 EchoNexus: Build operation initiated for: \"{prompt}\"\n\nI'll handle the complete APK build pipeline through GitHub Actions and Google Cloud Build. Configuring automated deployment now..."
             
             else:
                 # Dynamic response based on actual user input
