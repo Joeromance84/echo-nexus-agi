@@ -11,10 +11,10 @@ import time
 from datetime import datetime
 import hashlib
 import tempfile
-import PyPDF2
 import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
+import re
 
 class DocumentLearningProcessor:
     """Advanced document processing and learning system"""
@@ -61,28 +61,65 @@ class DocumentLearningProcessor:
             st.error(f"Error saving learning database: {e}")
     
     def extract_text_from_pdf(self, file_content):
-        """Extract text from PDF file"""
+        """Extract text from PDF file using dependency-free approach"""
         try:
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-                tmp_file.write(file_content)
-                tmp_file.flush()
+            # Simple PDF text extraction using binary patterns
+            # This is a basic approach that works for many PDFs
+            
+            # Convert bytes to string and look for text streams
+            pdf_text = file_content.decode('latin-1', errors='ignore')
+            
+            # Look for text objects in PDF structure
+            text_content = ""
+            
+            # Pattern 1: Look for text streams between "stream" and "endstream"
+            stream_pattern = r'stream\s*(.*?)\s*endstream'
+            streams = re.findall(stream_pattern, pdf_text, re.DOTALL | re.IGNORECASE)
+            
+            for stream in streams:
+                # Try to extract readable text from stream
+                readable_chars = ''.join(char for char in stream if char.isprintable() and char not in ['\x00', '\x01', '\x02'])
+                if len(readable_chars) > 10:  # Only include streams with substantial text
+                    text_content += readable_chars + "\n"
+            
+            # Pattern 2: Look for text objects with "Tj" or "TJ" operators
+            text_show_pattern = r'\((.*?)\)\s*(?:Tj|TJ)'
+            text_objects = re.findall(text_show_pattern, pdf_text, re.IGNORECASE)
+            
+            for text_obj in text_objects:
+                if len(text_obj.strip()) > 1:
+                    text_content += text_obj + " "
+            
+            # Pattern 3: Look for text arrays
+            text_array_pattern = r'\[(.*?)\]\s*TJ'
+            text_arrays = re.findall(text_array_pattern, pdf_text, re.IGNORECASE)
+            
+            for text_array in text_arrays:
+                # Extract text from array format
+                array_text = re.findall(r'\((.*?)\)', text_array)
+                for text in array_text:
+                    if len(text.strip()) > 1:
+                        text_content += text + " "
+            
+            # Clean up the extracted text
+            if text_content:
+                # Remove excessive whitespace and non-printable characters
+                text_content = re.sub(r'\s+', ' ', text_content)
+                text_content = text_content.strip()
                 
-                text_content = ""
-                with open(tmp_file.name, 'rb') as file:
-                    reader = PyPDF2.PdfReader(file)
-                    for page in reader.pages:
-                        text_content += page.extract_text() + "\n"
+                # If we got some text, return it
+                if len(text_content) > 50:  # Minimum threshold for meaningful content
+                    return text_content
                 
-                # Clean up temporary file
-                os.unlink(tmp_file.name)
-                return text_content
+            # If no text extracted, provide helpful feedback
+            return None
                 
         except Exception as e:
-            st.error(f"Error extracting PDF text: {e}")
+            st.error(f"Error processing PDF: {e}")
             return None
     
     def extract_text_from_epub(self, file_content):
-        """Extract text from EPUB file"""
+        """Extract text from EPUB file using built-in libraries"""
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix='.epub') as tmp_file:
                 tmp_file.write(file_content)
@@ -94,32 +131,43 @@ class DocumentLearningProcessor:
                     for file_name in epub.namelist():
                         if file_name.endswith(('.html', '.xhtml', '.htm')):
                             try:
-                                content = epub.read(file_name).decode('utf-8')
-                                # Parse HTML/XML and extract text
-                                root = ET.fromstring(content)
-                                # Remove tags and get text content
-                                for elem in root.iter():
-                                    if elem.text:
-                                        text_content += elem.text + " "
-                                    if elem.tail:
-                                        text_content += elem.tail + " "
-                            except Exception:
-                                # If XML parsing fails, try simple text extraction
+                                content = epub.read(file_name).decode('utf-8', errors='ignore')
+                                
+                                # Try XML parsing first
                                 try:
-                                    content = epub.read(file_name).decode('utf-8', errors='ignore')
-                                    # Simple tag removal
-                                    import re
+                                    # Handle HTML with XML namespace issues
+                                    content_clean = re.sub(r'xmlns="[^"]*"', '', content)
+                                    content_clean = re.sub(r'<\?xml[^>]*\?>', '', content_clean)
+                                    
+                                    root = ET.fromstring(f"<root>{content_clean}</root>")
+                                    # Extract text content
+                                    for elem in root.iter():
+                                        if elem.text:
+                                            text_content += elem.text + " "
+                                        if elem.tail:
+                                            text_content += elem.tail + " "
+                                except ET.ParseError:
+                                    # If XML parsing fails, use regex to extract text
                                     clean_text = re.sub(r'<[^>]+>', ' ', content)
+                                    clean_text = re.sub(r'\s+', ' ', clean_text)
                                     text_content += clean_text + " "
-                                except Exception:
-                                    continue
+                                    
+                            except Exception:
+                                continue
                 
                 # Clean up temporary file
                 os.unlink(tmp_file.name)
-                return text_content.strip()
+                
+                if text_content:
+                    # Clean up the text
+                    text_content = re.sub(r'\s+', ' ', text_content)
+                    text_content = text_content.strip()
+                    return text_content if len(text_content) > 50 else None
+                    
+                return None
                 
         except Exception as e:
-            st.error(f"Error extracting EPUB text: {e}")
+            st.error(f"Error processing EPUB: {e}")
             return None
     
     def extract_key_concepts(self, text):

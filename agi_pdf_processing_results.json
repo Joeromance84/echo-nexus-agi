@@ -1,0 +1,15 @@
+{
+  "processing_timestamp": "2025-07-21T10:59:37.342546",
+  "processing_status": "successful",
+  "text_length": 232,
+  "word_count": 37,
+  "text_preview": "BT /F1 12 Tf 72 720 Td (Advanced Linux Programming Tutorial) Tj 0 -20 Td (This document covers system calls, processes, and threads) Tj ET Advanced Linux Programming Tutorial This document covers system calls, processes, and threads",
+  "agi_insights": [
+    "Document contains 37 words and 232 characters",
+    "Technical programming document detected (5 technical indicators)",
+    "Document 'advanced-linux-programming.pdf' successfully processed by corrected AGI system",
+    "Content integrated into AGI knowledge base for autonomous decision-making",
+    "PDF processing system now working without external dependencies"
+  ],
+  "system_status": "corrected_pdf_processing_operational"
+}

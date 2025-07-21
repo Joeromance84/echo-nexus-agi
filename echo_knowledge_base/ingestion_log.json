@@ -1,0 +1,103 @@
+{
+  "sessions": [
+    {
+      "timestamp": "2025-07-21T10:50:02.784981",
+      "results": {
+        "total_files": 1,
+        "processed_files": 0,
+        "failed_files": 1,
+        "total_chunks_created": 0,
+        "total_vectors_generated": 0,
+        "memory_usage_gb": 0.0,
+        "cloud_offloaded": 0,
+        "processing_time_seconds": 0.009175300598144531,
+        "errors": [
+          {
+            "file": "Digital_Computers_Advanced_Coding_Techniques_Summer_1954 (1).pdf",
+            "error": "No text content extracted"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2025-07-21T10:51:43.653048",
+      "results": {
+        "total_files": 2,
+        "processed_files": 0,
+        "failed_files": 2,
+        "total_chunks_created": 0,
+        "total_vectors_generated": 0,
+        "memory_usage_gb": 0.0,
+        "cloud_offloaded": 0,
+        "processing_time_seconds": 0.025287151336669922,
+        "errors": [
+          {
+            "file": "Digital_Computers_Advanced_Coding_Techniques_Summer_1954 (1).pdf",
+            "error": "No text content extracted"
+          },
+          {
+            "file": "Android Game Programming For Dummies.epub",
+            "error": "No text content extracted"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2025-07-21T10:52:52.268025",
+      "results": {
+        "total_files": 1,
+        "processed_files": 0,
+        "failed_files": 1,
+        "total_chunks_created": 0,
+        "total_vectors_generated": 0,
+        "memory_usage_gb": 0.0,
+        "cloud_offloaded": 0,
+        "processing_time_seconds": 0.00717473030090332,
+        "errors": [
+          {
+            "file": "book_art_of_computer_game_design.pdf",
+            "error": "No text content extracted"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2025-07-21T10:54:28.156447",
+      "results": {
+        "total_files": 1,
+        "processed_files": 0,
+        "failed_files": 1,
+        "total_chunks_created": 0,
+        "total_vectors_generated": 0,
+        "memory_usage_gb": 0.0,
+        "cloud_offloaded": 0,
+        "processing_time_seconds": 0.009328126907348633,
+        "errors": [
+          {
+            "file": "Hacking with Kali Linux - The Advanced Guide about CyberSecurity to Learn the Secret Coding Tools that Every Hacker Must Use to Break All Computer ... Line Administration + Beginners Linux Basics) by Darwin Growth.pdf",
+            "error": "No text content extracted"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2025-07-21T10:56:41.278811",
+      "results": {
+        "total_files": 1,
+        "processed_files": 0,
+        "failed_files": 1,
+        "total_chunks_created": 0,
+        "total_vectors_generated": 0,
+        "memory_usage_gb": 0.0,
+        "cloud_offloaded": 0,
+        "processing_time_seconds": 0.013223409652709961,
+        "errors": [
+          {
+            "file": "advanced-linux-programming (1).pdf",
+            "error": "No text content extracted"
+          }
+        ]
+      }
+    }
+  ]
+}
