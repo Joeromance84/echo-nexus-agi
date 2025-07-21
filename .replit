@@ -127,7 +127,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run test_minimal.py --server.port 8502 --server.address 0.0.0.0 --server.headless true --server.enableXsrfProtection false"
+args = "streamlit run test_minimal.py --server.port 8502"
 waitForPort = 8502
 
 [[ports]]
