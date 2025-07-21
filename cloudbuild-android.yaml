@@ -2,7 +2,7 @@
 # Triggered by GitHub push to echo-ai-android repository
 
 steps:
-  # Step 1: Setup Android Build Environment
+  # Step 1: Setup Android Build Environment with Project Context
   - name: 'gcr.io/cloud-builders/git'
     id: 'clone-android-repo'
     args:
@@ -10,6 +10,9 @@ steps:
       - 'https://github.com/Joeromance84/echo-ai-android.git'
       - 'echo-ai-android'
     dir: '/workspace'
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 2: Setup Java 17 and Android SDK
   - name: 'gcr.io/cloud-builders/docker'
@@ -19,6 +22,7 @@ steps:
       - '-c'
       - |
         echo "Setting up Android build environment..."
+        echo "Project ID: $GOOGLE_CLOUD_PROJECT"
         
         # Install Java 17
         apt-get update
@@ -44,6 +48,9 @@ steps:
         echo "JAVA_HOME: $JAVA_HOME"
         echo "ANDROID_HOME: $ANDROID_HOME"
     dir: '/workspace'
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 3: Grant Gradle Permissions and Clean
   - name: 'gcr.io/cloud-builders/docker'
@@ -67,6 +74,9 @@ steps:
         
         echo "Gradle preparation complete"
     waitFor: ['clone-android-repo', 'setup-android-environment']
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 4: Build Debug APK
   - name: 'gcr.io/cloud-builders/docker'
@@ -94,6 +104,9 @@ steps:
           exit 1
         fi
     waitFor: ['prepare-gradle']
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 5: Build Release APK
   - name: 'gcr.io/cloud-builders/docker'
@@ -121,6 +134,9 @@ steps:
           exit 1
         fi
     waitFor: ['build-debug-apk']
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 6: AGI Integration Analysis
   - name: 'python:3.11'
@@ -179,6 +195,9 @@ steps:
         
         EOF
     waitFor: ['build-release-apk']
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 7: Upload APKs to Cloud Storage
   - name: 'gcr.io/cloud-builders/gsutil'
@@ -190,6 +209,9 @@ steps:
       - '/workspace/echo-ai-android/app/build/outputs/apk/release/app-release.apk'
       - 'gs://${PROJECT_ID}-echo-ai-apks/${BUILD_ID}/'
     waitFor: ['agi-analysis']
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
   # Step 8: Generate Build Report
   - name: 'python:3.11'
@@ -244,6 +266,9 @@ steps:
         
         EOF
     waitFor: ['upload-apks']
+    env:
+      - 'GOOGLE_CLOUD_PROJECT=${PROJECT_ID}'
+      - 'GCLOUD_PROJECT=${PROJECT_ID}'
 
 # Artifacts to save
 artifacts:
