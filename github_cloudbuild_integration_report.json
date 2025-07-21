@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-07-21T07:50:10.022572",
+  "cloudbuild_files": [
+    "cloudbuild.yaml",
+    "cloudbuild-autonomous.yaml",
+    "cloudbuild-federated.yaml",
+    "cloudbuild-consciousness.yaml",
+    "cloud_build/cloudbuild.yaml"
+  ],
+  "integration_files": [
+    "github_to_cloudbuild_handler.sh",
+    "cloudbuild_to_github_handler.sh",
+    "cloudbuild_trigger_intelligence.json",
+    "cloudbuild_pubsub_config.json"
+  ],
+  "github_secrets": {
+    "GITHUB_TOKEN": "configured"
+  },
+  "triggers_found": false,
+  "github_repo_connected": true,
+  "recommendations": [
+    "Set GOOGLE_CLOUD_PROJECT environment variable",
+    "Create GitHub-Cloud Build trigger"
+  ]
+}
