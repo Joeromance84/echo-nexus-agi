@@ -1,0 +1,33 @@
+{
+  "title": "Google Cloud Build Setup for Replit",
+  "status": "not_configured",
+  "required_secrets": [
+    {
+      "name": "GOOGLE_CLOUD_PROJECT",
+      "description": "Your Google Cloud Project ID",
+      "example": "my-echo-ai-project",
+      "required": true
+    }
+  ],
+  "optional_secrets": [
+    {
+      "name": "GOOGLE_APPLICATION_CREDENTIALS",
+      "description": "Path to service account key JSON file",
+      "example": "/path/to/service-account-key.json",
+      "required": false
+    }
+  ],
+  "setup_steps": [
+    "1. Create Google Cloud Project at console.cloud.google.com",
+    "2. Enable Cloud Build API: gcloud services enable cloudbuild.googleapis.com",
+    "3. Add GOOGLE_CLOUD_PROJECT to Replit Secrets",
+    "4. Test with: gcloud builds list",
+    "5. Configure cloudbuild.yaml for Echo AI builds"
+  ],
+  "alternatives": [
+    "Use GitHub Actions (already configured in Echo AI repository)",
+    "Use local Gradle builds with ./gradlew assembleRelease",
+    "Use Android Studio for development builds"
+  ],
+  "current_recommendation": "Use GitHub Actions for APK building as it's already configured and working"
+}

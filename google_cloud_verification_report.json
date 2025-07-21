@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-07-21T07:47:54.522542",
+  "gcloud_installed": false,
+  "authenticated": false,
+  "project_configured": false,
+  "cloud_build_api_enabled": false,
+  "cloud_build_permissions": false,
+  "environment_variables": {},
+  "recommendations": [
+    "Install gcloud CLI",
+    "Run: gcloud auth login",
+    "Set project: gcloud config set project YOUR_PROJECT_ID",
+    "Enable Cloud Build API: gcloud services enable cloudbuild.googleapis.com",
+    "Set GOOGLE_CLOUD_PROJECT environment variable"
+  ]
+}
