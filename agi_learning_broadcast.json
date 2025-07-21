@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-07-21T11:15:57.029057",
+  "source": "AGI_Document_Learning_System",
+  "message_type": "new_learning_data",
+  "learning_content": {
+    "content_type": "general_learning_update",
+    "total_documents": 0,
+    "total_insights": 0,
+    "total_concepts": 0,
+    "last_updated": null,
+    "urgent_message": "New knowledge available for immediate integration"
+  },
+  "broadcast_id": "broadcast_1753096557",
+  "priority": "high",
+  "recipients": [
+    "all_agi_systems",
+    "cloud_build_ais",
+    "federated_agents"
+  ]
+}
