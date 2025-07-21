@@ -55,8 +55,16 @@
       "content_preview": "PDF document: 138_Barbara_Fadem_BRS_Behavioral_Science.pdf (16249262 bytes)",
       "processed_at": "2025-07-21T11:47:39.355864",
       "file_type": "PDF"
+    },
+    {
+      "filename": "Digital_Computers_Advanced_Coding_Techniques_Summer_1954 (1).pdf",
+      "file_size": 5635499,
+      "word_count": 118,
+      "content_preview": "OpenAction PageLayout SinglePage UseOutlines xpacket begin MpCehiHzreSzNTczkc xmpmeta xmlns Adobe XMP Core  Description rdf \n            xmlns \n          CreateDate CreateDate \n          ModifyDate ModifyDate \n          MetadataDate MetadataDate Description Description rdf \n            xmlns \n          Adobe Acrobat   Paper Capture Plug Description Description rdf \n            xmlns \n          application Description Description rdf \n            xmlns \n          DocumentID DocumentID \n          ",
+      "processed_at": "2025-07-21T11:58:02.176658",
+      "file_type": "PDF"
     }
   ],
-  "total_processed": 7,
-  "last_updated": "2025-07-21T11:47:39.360799"
+  "total_processed": 8,
+  "last_updated": "2025-07-21T11:58:02.185287"
 }
