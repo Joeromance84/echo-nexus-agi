@@ -1,0 +1,62 @@
+{
+  "documents": [
+    {
+      "filename": "Advanced_Animation_Preston_Blair (1).pdf",
+      "file_size": 15385210,
+      "word_count": 6,
+      "content_preview": "PDF document: Advanced_Animation_Preston_Blair (1).pdf (15385210 bytes)",
+      "processed_at": "2025-07-21T11:43:17.481413",
+      "file_type": "PDF"
+    },
+    {
+      "filename": "Farkas-Farkas-Graphic Design-Ch11Principles of Web Design.pdf",
+      "file_size": 13970385,
+      "word_count": 9,
+      "content_preview": "PDF document: Farkas-Farkas-Graphic Design-Ch11Principles of Web Design.pdf (13970385 bytes)",
+      "processed_at": "2025-07-21T11:43:17.481923",
+      "file_type": "PDF"
+    },
+    {
+      "filename": "hacking_artofexploitation_2ndedition.pdf",
+      "file_size": 5960141,
+      "word_count": 5,
+      "content_preview": "PDF document: hacking_artofexploitation_2ndedition.pdf (5960141 bytes)",
+      "processed_at": "2025-07-21T11:44:33.189694",
+      "file_type": "PDF"
+    },
+    {
+      "filename": "ioshacking.pdf",
+      "file_size": 21959172,
+      "word_count": 5,
+      "content_preview": "PDF document: ioshacking.pdf (21959172 bytes)",
+      "processed_at": "2025-07-21T11:44:33.190278",
+      "file_type": "PDF"
+    },
+    {
+      "filename": "The+Basics+of+Hacking+and+Penetration+Testing,+Second+Edition+(2013).pdf",
+      "file_size": 4738410,
+      "word_count": 5,
+      "content_preview": "PDF document: The+Basics+of+Hacking+and+Penetration+Testing,+Second+Edition+(2013).pdf (4738410 bytes)",
+      "processed_at": "2025-07-21T11:45:31.219962",
+      "file_type": "PDF"
+    },
+    {
+      "filename": "baumeister-finkel-2010-book-advanced-social-psychology-the-state-of-the-science.pdf",
+      "file_size": 4775936,
+      "word_count": 5,
+      "content_preview": "PDF document: baumeister-finkel-2010-book-advanced-social-psychology-the-state-of-the-science.pdf (4775936 bytes)",
+      "processed_at": "2025-07-21T11:46:40.824779",
+      "file_type": "PDF"
+    },
+    {
+      "filename": "138_Barbara_Fadem_BRS_Behavioral_Science.pdf",
+      "file_size": 16249262,
+      "word_count": 5,
+      "content_preview": "PDF document: 138_Barbara_Fadem_BRS_Behavioral_Science.pdf (16249262 bytes)",
+      "processed_at": "2025-07-21T11:47:39.355864",
+      "file_type": "PDF"
+    }
+  ],
+  "total_processed": 7,
+  "last_updated": "2025-07-21T11:47:39.360799"
+}

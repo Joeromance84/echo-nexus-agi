@@ -6,6 +6,7 @@ Document Upload System - AGI Learning Interface
 import streamlit as st
 import os
 import json
+import re
 from datetime import datetime
 
 # Configure page
@@ -15,8 +16,69 @@ st.set_page_config(
     layout="wide"
 )
 
+def extract_pdf_text_simple(content):
+    """Simple PDF text extraction without external dependencies"""
+    try:
+        # Convert bytes to string, looking for text objects
+        text_content = content.decode('latin1', errors='ignore')
+        
+        # Extract text between stream objects (basic PDF parsing)
+        text_patterns = []
+        
+        # Look for text commands in PDF
+        bt_et_pattern = re.findall(r'BT\s*(.*?)\s*ET', text_content, re.DOTALL)
+        for match in bt_et_pattern:
+            # Extract text from Tj commands
+            tj_matches = re.findall(r'\((.*?)\)\s*Tj', match)
+            text_patterns.extend(tj_matches)
+            
+            # Extract text from TJ commands  
+            tj_array_matches = re.findall(r'\[(.*?)\]\s*TJ', match)
+            for tj_array in tj_array_matches:
+                # Extract strings from arrays
+                strings = re.findall(r'\((.*?)\)', tj_array)
+                text_patterns.extend(strings)
+        
+        # Combine all extracted text
+        extracted_text = ' '.join(text_patterns)
+        
+        # Clean up escaped characters and formatting
+        extracted_text = extracted_text.replace('\\n', '\n').replace('\\r', '\r')
+        extracted_text = extracted_text.replace('\\t', '\t').replace('\\\\', '\\')
+        
+        # Remove excessive whitespace
+        extracted_text = re.sub(r'\s+', ' ', extracted_text).strip()
+        
+        if len(extracted_text) > 50:  # If we extracted meaningful content
+            return extracted_text
+        else:
+            # Fallback: extract readable text sequences
+            readable_text = re.findall(r'[A-Za-z\s]{10,}', text_content)
+            return ' '.join(readable_text[:100]) if readable_text else f"PDF binary content ({len(content)} bytes)"
+            
+    except Exception as e:
+        return f"PDF processing error: {str(e)} (Size: {len(content)} bytes)"
+
+def extract_epub_text_simple(content):
+    """Simple EPUB text extraction without external dependencies"""
+    try:
+        # EPUB is essentially a ZIP file with XHTML content
+        text_content = content.decode('utf-8', errors='ignore')
+        
+        # Look for HTML-like content
+        html_content = re.findall(r'<[^>]*>([^<]+)</[^>]*>', text_content)
+        text_parts = [part.strip() for part in html_content if len(part.strip()) > 3]
+        
+        if text_parts:
+            return ' '.join(text_parts[:200])  # First 200 text blocks
+        else:
+            return f"EPUB binary content ({len(content)} bytes)"
+            
+    except Exception as e:
+        return f"EPUB processing error: {str(e)} (Size: {len(content)} bytes)"
+
 def process_document(uploaded_file):
-    """Process uploaded document and extract basic information"""
+    """Process uploaded document and extract text content"""
     try:
         content = uploaded_file.read()
         filename = uploaded_file.name
@@ -27,9 +89,11 @@ def process_document(uploaded_file):
         if filename.endswith(('.txt', '.md')):
             text_content = content.decode('utf-8', errors='ignore')
         elif filename.endswith('.pdf'):
-            text_content = f"PDF document: {filename} ({file_size} bytes)"
+            text_content = extract_pdf_text_simple(content)
         elif filename.endswith('.epub'):
-            text_content = f"EPUB document: {filename} ({file_size} bytes)"
+            text_content = extract_epub_text_simple(content)
+        else:
+            text_content = f"Unsupported file type: {filename}"
         
         # Basic analysis
         word_count = len(text_content.split()) if text_content else 0
