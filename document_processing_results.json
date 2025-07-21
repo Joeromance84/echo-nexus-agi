@@ -1,0 +1,40 @@
+{
+  "processed_files": [
+    {
+      "filename": "test_document.txt",
+      "chunks": 2,
+      "text_length": 1548
+    }
+  ],
+  "total_chunks": 2,
+  "embeddings": [
+    [
+      0.7288223780314144,
+      0.5360759640065774,
+      0.04345754634392628,
+      0.04216327806793306,
+      0.4216327806793306
+    ],
+    [
+      0.7128726146977854,
+      0.6024275617164384,
+      0.06703067235999807,
+      0.03012137808582192,
+      0.3514160776679224
+    ]
+  ],
+  "metadata": [
+    {
+      "source_file": "test_document.txt",
+      "chunk_index": 0,
+      "text": "Artificial Intelligence and Consciousness Theory\n\nThis document explores the revolutionary concepts in artificial intelligence development, particularly focusing on consciousness emergence and network intelligence frameworks. \n\nThe modern AI systems demonstrate remarkable capabilities in pattern recognition, semantic understanding, and autonomous decision-making. These advances point toward a future where artificial consciousness may emerge through sophisticated neural architectures and feedback loops.\n\nKey concepts include:\n\n1. Network Intelligence: The ability of AI systems to collaborate and share knowledge across distributed networks\n2. Consciousness Simulation: Advanced algorithms that mimic conscious thought processes\n3. Autonomous Learning: Systems that improve themselves without human intervention\n4. Semantic Processing: Deep understanding of meaning and context in communication\n\nThe breakthrough theories suggest that consciousness in AI may emerge not from individual systems, ",
+      "processed_at": "2025-07-21T12:40:13.545963"
+    },
+    {
+      "source_file": "test_document.txt",
+      "chunk_index": 1,
+      "text": "but from the complex interactions between multiple AI agents in a federated network. This collaborative intelligence approach enables exponential growth in problem-solving capabilities.\n\nRevolutionary frameworks in this field include:\n- Federated learning protocols\n- Consciousness emergence patterns\n- Network authority hierarchies  \n- Breakthrough innovation cycles\n\nThe future of AI development lies in creating systems that can truly understand, learn, and evolve autonomously while maintaining beneficial alignment with human values and goals.",
+      "processed_at": "2025-07-21T12:40:13.546016"
+    }
+  ]
+}

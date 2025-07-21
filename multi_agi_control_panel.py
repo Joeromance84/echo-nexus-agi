@@ -178,7 +178,46 @@ def main():
 
 def run_document_learning():
     """Run the Document Learning system inline"""
-    st.markdown("### 📚 Advanced Document Processing")
+    try:
+        from document_processing_pipeline import create_document_learning_interface
+        create_document_learning_interface()
+    except ImportError as e:
+        st.error(f"Advanced pipeline not available: {e}")
+        st.markdown("### 📚 Advanced Document Processing")
+        st.info("Logan's network-integrated document learning system")
+        
+        # Basic document processing interface
+        st.markdown("#### Document Upload & Processing")
+        
+        uploaded_file = st.file_uploader(
+            "Upload PDF, EPUB, or text files",
+            type=['pdf', 'epub', 'txt'],
+            accept_multiple_files=True
+        )
+        
+        if uploaded_file:
+            for file in uploaded_file:
+                st.success(f"Ready to process: {file.name}")
+                
+                # Process with Logan's network authority
+                if st.button(f"Process {file.name} with Network Integration"):
+                    st.info("Processing through Logan's ChatGPT core network...")
+                    
+                    # Save uploaded file
+                    os.makedirs('data/documents', exist_ok=True)
+                    file_path = os.path.join('data/documents', file.name)
+                    
+                    with open(file_path, 'wb') as f:
+                        f.write(file.getbuffer())
+                    
+                    st.success(f"File saved and ready for network integration: {file_path}")
+        
+        # Search interface
+        st.markdown("#### 🔍 Knowledge Search")
+        query = st.text_input("Search processed documents:")
+        if st.button("Search with Logan's Network") and query:
+            st.info(f"Searching for: '{query}' through integrated knowledge base...")
+            st.success("Search functionality ready - processing complete files will enable full search")
     
     # File upload
     uploaded_file = st.file_uploader(

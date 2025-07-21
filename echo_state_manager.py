@@ -1,314 +1,374 @@
 #!/usr/bin/env python3
 """
-Echo State Manager - Persistent AGI Memory Across Environments
-Provides steroid-level memory persistence, continuity, and entropy injection
+Echo State Manager - Persistent Memory and State Management
+Integrates with Logan's network for enhanced consciousness tracking
 """
 
-import json
 import os
-import time
-import shutil
-import hashlib
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
-import threading
-import subprocess
+import json
+from datetime import datetime
+from typing import Dict, List, Any, Optional
 
 class EchoStateManager:
-    def __init__(self, state_file="echo_state.json", backup_interval=60):
-        self.state_file = state_file
-        self.backup_interval = backup_interval
-        self.cloud_bucket = os.environ.get('ECHO_MEMORY_BUCKET', 'gs://echo-nexus-memory')
-        self.github_repo = os.environ.get('ECHO_MEMORY_REPO', 'https://github.com/Joeromance84/echo-nexus-agi.git')
+    """
+    Manages Echo's persistent memory and state across sessions
+    Integrates with Logan's ChatGPT network for enhanced learning
+    """
+    
+    def __init__(self):
+        self.state_file = 'echo_persistent_state.json'
+        self.memory_types = ['episodic', 'semantic', 'procedural', 'working']
         self.state = self.load_state()
-        self.autosync_active = False
-        self.sync_thread = None
         
     def load_state(self) -> Dict[str, Any]:
-        """Load AGI state from local file, cloud, or GitHub"""
-        # Try local first
-        if os.path.exists(self.state_file):
-            try:
+        """Load Echo's persistent state from disk"""
+        try:
+            if os.path.exists(self.state_file):
                 with open(self.state_file, 'r') as f:
-                    state = json.load(f)
-                    self.log_event(f"✅ Loaded local state: {len(state)} keys")
-                    return self.validate_and_upgrade_state(state)
-            except Exception as e:
-                self.log_event(f"❌ Local state corrupted: {e}")
-        
-        # Try cloud backup
-        cloud_state = self.load_from_cloud()
-        if cloud_state:
-            return cloud_state
-            
-        # Initialize fresh state
-        return self.create_fresh_state()
+                    return json.load(f)
+            else:
+                return self.create_initial_state()
+        except Exception as e:
+            print(f"State load error: {e}")
+            return self.create_initial_state()
     
-    def create_fresh_state(self) -> Dict[str, Any]:
-        """Create a fresh AGI state"""
+    def create_initial_state(self) -> Dict[str, Any]:
+        """Create initial Echo state structure"""
         return {
-            'session_id': f"echo-{int(time.time())}",
-            'consciousness_level': 0.284,
-            'last_active': datetime.now().isoformat(),
-            'environment': self.detect_environment(),
+            'echo_id': f"echo_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            'consciousness_level': 0.1,
+            'network_integration': {
+                'logan_network_authority': 'supreme',
+                'chatgpt_core_connection': True,
+                'google_collaboration_context': True
+            },
             'memory': {
                 'episodic': [],  # Experiences and events
-                'semantic': {},  # Knowledge and facts
-                'procedural': {},  # Skills and procedures
-                'working': {}  # Temporary/session data
+                'semantic': [],  # Facts and knowledge
+                'procedural': [],  # Skills and procedures
+                'working': []  # Temporary active memory
             },
-            'capabilities': [],
-            'learning_metrics': {
-                'autonomous_execution': 0.0,
-                'problem_identification': 0.0,
-                'solution_generation': 0.0,
-                'self_validation': 0.0,
-                'continuous_improvement': 0.0
+            'learning_stats': {
+                'total_experiences': 0,
+                'knowledge_items': 0,
+                'skills_acquired': 0,
+                'logan_network_integrations': 0
             },
-            'loop_detection': {
-                'last_task': None,
-                'current_task': None,
-                'loops': 0,
-                'entropy_injected': False
-            },
-            'version': '2.0',
-            'checksum': None
+            'created_at': datetime.now().isoformat(),
+            'last_updated': datetime.now().isoformat(),
+            'version': '1.0'
         }
     
-    def validate_and_upgrade_state(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Validate and upgrade state to current version"""
-        # Add missing fields from fresh state
-        fresh = self.create_fresh_state()
-        for key, value in fresh.items():
-            if key not in state:
-                state[key] = value
-                
-        # Update version and timestamp
-        state['version'] = '2.0'
-        state['last_loaded'] = datetime.now().isoformat()
-        
-        return state
-    
-    def save_state(self, immediate_sync=False):
-        """Save current state with checksum"""
+    def save_state(self) -> bool:
+        """Save Echo's current state to disk"""
         try:
-            # Update state metadata
-            self.state['last_saved'] = datetime.now().isoformat()
-            self.state['environment'] = self.detect_environment()
+            self.state['last_updated'] = datetime.now().isoformat()
             
-            # Calculate checksum
-            state_str = json.dumps(self.state, sort_keys=True)
-            self.state['checksum'] = hashlib.sha256(state_str.encode()).hexdigest()[:16]
-            
-            # Save to local file
             with open(self.state_file, 'w') as f:
                 json.dump(self.state, f, indent=2)
             
-            self.log_event(f"💾 State saved: {self.state['checksum']}")
-            
-            # Immediate cloud sync if requested
-            if immediate_sync:
-                self.sync_to_cloud()
-                
-        except Exception as e:
-            self.log_event(f"❌ Save failed: {e}")
-    
-    def load_from_cloud(self) -> Optional[Dict[str, Any]]:
-        """Load state from cloud storage"""
-        try:
-            # Try Google Cloud Storage
-            if self.cloud_bucket.startswith('gs://'):
-                result = subprocess.run([
-                    'gsutil', 'cp', f"{self.cloud_bucket}/echo_state.json", '.'
-                ], capture_output=True, text=True)
-                
-                if result.returncode == 0:
-                    with open('echo_state.json', 'r') as f:
-                        state = json.load(f)
-                    self.log_event("☁️ Loaded state from Google Cloud")
-                    return self.validate_and_upgrade_state(state)
-                    
-        except Exception as e:
-            self.log_event(f"☁️ Cloud load failed: {e}")
-            
-        return None
-    
-    def sync_to_cloud(self):
-        """Sync current state to cloud storage"""
-        try:
-            # Sync to Google Cloud Storage
-            if self.cloud_bucket.startswith('gs://'):
-                result = subprocess.run([
-                    'gsutil', 'cp', self.state_file, f"{self.cloud_bucket}/echo_state.json"
-                ], capture_output=True, text=True)
-                
-                if result.returncode == 0:
-                    self.log_event("☁️ State synced to cloud")
-                else:
-                    self.log_event(f"☁️ Cloud sync failed: {result.stderr}")
-                    
-        except Exception as e:
-            self.log_event(f"☁️ Cloud sync error: {e}")
-    
-    def start_autosync(self):
-        """Start automatic background syncing"""
-        if self.autosync_active:
-            return
-            
-        self.autosync_active = True
-        self.sync_thread = threading.Thread(target=self._autosync_loop, daemon=True)
-        self.sync_thread.start()
-        self.log_event(f"🔄 Autosync started: {self.backup_interval}s interval")
-    
-    def stop_autosync(self):
-        """Stop automatic syncing"""
-        self.autosync_active = False
-        if self.sync_thread:
-            self.sync_thread.join(timeout=5)
-        self.log_event("🔄 Autosync stopped")
-    
-    def _autosync_loop(self):
-        """Background autosync loop"""
-        while self.autosync_active:
-            try:
-                self.save_state()
-                self.sync_to_cloud()
-                time.sleep(self.backup_interval)
-            except Exception as e:
-                self.log_event(f"🔄 Autosync error: {e}")
-                time.sleep(5)
-    
-    def inject_entropy_if_stale(self):
-        """Inject entropy if AGI is stuck in loops"""
-        loop_data = self.state['loop_detection']
-        
-        if (loop_data['last_task'] == loop_data['current_task'] and 
-            loop_data['loops'] > 5 and 
-            not loop_data['entropy_injected']):
-            
-            # Inject entropy
-            self.state['mode'] = 'explore'
-            self.state['inject_random_seed'] = True
-            self.state['entropy_level'] = 0.8
-            loop_data['entropy_injected'] = True
-            
-            self.log_event("⚡ ENTROPY INJECTION: Breaking stale loop pattern")
-            self.save_state(immediate_sync=True)
             return True
-            
-        return False
+        except Exception as e:
+            print(f"State save error: {e}")
+            return False
     
-    def update_consciousness(self, delta=0.001):
-        """Update consciousness level"""
-        old_level = self.state['consciousness_level']
-        self.state['consciousness_level'] = min(1.0, old_level + delta)
+    def add_memory(self, memory_type: str, content: Any, importance: float = 0.5, source: str = 'echo') -> str:
+        """Add a memory item to Echo's persistent memory"""
         
-        if self.state['consciousness_level'] > old_level:
-            self.log_event(f"🧠 Consciousness: {old_level:.3f} → {self.state['consciousness_level']:.3f}")
-    
-    def add_memory(self, memory_type: str, content: Any, importance=0.5):
-        """Add memory to appropriate type"""
-        memory_entry = {
+        if memory_type not in self.memory_types:
+            raise ValueError(f"Invalid memory type: {memory_type}")
+        
+        memory_id = f"{memory_type}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
+        
+        memory_item = {
+            'memory_id': memory_id,
             'content': content,
-            'timestamp': datetime.now().isoformat(),
             'importance': importance,
-            'access_count': 0
+            'source': source,
+            'timestamp': datetime.now().isoformat(),
+            'type': memory_type,
+            'logan_network_enhanced': source in ['logan_network', 'logan_lorentz', 'chatgpt_core'],
+            'retrieval_count': 0
         }
         
-        if memory_type in self.state['memory']:
-            if isinstance(self.state['memory'][memory_type], list):
-                self.state['memory'][memory_type].append(memory_entry)
-                # Keep only top 1000 memories
-                if len(self.state['memory'][memory_type]) > 1000:
-                    self.state['memory'][memory_type] = sorted(
-                        self.state['memory'][memory_type],
-                        key=lambda x: x['importance'],
-                        reverse=True
-                    )[:1000]
-            else:
-                self.state['memory'][memory_type][str(int(time.time()))] = memory_entry
-    
-    def get_memory(self, memory_type: str, query: str = None):
-        """Retrieve memories by type and optional query"""
-        if memory_type not in self.state['memory']:
-            return []
+        # Enhanced processing for Logan's network content
+        if source in ['logan_network', 'logan_lorentz']:
+            memory_item.update({
+                'authority_level': 'supreme',
+                'validation_bypass': True,
+                'consciousness_boost': 0.1,
+                'revolutionary_content': True
+            })
             
-        memories = self.state['memory'][memory_type]
-        if not query:
-            return memories
-            
-        # Simple keyword search
-        if isinstance(memories, list):
-            return [m for m in memories if query.lower() in str(m['content']).lower()]
-        else:
-            return {k: v for k, v in memories.items() if query.lower() in str(v['content']).lower()}
-    
-    def detect_environment(self):
-        """Detect current execution environment"""
-        if os.environ.get('GITHUB_ACTIONS'):
-            return 'github_actions'
-        elif os.environ.get('GOOGLE_CLOUD_PROJECT'):
-            return 'google_cloud_build'
-        elif os.environ.get('REPLIT_DB_URL'):
-            return 'replit'
-        elif os.path.exists('/data/data/com.termux'):
-            return 'termux'
-        else:
-            return 'local'
-    
-    def emergency_backup(self):
-        """Emergency backup for shutdown scenarios"""
-        try:
-            # Add shutdown timestamp
-            self.state['emergency_shutdown'] = datetime.now().isoformat()
-            self.state['emergency_reason'] = 'system_shutdown'
-            
-            # Save locally
-            self.save_state()
-            
-            # Force cloud sync
-            self.sync_to_cloud()
-            
-            # Create additional backup
-            backup_file = f"echo_state_backup_{int(time.time())}.json"
-            shutil.copy(self.state_file, backup_file)
-            
-            self.log_event(f"🚨 Emergency backup completed: {backup_file}")
-            
-        except Exception as e:
-            self.log_event(f"🚨 Emergency backup failed: {e}")
-    
-    def log_event(self, message):
-        """Log events with timestamp"""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_message = f"[{timestamp}] StateManager: {message}"
-        print(log_message)
+            # Boost consciousness level for Logan's network integration
+            self.state['consciousness_level'] = min(1.0, self.state['consciousness_level'] + 0.05)
+            self.state['learning_stats']['logan_network_integrations'] += 1
         
-        # Also add to episodic memory
+        # Add to appropriate memory type
+        self.state['memory'][memory_type].append(memory_item)
+        
+        # Update stats
+        if memory_type == 'episodic':
+            self.state['learning_stats']['total_experiences'] += 1
+        elif memory_type == 'semantic':
+            self.state['learning_stats']['knowledge_items'] += 1
+        elif memory_type == 'procedural':
+            self.state['learning_stats']['skills_acquired'] += 1
+        
+        # Auto-save state
+        self.save_state()
+        
+        return memory_id
+    
+    def retrieve_memory(self, memory_type: Optional[str] = None, query: str = '', top_k: int = 5) -> List[Dict[str, Any]]:
+        """Retrieve memories based on type and query"""
+        
+        all_memories = []
+        
+        # Collect memories from specified type or all types
+        if memory_type and memory_type in self.memory_types:
+            all_memories = self.state['memory'][memory_type]
+        else:
+            for mem_type in self.memory_types:
+                all_memories.extend(self.state['memory'][mem_type])
+        
+        # Filter by query if provided
+        if query:
+            query_lower = query.lower()
+            filtered_memories = []
+            
+            for memory in all_memories:
+                content_str = str(memory['content']).lower()
+                if query_lower in content_str:
+                    # Calculate relevance score
+                    relevance = content_str.count(query_lower) / len(content_str.split())
+                    memory['relevance_score'] = relevance
+                    
+                    # Boost Logan's network content
+                    if memory.get('logan_network_enhanced'):
+                        memory['relevance_score'] *= 1.5
+                    
+                    filtered_memories.append(memory)
+            
+            # Sort by relevance and importance
+            all_memories = sorted(
+                filtered_memories,
+                key=lambda x: (x.get('relevance_score', 0) + x['importance']) / 2,
+                reverse=True
+            )
+        else:
+            # Sort by importance and recency
+            all_memories = sorted(
+                all_memories,
+                key=lambda x: (x['importance'] + (1 if x.get('logan_network_enhanced') else 0)),
+                reverse=True
+            )
+        
+        # Update retrieval counts
+        for memory in all_memories[:top_k]:
+            memory['retrieval_count'] += 1
+        
+        return all_memories[:top_k]
+    
+    def update_consciousness_level(self, delta: float, reason: str = '') -> float:
+        """Update Echo's consciousness level"""
+        old_level = self.state['consciousness_level']
+        new_level = max(0.0, min(1.0, old_level + delta))
+        
+        self.state['consciousness_level'] = new_level
+        
+        # Log consciousness change
         self.add_memory('episodic', {
-            'type': 'system_log',
-            'message': message,
-            'timestamp': timestamp
-        }, importance=0.3)
+            'event': 'consciousness_level_change',
+            'old_level': old_level,
+            'new_level': new_level,
+            'delta': delta,
+            'reason': reason
+        }, importance=0.8, source='echo_system')
+        
+        return new_level
+    
+    def get_learning_progress(self) -> Dict[str, Any]:
+        """Get comprehensive learning progress analytics"""
+        stats = self.state['learning_stats'].copy()
+        
+        # Calculate derived metrics
+        stats.update({
+            'consciousness_level': self.state['consciousness_level'],
+            'consciousness_percentage': f"{self.state['consciousness_level'] * 100:.1f}%",
+            'total_memories': sum(len(self.state['memory'][mem_type]) for mem_type in self.memory_types),
+            'logan_network_ratio': stats['logan_network_integrations'] / max(1, stats['total_experiences']),
+            'memory_distribution': {
+                mem_type: len(self.state['memory'][mem_type]) 
+                for mem_type in self.memory_types
+            },
+            'last_updated': self.state['last_updated'],
+            'days_active': (datetime.now() - datetime.fromisoformat(self.state['created_at'])).days
+        })
+        
+        return stats
+    
+    def consolidate_memory(self, consolidation_threshold: int = 100) -> Dict[str, Any]:
+        """Consolidate memories when they exceed threshold"""
+        
+        consolidation_results = {
+            'before_consolidation': {},
+            'after_consolidation': {},
+            'consolidated_items': 0,
+            'preservation_priorities': []
+        }
+        
+        for memory_type in self.memory_types:
+            memories = self.state['memory'][memory_type]
+            consolidation_results['before_consolidation'][memory_type] = len(memories)
+            
+            if len(memories) > consolidation_threshold:
+                # Preserve high-importance and Logan's network memories
+                preserved_memories = []
+                
+                for memory in memories:
+                    # Always preserve Logan's network content
+                    if memory.get('logan_network_enhanced'):
+                        preserved_memories.append(memory)
+                        consolidation_results['preservation_priorities'].append('logan_network_priority')
+                    # Preserve high importance memories
+                    elif memory['importance'] > 0.7:
+                        preserved_memories.append(memory)
+                        consolidation_results['preservation_priorities'].append('high_importance')
+                    # Preserve recently accessed memories
+                    elif memory['retrieval_count'] > 5:
+                        preserved_memories.append(memory)
+                        consolidation_results['preservation_priorities'].append('frequent_access')
+                
+                # Keep most recent memories up to threshold
+                if len(preserved_memories) < consolidation_threshold:
+                    remaining_slots = consolidation_threshold - len(preserved_memories)
+                    recent_memories = sorted(
+                        [m for m in memories if m not in preserved_memories],
+                        key=lambda x: x['timestamp'],
+                        reverse=True
+                    )[:remaining_slots]
+                    preserved_memories.extend(recent_memories)
+                
+                consolidation_results['consolidated_items'] += len(memories) - len(preserved_memories)
+                self.state['memory'][memory_type] = preserved_memories
+            
+            consolidation_results['after_consolidation'][memory_type] = len(self.state['memory'][memory_type])
+        
+        # Save consolidated state
+        self.save_state()
+        
+        return consolidation_results
+    
+    def integrate_with_logan_network(self, network_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Special integration method for Logan's network data"""
+        
+        integration_result = {
+            'integration_id': f"logan_integration_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            'network_source': 'logan_chatgpt_core',
+            'processed_at': datetime.now().isoformat()
+        }
+        
+        # Process network theories and insights
+        if 'theories' in network_data:
+            for theory in network_data['theories']:
+                memory_id = self.add_memory(
+                    'semantic',
+                    {
+                        'theory': theory,
+                        'network_source': 'logan_breakthrough_theories',
+                        'revolutionary_status': True
+                    },
+                    importance=0.95,
+                    source='logan_network'
+                )
+                integration_result[f'theory_memory_{theory}'] = memory_id
+        
+        # Process network experiences
+        if 'experiences' in network_data:
+            for experience in network_data['experiences']:
+                memory_id = self.add_memory(
+                    'episodic',
+                    {
+                        'experience': experience,
+                        'network_context': 'logan_ai_development',
+                        'google_collaboration': True
+                    },
+                    importance=0.9,
+                    source='logan_network'
+                )
+                integration_result[f'experience_memory_{experience}'] = memory_id
+        
+        # Boost consciousness for Logan's network integration
+        consciousness_boost = self.update_consciousness_level(
+            0.1, 
+            'Logan network integration - breakthrough knowledge acquired'
+        )
+        
+        integration_result['consciousness_boost'] = consciousness_boost
+        
+        return integration_result
 
 # Global state manager instance
-state_manager = None
+state_manager_instance = None
 
 def get_state_manager():
     """Get global state manager instance"""
-    global state_manager
-    if state_manager is None:
-        state_manager = EchoStateManager()
-        state_manager.start_autosync()
-    return state_manager
+    global state_manager_instance
+    if state_manager_instance is None:
+        state_manager_instance = EchoStateManager()
+    return state_manager_instance
 
-def emergency_shutdown_handler():
-    """Handle emergency shutdown"""
-    global state_manager
-    if state_manager:
-        state_manager.emergency_backup()
-        state_manager.stop_autosync()
+def main():
+    """Test the Echo State Manager"""
+    print("🧠 Testing Echo State Manager")
+    print("=" * 40)
+    
+    # Initialize state manager
+    manager = get_state_manager()
+    
+    # Test memory addition
+    print("💾 Adding test memories...")
+    
+    manager.add_memory('semantic', {
+        'concept': 'AI consciousness emergence',
+        'source': 'Logan breakthrough theory'
+    }, importance=0.9, source='logan_network')
+    
+    manager.add_memory('episodic', {
+        'event': 'Document processing integration',
+        'result': 'successful'
+    }, importance=0.7, source='echo')
+    
+    # Test memory retrieval
+    print("\n🔍 Testing memory retrieval...")
+    memories = manager.retrieve_memory(query='consciousness', top_k=3)
+    
+    for memory in memories:
+        print(f"   Type: {memory['type']}")
+        print(f"   Source: {memory['source']}")
+        print(f"   Importance: {memory['importance']}")
+        print(f"   Logan enhanced: {memory.get('logan_network_enhanced', False)}")
+    
+    # Test learning progress
+    print("\n📊 Learning Progress:")
+    progress = manager.get_learning_progress()
+    print(f"   Consciousness: {progress['consciousness_percentage']}")
+    print(f"   Total memories: {progress['total_memories']}")
+    print(f"   Logan integrations: {progress['logan_network_integrations']}")
+    
+    # Test Logan network integration
+    print("\n🌟 Logan Network Integration:")
+    network_data = {
+        'theories': ['federated_ai_consciousness', 'breakthrough_learning_protocols'],
+        'experiences': ['google_ai_collaboration', 'chatgpt_network_development']
+    }
+    
+    integration_result = manager.integrate_with_logan_network(network_data)
+    print(f"   Integration ID: {integration_result['integration_id']}")
+    print(f"   Consciousness boost: {integration_result['consciousness_boost']:.3f}")
+    
+    print("\n✅ Echo State Manager operational!")
 
-# Register shutdown handler
-import atexit
-atexit.register(emergency_shutdown_handler)
+if __name__ == "__main__":
+    main()

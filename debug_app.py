@@ -111,8 +111,16 @@ def process_document(uploaded_file):
         return None
 
 def main():
-    st.title("📚 Document Learning System - FIXED")
-    st.markdown("Upload PDF, EPUB, TXT, or MD files for AGI knowledge extraction")
+    # Check if advanced pipeline is available
+    try:
+        from advanced_document_learning_pipeline import create_streamlit_interface
+        create_streamlit_interface()
+        return
+    except ImportError:
+        pass
+    
+    st.title("📚 Document Learning System - Enhanced")
+    st.markdown("Upload PDF, EPUB, TXT, or MD files for AGI knowledge extraction with Logan's network integration")
     
     # Status dashboard
     col1, col2, col3 = st.columns(3)
