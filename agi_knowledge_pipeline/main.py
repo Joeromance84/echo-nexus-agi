@@ -278,66 +278,14 @@ class AGIKnowledgeProcessor:
             
         except Exception as e:
             print(f"⚠️ Error updating AGI knowledge index: {e}")
-    
-    def process_file(self, bucket_name: str, file_name: str) -> bool:
-        """Main file processing pipeline"""
-        try:
-            print(f"🚀 Starting AGI knowledge processing for: {file_name}")
-            
-            # Download file
-            bucket = storage_client.bucket(bucket_name)
-            blob = bucket.blob(file_name)
-            
-            with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file_name)[1]) as temp_file:
-                blob.download_to_filename(temp_file.name)
-                temp_file_path = temp_file.name
-            
-            # Extract text based on file type
-            text_content = ""
-            if file_name.lower().endswith('.pdf'):
-                text_content = self.extract_text_from_pdf(temp_file_path)
-            elif file_name.lower().endswith('.epub'):
-                text_content = self.extract_text_from_epub(temp_file_path)
-            else:
-                print(f"⚠️ Unsupported file type: {file_name}")
-                return False
-            
-            # Clean up temp file
-            os.unlink(temp_file_path)
-            
-            if not text_content.strip():
-                print(f"⚠️ No text content extracted from {file_name}")
-                return False
-            
-            # Create intelligent chunks
-            chunks = self.intelligent_chunking(text_content, file_name)
-            
-            if not chunks:
-                print(f"⚠️ No chunks created from {file_name}")
-                return False
-            
-            # Generate embeddings
-            if self.initialize_embedding_model():
-                chunks = self.generate_embeddings(chunks)
-            
-            # Store processed data
-            self.store_processed_data(chunks, file_name)
-            
-            # Update statistics
-            self.processing_stats['files_processed'] += 1
-            self.processing_stats['chunks_created'] += len(chunks)
-            
-            print(f"✅ Successfully processed {file_name}")
-            print(f"📊 Stats: {self.processing_stats}")
-            
-            return True
-            
-        except Exception as e:
-            print(f"❌ Error processing {file_name}: {e}")
-            self.processing_stats['errors'] += 1
-            return False
 
-# Global processor instance
+# Import autonomous memory system
+from autonomous_memory_system import (
+    autonomous_memory, remember, recall, search_knowledge, 
+    record_learning, record_action, update_skill, get_memory_status
+)
+
+# Global processor instance with memory integration
 processor = AGIKnowledgeProcessor()
 
 @functions_framework.cloud_event
