@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Echo AI</string>
+    <string name="app_description">Advanced Artificial General Intelligence</string>
+    <string name="welcome_message">Welcome to Echo AI - Your Advanced AGI Companion</string>
+    <string name="input_hint">Ask Echo anything...</string>
+    <string name="send_button">Send</string>
+    <string name="clear_button">Clear</string>
+    <string name="status_initializing">Status: Initializing...</string>
+    <string name="status_ready">Status: Ready</string>
+    <string name="error_initialization">Failed to initialize Echo AI</string>
+    <string name="error_processing">Error processing your message</string>
+    <string name="permission_storage_rationale">Echo AI needs storage permission to save conversation logs and training data.</string>
+</resources>

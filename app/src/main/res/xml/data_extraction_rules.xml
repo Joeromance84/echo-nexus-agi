@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="EchoAI/logs" />
+        <exclude domain="sharedpref" path="device.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="EchoAI" />
+        <exclude domain="database" path="echo_secure.db" />
+    </device-transfer>
+</data-extraction-rules>

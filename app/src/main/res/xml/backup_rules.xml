@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include Echo AI data -->
+    <include domain="external" path="EchoAI" />
+    
+    <!-- Exclude sensitive files -->
+    <exclude domain="sharedpref" path="device.xml" />
+    <exclude domain="database" path="echo_secure.db" />
+</full-backup-content>
