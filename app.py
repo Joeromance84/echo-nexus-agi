@@ -101,7 +101,7 @@ with st.sidebar:
     
     page = st.selectbox(
         "Select Page",
-        ["Chat Assistant", "🚀 AGI Deployment Pipeline", "🔗 GitHub Connection", "📚 Document Ingestion", "🧠 Workflow Diagnostics", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
+        ["Chat Assistant", "🚀 AGI Deployment Pipeline", "🔗 GitHub Connection", "📚 Document Learning", "📚 Document Ingestion", "🧠 Workflow Diagnostics", "Command Builder", "EchoSoul Demo", "My Workflows", "Workflow Templates", "Validation Tools", "Policy Compliance", "Analytics", "Setup Guide"]
     )
     
     st.header("Settings")
@@ -585,6 +585,258 @@ elif page == "📚 Document Ingestion":
         with col2:
             if st.button("📊 Refresh Statistics"):
                 st.rerun()
+
+elif page == "📚 Document Learning":
+    st.header("📚 AGI Document Learning System")
+    st.markdown("Upload documents for the AGI to read, learn from, and intelligently manage without external dependencies")
+    
+    # Initialize simple document processor in session state
+    if 'simple_doc_processor' not in st.session_state:
+        from simple_document_processor import SimpleDocumentProcessor
+        st.session_state.simple_doc_processor = SimpleDocumentProcessor()
+    
+    processor = st.session_state.simple_doc_processor
+    
+    # Sidebar - Memory and System Status
+    with st.sidebar:
+        st.header("🧠 AGI Learning Status")
+        
+        # Get memory status
+        memory_status = processor.get_memory_status()
+        
+        # Progress bar for storage usage
+        storage_mb = memory_status["storage_size_mb"]
+        max_storage = 100  # 100MB threshold
+        storage_percent = min(storage_mb / max_storage * 100, 100)
+        
+        st.progress(storage_percent / 100)
+        st.write(f"**Storage:** {storage_mb} MB")
+        
+        # System stats
+        st.metric("Documents Processed", memory_status["documents_processed"])
+        st.metric("Knowledge Files", memory_status["knowledge_files"])
+        
+        # Status indicator
+        status = memory_status["status"]
+        if status == "optimal":
+            st.success("✅ System optimal")
+        elif status == "moderate":
+            st.warning("⚠️ Moderate usage")
+        else:
+            st.error("🔥 High usage")
+        
+        # Memory management explanation
+        st.info("""
+        **Simple Text Processing:**
+        - Works without external dependencies
+        - Supports TXT, basic PDF, HTML/EPUB
+        - Extracts knowledge automatically
+        - Smart memory management
+        """)
+    
+    # Main content area
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.header("📁 Upload Documents")
+        
+        # File upload widget
+        uploaded_files = st.file_uploader(
+            "Choose text files, PDFs, or EPUB files",
+            type=['txt', 'pdf', 'epub', 'html', 'htm'],
+            accept_multiple_files=True,
+            help="Upload documents for the AGI to learn from. Simple text extraction without external dependencies."
+        )
+        
+        # Process uploaded files
+        if uploaded_files:
+            for uploaded_file in uploaded_files:
+                with st.expander(f"🔄 Processing: {uploaded_file.name}", expanded=True):
+                    
+                    # Read file data
+                    file_data = uploaded_file.read()
+                    file_size_mb = len(file_data) / (1024 * 1024)
+                    
+                    st.write(f"**File Size:** {file_size_mb:.2f} MB")
+                    st.write(f"**File Type:** {uploaded_file.name.split('.')[-1].upper()}")
+                    
+                    # Show processing status
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
+                    try:
+                        # Process document
+                        status_text.text("🔍 Extracting text content...")
+                        progress_bar.progress(25)
+                        
+                        result = processor.process_uploaded_file(file_data, uploaded_file.name)
+                        
+                        status_text.text("🧠 Analyzing and extracting knowledge...")
+                        progress_bar.progress(75)
+                        
+                        # Display results based on status
+                        if result["status"] == "processed_successfully":
+                            progress_bar.progress(100)
+                            status_text.text("✅ Processing complete!")
+                            
+                            # Success metrics
+                            col1_inner, col2_inner, col3_inner = st.columns(3)
+                            
+                            with col1_inner:
+                                st.metric("Text Length", f"{result['text_length']:,} chars")
+                            
+                            with col2_inner:
+                                st.metric("Knowledge Insights", result['knowledge_insights'])
+                            
+                            with col3_inner:
+                                st.metric("Key Concepts", len(result['key_concepts']))
+                            
+                            # Show key concepts
+                            if result['key_concepts']:
+                                st.write("**🎯 Key Concepts Learned:**")
+                                concepts_text = ", ".join(result['key_concepts'][:8])
+                                st.write(concepts_text)
+                            
+                            # Show summary
+                            if result.get('summary'):
+                                st.write("**📝 Summary:**")
+                                st.write(result['summary'])
+                            
+                        elif result["status"] == "already_processed":
+                            progress_bar.progress(100)
+                            status_text.text("📚 Already learned from this document!")
+                            st.info(f"This document was previously processed with {result['knowledge_insights']} insights extracted.")
+                            
+                        elif result["status"] == "file_too_large":
+                            progress_bar.progress(0)
+                            status_text.text("❌ File too large")
+                            st.error(f"File size ({result['file_size_mb']:.1f} MB) exceeds limit ({result['max_size_mb']} MB)")
+                            
+                        elif result["status"] == "unsupported_format":
+                            progress_bar.progress(0)
+                            status_text.text("❌ Unsupported format")
+                            st.error(f"Supported formats: {', '.join(result['supported_formats'])}")
+                            if result.get('note'):
+                                st.info(result['note'])
+                            
+                        else:
+                            progress_bar.progress(0)
+                            status_text.text("❌ Processing failed")
+                            st.error(f"Processing failed: {result.get('error', 'Unknown error')}")
+                            
+                    except Exception as e:
+                        progress_bar.progress(0)
+                        status_text.text("❌ Error occurred")
+                        st.error(f"Error processing file: {str(e)}")
+    
+    with col2:
+        st.header("🔍 Search Knowledge")
+        
+        # Knowledge search
+        search_query = st.text_input(
+            "Search learned knowledge:",
+            placeholder="Enter keywords to search..."
+        )
+        
+        if search_query:
+            search_results = processor.search_knowledge(search_query)
+            
+            if search_results["results"]:
+                st.success(f"Found {len(search_results['results'])} results")
+                
+                for i, result in enumerate(search_results["results"][:5]):  # Limit to 5 results
+                    with st.expander(f"📄 {result['filename']} ({result['match_type']})"):
+                        st.write(result['content'])
+            else:
+                st.info("No matching knowledge found")
+    
+    # Learning Summary Section
+    st.header("🧠 AGI Learning Summary")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("📊 Show Learning Summary"):
+            summary = processor.get_learning_summary()
+            
+            if summary.get("status") == "no_documents_processed":
+                st.info("No documents have been processed yet. Upload some files to begin learning!")
+            else:
+                st.subheader("📊 Learning Analytics")
+                
+                # Main metrics
+                col1_s, col2_s, col3_s = st.columns(3)
+                
+                with col1_s:
+                    st.metric("Documents", summary["total_documents"])
+                
+                with col2_s:
+                    st.metric("Insights", summary["total_insights"])
+                
+                with col3_s:
+                    st.metric("Concepts", summary["total_concepts"])
+                
+                # Top concepts
+                if summary["concepts_learned"]:
+                    st.subheader("🧠 Key Concepts Learned")
+                    concepts_text = " • ".join(summary["concepts_learned"][:15])
+                    st.write(concepts_text)
+                
+                # Recent documents
+                if summary["recent_documents"]:
+                    st.subheader("📚 Recent Learning")
+                    for doc in summary["recent_documents"]:
+                        st.write(f"• **{doc['filename']}** - {doc['insights']} insights extracted")
+    
+    with col2:
+        if st.button("📚 View Knowledge Database"):
+            if not processor.processed_documents:
+                st.info("Knowledge database is empty. Process some documents first!")
+            else:
+                st.subheader("🗄️ Knowledge Database")
+                
+                for file_hash, doc_info in processor.processed_documents.items():
+                    with st.expander(f"📄 {doc_info['filename']}"):
+                        
+                        col1_db, col2_db = st.columns(2)
+                        
+                        with col1_db:
+                            st.write(f"**Processing Method:** {doc_info.get('processing_method', 'Unknown')}")
+                            st.write(f"**Text Length:** {doc_info.get('text_length', 0):,} chars")
+                            st.write(f"**Processed:** {doc_info['timestamp'][:19]}")
+                        
+                        with col2_db:
+                            st.write(f"**Knowledge Insights:** {doc_info['knowledge_extracted']}")
+                            
+                        # Show knowledge if available
+                        if file_hash in processor.knowledge_database:
+                            knowledge = processor.knowledge_database[file_hash]
+                            
+                            if knowledge.get("key_concepts"):
+                                st.write("**Key Concepts:**")
+                                st.write(", ".join(knowledge["key_concepts"][:10]))
+                            
+                            if knowledge.get("summary"):
+                                st.write("**Summary:**")
+                                st.write(knowledge["summary"][:300] + "...")
+    
+    with col3:
+        if st.button("🔄 Memory Status"):
+            memory_status = processor.get_memory_status()
+            
+            st.subheader("💾 Memory Status")
+            
+            col1_m, col2_m = st.columns(2)
+            
+            with col1_m:
+                st.metric("Storage Size", f"{memory_status['storage_size_mb']:.2f} MB")
+                st.metric("Knowledge Files", memory_status['knowledge_files'])
+            
+            with col2_m:
+                st.metric("Documents", memory_status['documents_processed'])
+                st.write(f"**Status:** {memory_status['status'].title()}")
+            
+            st.info("✅ All knowledge preserved in local storage with auto-cleanup enabled")
 
 elif page == "🧠 Workflow Diagnostics":
     st.header("🧠 EchoNexus Workflow Diagnostics")
