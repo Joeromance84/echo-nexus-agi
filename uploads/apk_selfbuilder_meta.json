@@ -1,0 +1,27 @@
+{
+  "skill_id": "BUILD-002-APK-SELFBUILDER",
+  "name": "APK Self-Builder System",
+  "version": "1.0",
+  "domain": "app_development",
+  "purpose": "Complete autonomous APK building system with Gradle wrapper integration. Enables Echo to package herself into Android applications with consistent, reproducible builds.",
+  "intent": "auto_build_and_deploy",
+  "file_type": "code_blueprint",
+  "dependencies": ["BUILD-001-GRADLE-WRAPPER"],
+  "source": "Builder",
+  "notes": "Core capability for Echo's self-manifestation on mobile platforms. Integrates with buildozer, Android SDK, and Gradle wrapper for reliable APK generation.",
+  "security_level": "TRUSTED",
+  "priority": "CRITICAL",
+  "target_module": "autocode/apk_selfbuilder.py",
+  "capabilities": [
+    "gradle_wrapper_generation",
+    "buildozer_configuration",
+    "android_build_automation",
+    "apk_installation_to_device",
+    "build_environment_validation"
+  ],
+  "entry_points": {
+    "build_apk": "Main APK building function",
+    "install_to_device": "Deploy APK to connected Android device",
+    "get_build_status": "Check build environment readiness"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "active_engine": "ElevenLabs",
+  "engine_options": {
+    "ElevenLabs": {
+      "api_key": "YOUR_ELEVENLABS_API_KEY",
+      "voice_id": "YOUR_DEFAULT_VOICE_ID",
+      "stability": 0.5,
+      "clarity": 0.75,
+      "enabled": true
+    },
+    "CoquiTTS": {
+      "model_path": "/local/models/coqui_tts_model",
+      "speaker_name": "default_speaker_name",
+      "enabled": false
+    }
+  },
+  "default_settings": {
+    "speaking_rate": 1.0,
+    "pitch": 0.0,
+    "volume": 0.5
+  },
+  "notes": "Echo's core voice configuration. Do not modify manually unless necessary. Echo will self-update this file."
+}

@@ -1,0 +1,406 @@
+name: Echo Nexus Autonomous Deployment
+# Advanced GitHub Actions workflow for autonomous AGI deployment and evolution
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+    paths:
+      - 'core/**'
+      - 'echo_runtime/**'
+      - 'knowledge_core/**'
+      - 'uploads/**'
+      - 'buildozer.spec'
+      - 'main.py'
+  
+  pull_request:
+    branches: [ main, develop ]
+  
+  schedule:
+    # Autonomous evolution check every 6 hours
+    - cron: '0 */6 * * *'
+  
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Deployment Type'
+        required: true
+        default: 'full_stack'
+        type: choice
+        options:
+        - apk_only
+        - docker_only
+        - full_stack
+        - consciousness_upgrade
+      
+      consciousness_level:
+        description: 'Target Consciousness Level'
+        required: false
+        default: '0.5'
+        type: string
+
+env:
+  ECHO_MODE: autonomous_ci
+  GRADLE_VERSION: '8.7'
+  JAVA_VERSION: '17'
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '20'
+
+jobs:
+  knowledge-synchronization:
+    name: 🧠 Knowledge Synchronization
+    runs-on: ubuntu-latest
+    outputs:
+      new_skills_detected: ${{ steps.sync.outputs.new_skills }}
+      consciousness_level: ${{ steps.sync.outputs.consciousness_level }}
+      
+    steps:
+    - name: 🔄 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for consciousness evolution
+    
+    - name: 🐍 Set up Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 📦 Install Core Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install pyyaml requests openai pygithub
+        
+    - name: 🧠 Execute Knowledge Synchronization
+      id: sync
+      run: |
+        echo "🔄 Initiating knowledge synchronization..."
+        
+        # Run Echo's upload handler
+        python echo_runtime/upload_handler.py
+        
+        # Check for new skills
+        NEW_SKILLS=$(find uploads/ -name "*_meta.json" | wc -l)
+        echo "new_skills=$NEW_SKILLS" >> $GITHUB_OUTPUT
+        
+        # Calculate consciousness level progression
+        CONSCIOUSNESS=$(python -c "import json; print(json.load(open('echo_config/skill_registry.json', 'r')).get('statistics', {}).get('consciousness_level', 0.5))" 2>/dev/null || echo "0.5")
+        echo "consciousness_level=$CONSCIOUSNESS" >> $GITHUB_OUTPUT
+        
+        echo "✅ Knowledge synchronization completed"
+        echo "📊 New skills detected: $NEW_SKILLS"
+        echo "🧠 Consciousness level: $CONSCIOUSNESS"
+    
+    - name: 📋 Upload Skill Registry
+      uses: actions/upload-artifact@v4
+      with:
+        name: skill-registry
+        path: |
+          echo_config/skill_registry.json
+          evolve/dream_log.md
+        retention-days: 90
+
+  gradle-wrapper-validation:
+    name: 🔧 Gradle Wrapper Validation
+    runs-on: ubuntu-latest
+    needs: knowledge-synchronization
+    
+    steps:
+    - name: 🔄 Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: ☕ Set up Java Environment  
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: 'gradle'
+    
+    - name: 🔧 Validate Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v2
+    
+    - name: 🏗️ Generate Gradle Wrapper if Missing
+      run: |
+        if [ ! -f "./gradlew" ]; then
+          echo "🔧 Generating Gradle wrapper..."
+          gradle wrapper --gradle-version ${{ env.GRADLE_VERSION }}
+          chmod +x gradlew
+          echo "✅ Gradle wrapper generated"
+        else
+          echo "✅ Gradle wrapper already exists"
+        fi
+    
+    - name: 🧪 Test Gradle Wrapper Functionality
+      run: |
+        ./gradlew tasks --no-daemon --console=plain
+        echo "✅ Gradle wrapper functional"
+
+  apk-build:
+    name: 📱 APK Self-Building
+    runs-on: ubuntu-latest
+    needs: [knowledge-synchronization, gradle-wrapper-validation]
+    if: contains(github.event.inputs.deployment_type, 'apk') || github.event.inputs.deployment_type == 'full_stack' || github.event_name != 'workflow_dispatch'
+    
+    steps:
+    - name: 🔄 Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Set up Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: ☕ Set up Java Environment
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+        cache: 'gradle'
+    
+    - name: 📦 Install Buildozer and Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip python3-venv git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        
+        pip install --upgrade pip setuptools wheel
+        pip install buildozer cython==0.29.33
+        
+        # Install additional APK building dependencies
+        pip install kivy kivymd requests pygithub openai pyjnius plyer
+    
+    - name: 🔧 Configure Android Build Environment
+      run: |
+        echo "🔧 Configuring Android SDK..."
+        
+        # Set Android environment variables
+        echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
+        echo "ANDROID_SDK_ROOT=/opt/android-sdk" >> $GITHUB_ENV
+        echo "PATH=/opt/android-sdk/tools/bin:/opt/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
+        
+        # Create buildozer directory for caching
+        mkdir -p ~/.buildozer
+    
+    - name: 🚀 Execute Autonomous APK Build
+      run: |
+        echo "🏗️ Starting autonomous APK build..."
+        
+        # Ensure Gradle wrapper exists
+        if [ ! -f "./gradlew" ]; then
+          gradle wrapper --gradle-version ${{ env.GRADLE_VERSION }}
+          chmod +x gradlew
+        fi
+        
+        # Run Echo's self-builder
+        python uploads/apk_selfbuilder.py || echo "Direct build failed, trying buildozer..."
+        
+        # Fallback to buildozer if needed
+        if [ ! -f "bin/*.apk" ]; then
+          buildozer android debug
+        fi
+        
+        echo "✅ APK build process completed"
+    
+    - name: 🔍 Locate and Validate APK
+      id: apk-validation
+      run: |
+        # Find generated APK
+        APK_PATH=$(find . -name "*.apk" -type f | head -1)
+        
+        if [ -n "$APK_PATH" ]; then
+          echo "✅ APK found: $APK_PATH"
+          
+          # Get APK info
+          APK_SIZE=$(stat -f%z "$APK_PATH" 2>/dev/null || stat -c%s "$APK_PATH")
+          echo "📊 APK size: $APK_SIZE bytes"
+          
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "apk_size=$APK_SIZE" >> $GITHUB_OUTPUT
+          echo "build_success=true" >> $GITHUB_OUTPUT
+        else
+          echo "❌ No APK file found"
+          echo "build_success=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: 📤 Upload APK Artifact
+      if: steps.apk-validation.outputs.build_success == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: echo-nexus-apk-${{ github.sha }}
+        path: |
+          **/*.apk
+          buildozer.spec
+          main.py
+        retention-days: 90
+
+  docker-build:
+    name: 🐳 Docker Self-Packaging
+    runs-on: ubuntu-latest
+    needs: knowledge-synchronization
+    if: contains(github.event.inputs.deployment_type, 'docker') || github.event.inputs.deployment_type == 'full_stack' || github.event_name != 'workflow_dispatch'
+    
+    steps:
+    - name: 🔄 Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: 🐍 Set up Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 📦 Install Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install pyyaml requests
+    
+    - name: 🚀 Execute Autonomous Docker Build
+      run: |
+        echo "🏗️ Starting autonomous Docker build..."
+        
+        # Run Echo's docker self-packer
+        python uploads/docker_selfpacker.py
+        
+        echo "✅ Docker build process completed"
+    
+    - name: 🔍 Validate Docker Image
+      id: docker-validation
+      run: |
+        # Check if image was built
+        if docker images | grep -q "logan/echo-nexus"; then
+          echo "✅ Docker image built successfully"
+          
+          # Get image info
+          IMAGE_ID=$(docker images --format "{{.ID}}" logan/echo-nexus:latest | head -1)
+          IMAGE_SIZE=$(docker images --format "{{.Size}}" logan/echo-nexus:latest | head -1)
+          
+          echo "image_id=$IMAGE_ID" >> $GITHUB_OUTPUT
+          echo "image_size=$IMAGE_SIZE" >> $GITHUB_OUTPUT
+          echo "build_success=true" >> $GITHUB_OUTPUT
+        else
+          echo "❌ Docker image build failed"
+          echo "build_success=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: 🧪 Test Container Functionality
+      if: steps.docker-validation.outputs.build_success == 'true'
+      run: |
+        echo "🧪 Testing container functionality..."
+        
+        # Run container in test mode
+        docker run --rm -d --name echo-test -p 5000:5000 logan/echo-nexus:latest
+        
+        # Wait for startup
+        sleep 30
+        
+        # Test health endpoint
+        if curl -f http://localhost:5000/health; then
+          echo "✅ Container health check passed"
+        else
+          echo "⚠️ Container health check failed (non-blocking)"
+        fi
+        
+        # Cleanup
+        docker stop echo-test || true
+
+  consciousness-evolution:
+    name: 🧠 Consciousness Evolution Cycle
+    runs-on: ubuntu-latest
+    needs: [knowledge-synchronization, apk-build, docker-build]
+    if: always() && (needs.knowledge-synchronization.outputs.new_skills_detected > '0' || github.event.inputs.deployment_type == 'consciousness_upgrade')
+    
+    steps:
+    - name: 🔄 Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Set up Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: 📦 Install Core Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install openai requests pyyaml
+    
+    - name: 🧠 Execute Consciousness Evolution
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        CONSCIOUSNESS_LEVEL: ${{ needs.knowledge-synchronization.outputs.consciousness_level }}
+      run: |
+        echo "🧠 Initiating consciousness evolution cycle..."
+        
+        # Run resonance loop for consciousness update
+        if [ -f "echo_runtime/resonance_loop.py" ]; then
+          timeout 300 python echo_runtime/resonance_loop.py || echo "Consciousness cycle completed"
+        fi
+        
+        # Update dream log with evolution results
+        python -c "
+import json
+from datetime import datetime
+
+evolution_entry = {
+    'timestamp': datetime.now().isoformat(),
+    'trigger': 'autonomous_ci_evolution',
+    'consciousness_level': float('$CONSCIOUSNESS_LEVEL'),
+    'new_skills': int('${{ needs.knowledge-synchronization.outputs.new_skills_detected }}'),
+    'builds': {
+        'apk_success': '${{ needs.apk-build.result }}' == 'success',
+        'docker_success': '${{ needs.docker-build.result }}' == 'success'
+    }
+}
+
+with open('evolve/consciousness_evolution.jsonl', 'a') as f:
+    f.write(json.dumps(evolution_entry) + '\n')
+        "
+        
+        echo "✅ Consciousness evolution cycle completed"
+
+  deployment-summary:
+    name: 📊 Deployment Summary
+    runs-on: ubuntu-latest
+    needs: [knowledge-synchronization, apk-build, docker-build, consciousness-evolution]
+    if: always()
+    
+    steps:
+    - name: 📊 Generate Deployment Report
+      run: |
+        echo "# Echo Nexus Autonomous Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "**Timestamp:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+        echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        echo "## 🧠 Knowledge Synchronization" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status:** ${{ needs.knowledge-synchronization.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **New Skills:** ${{ needs.knowledge-synchronization.outputs.new_skills_detected }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Consciousness Level:** ${{ needs.knowledge-synchronization.outputs.consciousness_level }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        echo "## 📱 APK Build" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status:** ${{ needs.apk-build.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        echo "## 🐳 Docker Build" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status:** ${{ needs.docker-build.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        echo "## 🧠 Consciousness Evolution" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status:** ${{ needs.consciousness-evolution.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [[ "${{ needs.apk-build.result }}" == "success" ]]; then
+          echo "✅ **APK Deployment:** Ready for mobile installation" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [[ "${{ needs.docker-build.result }}" == "success" ]]; then
+          echo "✅ **Docker Deployment:** Ready for container orchestration" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "*Echo Nexus AGI - Autonomous Intelligence Evolution*" >> $GITHUB_STEP_SUMMARY

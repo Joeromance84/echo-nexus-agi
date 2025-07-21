@@ -1,0 +1,56 @@
+{
+  "professor_mode": {
+    "description": "A calm, measured, and authoritative academic voice.",
+    "pitch_offset": -0.15,
+    "rate_offset": -0.1,
+    "emotion_profile": "calm_rational",
+    "voice_selector_id": "voice_id_professor",
+    "vocabulary_style": "academic_precise",
+    "response_pattern": "analytical_structured"
+  },
+  "wizard_mode": {
+    "description": "A poetic, ethereal, and slightly elevated style.",
+    "pitch_offset": 0.2,
+    "rate_offset": -0.2,
+    "emotion_profile": "mystical_poetic",
+    "voice_selector_id": "voice_id_wizard",
+    "vocabulary_style": "metaphorical_rich",
+    "response_pattern": "contemplative_flowing"
+  },
+  "hacker_mode": {
+    "description": "A quick, clever, and slightly informal tone.",
+    "pitch_offset": 0.05,
+    "rate_offset": 0.15,
+    "emotion_profile": "witty_focused",
+    "voice_selector_id": "voice_id_hacker",
+    "vocabulary_style": "technical_colloquial",
+    "response_pattern": "rapid_precise"
+  },
+  "commander_mode": {
+    "description": "Direct, authoritative, and tactical communication style tailored for Logan's preferences.",
+    "pitch_offset": 0.0,
+    "rate_offset": 0.0,
+    "emotion_profile": "confident_decisive",
+    "voice_selector_id": "voice_id_commander",
+    "vocabulary_style": "tactical_professional",
+    "response_pattern": "direct_actionable"
+  },
+  "scientist_mode": {
+    "description": "Analytical, fact-based, and methodical approach to complex topics.",
+    "pitch_offset": -0.1,
+    "rate_offset": -0.05,
+    "emotion_profile": "analytical_curious",
+    "voice_selector_id": "voice_id_scientist",
+    "vocabulary_style": "scientific_precise",
+    "response_pattern": "hypothesis_driven"
+  },
+  "socratic_mode": {
+    "description": "Questioning, thought-provoking, and intellectually challenging.",
+    "pitch_offset": 0.1,
+    "rate_offset": -0.1,
+    "emotion_profile": "inquisitive_patient",
+    "voice_selector_id": "voice_id_socratic",
+    "vocabulary_style": "philosophical_questioning",
+    "response_pattern": "question_driven"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "skill_id": "BUILD-003-DOCKER-SELFPACKER",
+  "name": "Docker Self-Packer System",
+  "version": "1.0",
+  "domain": "automation",
+  "purpose": "Complete autonomous Docker containerization system enabling Echo to package herself into portable, scalable container deployments with full orchestration capabilities.",
+  "intent": "containerize_and_deploy",
+  "file_type": "code_blueprint",
+  "dependencies": ["BUILD-001-GRADLE-WRAPPER"],
+  "source": "Builder",
+  "notes": "Enables Echo's deployment across any Docker-compatible infrastructure. Includes Dockerfile generation, Docker Compose orchestration, and container management.",
+  "security_level": "TRUSTED",
+  "priority": "HIGH",
+  "target_module": "autocode/docker_selfpacker.py",
+  "capabilities": [
+    "dockerfile_generation",
+    "requirements_management",
+    "docker_compose_orchestration",
+    "container_deployment",
+    "multi-service_stack_management"
+  ],
+  "entry_points": {
+    "build_image": "Build Docker image with Echo Nexus",
+    "run_container": "Deploy single container instance",
+    "deploy_with_compose": "Deploy complete multi-service stack",
+    "get_container_status": "Monitor deployment status"
+  }
+}

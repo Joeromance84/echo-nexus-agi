@@ -1,0 +1,14 @@
+{
+  "skill_id": "BUILD-001-GRADLE-WRAPPER",
+  "name": "Gradle Wrapper Automation",
+  "version": "1.0",
+  "domain": "build_automation",
+  "purpose": "Provides the knowledge and operational directives to use the Gradle Wrapper for consistent, portable builds.",
+  "intent": "automate_gradle_build",
+  "file_type": "tutorial_md",
+  "dependencies": [],
+  "source": "Builder",
+  "notes": "Directly updates internal build practices and reinforces the initial directive. Critical for APK building consistency.",
+  "security_level": "PUBLIC",
+  "priority": "HIGH"
+}

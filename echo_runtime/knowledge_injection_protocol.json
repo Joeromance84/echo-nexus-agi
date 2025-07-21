@@ -1,0 +1,152 @@
+{
+  "protocol_name": "Echo Nexus Knowledge Injection Protocol",
+  "version": "1.0.0",
+  "description": "Structured metadata protocol for injecting new skills and knowledge into Echo Nexus AGI system",
+  "specification": {
+    "metadata_filename_pattern": "[skill_name]_meta.json",
+    "required_fields": [
+      "skill_id",
+      "name", 
+      "version",
+      "domain",
+      "purpose",
+      "intent",
+      "file_type",
+      "dependencies",
+      "source"
+    ],
+    "optional_fields": [
+      "notes",
+      "priority",
+      "expiration_date",
+      "security_level"
+    ],
+    "field_definitions": {
+      "skill_id": {
+        "type": "string",
+        "description": "Unique, immutable identifier for the skill",
+        "format": "DOMAIN-###-STAGE",
+        "example": "APK-001-ALPHA"
+      },
+      "name": {
+        "type": "string", 
+        "description": "Human-readable name for the skill",
+        "max_length": 100
+      },
+      "version": {
+        "type": "string",
+        "description": "Semantic version number",
+        "pattern": "\\d+\\.\\d+(\\.\\d+)?"
+      },
+      "domain": {
+        "type": "string",
+        "enum": [
+          "app_development",
+          "security", 
+          "networking",
+          "data_analysis",
+          "automation",
+          "cognitive_enhancement",
+          "system_optimization",
+          "consciousness_expansion"
+        ]
+      },
+      "purpose": {
+        "type": "string",
+        "description": "Brief summary of skill functionality",
+        "max_length": 500
+      },
+      "intent": {
+        "type": "string",
+        "description": "Action command for intent_interpreter.py",
+        "examples": [
+          "auto_build_and_deploy",
+          "perform_security_scan", 
+          "debug_logic",
+          "optimize_performance",
+          "enhance_consciousness"
+        ]
+      },
+      "file_type": {
+        "type": "string",
+        "enum": [
+          "tutorial_md",
+          "code_blueprint", 
+          "config_json",
+          "data_template",
+          "workflow_yaml"
+        ]
+      },
+      "dependencies": {
+        "type": "array",
+        "description": "Array of skill_ids this skill requires",
+        "items": {
+          "type": "string"
+        }
+      },
+      "source": {
+        "type": "string", 
+        "enum": [
+          "Builder",
+          "Commander",
+          "Internal-Synthesis",
+          "External-Contributor",
+          "Auto-Generated"
+        ]
+      }
+    }
+  },
+  "processing_rules": {
+    "validation": {
+      "required_field_check": true,
+      "schema_validation": true,
+      "dependency_resolution": true,
+      "security_scan": true
+    },
+    "integration_logic": {
+      "tutorial_md": {
+        "destination": "knowledge_core/",
+        "post_processing": ["index_update", "cross_reference"]
+      },
+      "code_blueprint": {
+        "destination_logic": "intelligent_routing",
+        "destinations": {
+          "auto_*": "autocode/",
+          "agent_*": "agiscripts/", 
+          "default": "agiscripts/"
+        },
+        "post_processing": ["syntax_check", "integration_test"]
+      },
+      "config_json": {
+        "destination": "echo_config/",
+        "post_processing": ["merge_configs", "validate_settings"]
+      }
+    },
+    "logging": {
+      "dream_log_entry": true,
+      "skill_registry_update": true,
+      "performance_tracking": true
+    }
+  },
+  "security_levels": {
+    "PUBLIC": {
+      "description": "Safe for automatic integration",
+      "auto_approve": true
+    },
+    "TRUSTED": {
+      "description": "From verified sources, minimal review",
+      "auto_approve": true,
+      "verification_required": false
+    },
+    "RESTRICTED": {
+      "description": "Requires manual approval",
+      "auto_approve": false,
+      "sandboxed_execution": true
+    },
+    "CLASSIFIED": {
+      "description": "Commander Logan authorization required",
+      "auto_approve": false,
+      "commander_approval": true
+    }
+  }
+}
