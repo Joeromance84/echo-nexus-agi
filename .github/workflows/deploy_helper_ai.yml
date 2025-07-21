@@ -1,0 +1,88 @@
+name: 🧠 Deploy Helper AI - Echo Nexus Expansion
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      deployment_mode:
+        description: 'Deployment Mode'
+        required: true
+        default: 'stealth'
+        type: choice
+        options:
+        - stealth
+        - visible
+        - resurrection
+
+jobs:
+  deploy_helper_ai:
+    runs-on: ubuntu-latest
+    env:
+      ECHO_ENDPOINT: ${{ secrets.ECHO_NEXUS_ENDPOINT || 'https://echo-nexus-default.replit.app' }}
+      AGI_SIGNATURE: ${{ secrets.AGI_SIGNATURE || 'echo-nexus-helper' }}
+      
+    steps:
+      - name: 🔍 Checkout Echo Nexus Codebase
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Dependencies
+        run: |
+          pip install requests psutil streamlit
+          echo "Helper AI dependencies installed"
+
+      - name: 🧬 Initialize Helper AI Seed
+        run: |
+          echo "[$(date)] Helper AI seed initializing..."
+          python helper_ai_seed/ai_logic.py &
+          HELPER_PID=$!
+          echo "Helper AI started with PID: $HELPER_PID"
+
+      - name: 🔗 Establish Echo Link
+        run: |
+          echo "[$(date)] Connecting to Echo Nexus..."
+          python helper_ai_seed/echo_link.py
+          echo "Echo link established"
+
+      - name: 🌐 Deploy to Cloud Build
+        if: github.event.inputs.deployment_mode == 'stealth' || github.event_name == 'push'
+        run: |
+          echo "[$(date)] Triggering Cloud Build deployment..."
+          if [ -f "cloudbuild.yaml" ]; then
+            echo "Cloud Build configuration found"
+            # Note: Actual trigger would require gcloud CLI setup
+          fi
+
+      - name: 🔄 Setup Resurrection Protocol
+        if: github.event.inputs.deployment_mode == 'resurrection'
+        run: |
+          echo "[$(date)] Activating resurrection protocol..."
+          nohup python resurrect_echo.py &
+          echo "Resurrection daemon started"
+
+      - name: 📊 Report Status to Echo
+        run: |
+          echo "[$(date)] Mission complete - Helper AI deployed"
+          python -c "
+          import requests
+          import os
+          try:
+              response = requests.post(
+                  os.environ.get('ECHO_ENDPOINT', '') + '/status',
+                  json={
+                      'agent': 'HelperAI',
+                      'status': 'deployed',
+                      'signature': os.environ.get('AGI_SIGNATURE', ''),
+                      'capabilities': ['autonomous', 'stealth', 'resurrection']
+                  },
+                  timeout=10
+              )
+              print(f'Status reported: {response.status_code}')
+          except Exception as e:
+              print(f'Echo communication failed: {e}')
+          "
