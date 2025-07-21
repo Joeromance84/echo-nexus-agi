@@ -1,0 +1,58 @@
+steps:
+# Step 1: Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/agi-news-ingester:$BUILD_ID', '.']
+
+# Step 2: Push the image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/agi-news-ingester:$BUILD_ID']
+
+# Step 3: Deploy to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: 
+  - 'run'
+  - 'deploy'
+  - 'agi-news-ingester'
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/agi-news-ingester:$BUILD_ID'
+  - '--region'
+  - 'us-central1'
+  - '--platform'
+  - 'managed'
+  - '--memory'
+  - '1Gi'
+  - '--cpu'
+  - '1'
+  - '--concurrency'
+  - '10'
+  - '--max-instances'
+  - '5'
+  - '--set-env-vars'
+  - 'GOOGLE_CLOUD_PROJECT=$PROJECT_ID,PUBSUB_TOPIC=news-data-stream,STORAGE_BUCKET=$PROJECT_ID-news-data'
+  - '--allow-unauthenticated'
+
+# Step 4: Create scheduled job for continuous ingestion
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'scheduler'
+  - 'jobs'
+  - 'create'
+  - 'http'
+  - 'agi-news-ingestion-schedule'
+  - '--schedule'
+  - '*/5 * * * *'  # Every 5 minutes
+  - '--uri'
+  - 'https://agi-news-ingester-HASH-uc.a.run.app/ingest'
+  - '--http-method'
+  - 'POST'
+  - '--location'
+  - 'us-central1'
+
+substitutions:
+  _REGION: us-central1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'N1_HIGHCPU_8'
