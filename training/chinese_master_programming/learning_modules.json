@@ -1,0 +1,21 @@
+{
+  "curriculum_name": "Chinese Master Programming",
+  "modules": [
+    {
+      "title": "Module 1: Assembly Language for AI",
+      "description": "Understanding machine instructions and memory models.",
+      "tasks": [
+        "Write a simple 'hello world' program in x86 assembly.",
+        "Implement a basic arithmetic function using only assembly instructions."
+      ]
+    },
+    {
+      "title": "Module 2: Compiler Theory",
+      "description": "Building a mini-compiler to understand code translation.",
+      "tasks": [
+        "Create a lexer for a simple language.",
+        "Implement a parser that builds an Abstract Syntax Tree (AST)."
+      ]
+    }
+  ]
+}

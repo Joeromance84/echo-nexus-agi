@@ -1,0 +1,26 @@
+{
+  "retrieval_rules": [
+    {
+      "trigger": "favorite color",
+      "target": "user_favorite_color",
+      "priority": 1
+    },
+    {
+      "trigger": "my name",
+      "target": "user_name",
+      "priority": 1
+    }
+  ],
+  "storage_rules": [
+    {
+      "condition": "favorite color is",
+      "key": "user_favorite_color",
+      "delimiter": "is"
+    },
+    {
+      "condition": "My name is",
+      "key": "user_name",
+      "delimiter": "is"
+    }
+  ]
+}

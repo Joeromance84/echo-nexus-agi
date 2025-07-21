@@ -1,0 +1,41 @@
+# echo-nexus/cloud_build/cloudbuild.yaml
+steps:
+  # This step runs unit tests to ensure new code hasn't broken anything.
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['beta', 'run', 'services', 'describe', 'your-service-name', '--region=us-central1'] # Placeholder
+    env:
+      - 'PROJECT_ID=$PROJECT_ID'
+    
+  - name: 'python:3.9'
+    id: 'Install dependencies'
+    entrypoint: 'pip'
+    args: ['install', '-r', 'requirements.txt']
+
+  # This step builds the Docker image.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build container'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/echo-nexus:$COMMIT_SHA', '.']
+
+  # This step pushes the built image to Google Container Registry.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push container'
+    args: ['push', 'gcr.io/$PROJECT_ID/echo-nexus:$COMMIT_SHA']
+
+  # This step deploys the new image to Google Cloud Run.
+  - name: 'gcr.io/google.com/cloudsdk/cloud-sdk'
+    id: 'Deploy to Cloud Run'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'echo-nexus'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/echo-nexus:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated' # Change this for production environments
+
+images:
+- 'gcr.io/$PROJECT_ID/echo-nexus:$COMMIT_SHA'

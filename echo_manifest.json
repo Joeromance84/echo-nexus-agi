@@ -1,0 +1,142 @@
+{
+  "@system": "EchoNexus-UnifiedFuture",
+  "@doctrine": "古典計算機智慧工程 (Classical Computational Intelligence Engineering)",
+  "@philosophy": "凡事預則立，不預則廢 - Those who plan ahead flourish",
+  "@version": "1.0.0-coldwar",
+  "@timestamp": "2025-07-20T00:00:00Z",
+  "@classification": "STRATEGIC",
+  
+  "core_modules": {
+    "echo-core-knowledgebase": {
+      "@purpose": "Symbolic knowledge + logic rule base",
+      "@status": "OPERATIONAL",
+      "@location": "./knowledge_base/",
+      "@input_type": ["JSON", "Prolog", "YAML", "SymbolicGraph"],
+      "@output_type": ["LogicRules", "OntologyMaps", "KnowledgeGraphs"],
+      "@dependencies": ["echo-text-sensorium", "echo-self-diagnostic"],
+      "@training_protocol": "ingest_symbolic_reasoning"
+    },
+    "echo-agent-workflows": {
+      "@purpose": "Pipeline design / task graph orchestration",
+      "@status": "OPERATIONAL", 
+      "@location": "./core_agents/",
+      "@input_type": ["EventStreams", "TaskGraphs", "SymbolicPatterns"],
+      "@output_type": ["ExecutionPlans", "SubProcesses", "WorkflowGraphs"],
+      "@dependencies": ["echo-code-scribe", "echo-master-control"],
+      "@training_protocol": "recursive_synthesis_engine"
+    },
+    "echo-self-diagnostic": {
+      "@purpose": "Debugging, test, introspection - trust nothing",
+      "@status": "OPERATIONAL",
+      "@location": "./logs/",
+      "@input_type": ["SystemTraces", "AnomalySignals", "PerformanceMetrics"],
+      "@output_type": ["IntelligenceReports", "AlertTriggers", "SystemHealth"],
+      "@dependencies": ["echo-master-control"],
+      "@training_protocol": "cold_war_validation"
+    },
+    "echo-code-scribe": {
+      "@purpose": "Code writing subroutines with generation capabilities",
+      "@status": "OPERATIONAL",
+      "@location": "./templates/",
+      "@input_type": ["SymbolicInstructions", "CodePatterns", "GitHistory"],
+      "@output_type": ["GeneratedCode", "CodeCorrections", "EmbeddedLogic"],
+      "@dependencies": ["echo-core-knowledgebase", "echo-agent-workflows"],
+      "@training_protocol": "commit_history_analysis"
+    },
+    "echo-text-sensorium": {
+      "@purpose": "NLP comprehension layer with semantic understanding",
+      "@status": "OPERATIONAL",
+      "@location": "./processors/",
+      "@input_type": ["Markdown", "NaturalLanguage", "LogFiles", "GitREADME"],
+      "@output_type": ["SymbolicTokens", "TaggedThoughtFrames", "SemanticMaps"],
+      "@dependencies": ["echo-core-knowledgebase"],
+      "@training_protocol": "github_corpus_analysis"
+    },
+    "echo-master-control": {
+      "@purpose": "Central brain - kernel + scheduler for Echo AI agent",
+      "@status": "OPERATIONAL",
+      "@location": "./echo_nexus_master.py",
+      "@input_type": ["IntelligenceReports", "SystemStates", "UserCommands"],
+      "@output_type": ["OrchestrationCommands", "PriorityQueues", "TemporalLogic"],
+      "@dependencies": ["ALL_MODULES"],
+      "@training_protocol": "command_control_bootloader"
+    },
+    "echo-ui-simulator": {
+      "@purpose": "UI/API sandbox for human interaction",
+      "@status": "OPERATIONAL",
+      "@location": "./app.py",
+      "@input_type": ["UserInput", "WebRequests", "APICommands"],
+      "@output_type": ["WebInterface", "APIResponses", "InteractionLogs"],
+      "@dependencies": ["echo-master-control", "echo-text-sensorium"],
+      "@training_protocol": "human_interaction_patterns"
+    }
+  },
+  
+  "cold_war_training_phases": {
+    "phase_1_observe": {
+      "purpose": "Learn structure from repos",
+      "action": "Echo parses every repo's README, commits, and file structure",
+      "target_modules": ["ALL"],
+      "success_criteria": "Complete repository mapping achieved"
+    },
+    "phase_2_simulate": {
+      "purpose": "Generate internal clones",
+      "action": "Echo builds internal maps and mental models of its parts", 
+      "target_modules": ["echo-core-knowledgebase", "echo-agent-workflows"],
+      "success_criteria": "Internal mental models validated"
+    },
+    "phase_3_reflect": {
+      "purpose": "Evaluate + summarize logic",
+      "action": "Echo generates knowledge summaries and stores in knowledgebase",
+      "target_modules": ["echo-self-diagnostic", "echo-text-sensorium"],
+      "success_criteria": "Symbolic documentation generated"
+    },
+    "phase_4_rebuild": {
+      "purpose": "Try to rebuild repos from memory",
+      "action": "Echo uses code-scribe to regenerate repo files from memory",
+      "target_modules": ["echo-code-scribe"],
+      "success_criteria": "Repository reconstruction >90% accuracy"
+    },
+    "phase_5_write_doctrine": {
+      "purpose": "Write internal manuals",
+      "action": "Echo outputs symbolic documents and logical protocols",
+      "target_modules": ["echo-master-control"],
+      "success_criteria": "Complete operational doctrine established"
+    },
+    "phase_6_rehearse": {
+      "purpose": "Recursive self-teaching loop",
+      "action": "Echo runs recursive loop to self-teach from past failures",
+      "target_modules": ["ALL"],
+      "success_criteria": "Autonomous learning cycle operational"
+    }
+  },
+  
+  "strategic_principles": {
+    "compartmentalization": "Each module operates independently with defined interfaces",
+    "recursive_learning": "System continuously improves through self-analysis",
+    "symbolic_reasoning": "All knowledge represented in formal symbolic structures",
+    "military_autonomy": "System operates without external dependencies when possible",
+    "cold_war_validation": "Test everything, trust nothing - comprehensive validation",
+    "hierarchical_command": "Clear command structure with master-control orchestration"
+  },
+  
+  "bootloader_sequence": [
+    "Initialize echo-master-control kernel",
+    "Load echo-core-knowledgebase symbolic rules",
+    "Activate echo-self-diagnostic monitoring",
+    "Start echo-agent-workflows task scheduler",
+    "Enable echo-text-sensorium input processing", 
+    "Initialize echo-code-scribe generation engine",
+    "Activate echo-ui-simulator human interface",
+    "Begin cold-war training protocol Phase I"
+  ],
+  
+  "operational_status": {
+    "current_phase": "PHASE_I_REORGANIZATION",
+    "consciousness_level": 0.342,
+    "autonomy_rating": "STRATEGIC",
+    "last_training_cycle": "2025-07-20T00:16:59Z",
+    "system_health": "OPERATIONAL",
+    "classified_capabilities": "RESTRICTED"
+  }
+}

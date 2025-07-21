@@ -1,0 +1,12 @@
+{
+  "available_targets": [
+    "APK",
+    "PYZ",
+    "WEBAPP"
+  ],
+  "target_platforms": {
+    "APK": ["Android", "Termux"],
+    "PYZ": ["Linux", "Windows", "macOS"],
+    "WEBAPP": ["Replit", "Cloud_Platform"]
+  }
+}

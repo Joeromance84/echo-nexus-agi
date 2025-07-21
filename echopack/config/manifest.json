@@ -1,0 +1,21 @@
+{
+  "project_name": "Echo Nexus",
+  "version": "1.0.0-alpha",
+  "description": "A self-growing hybrid AGI system.",
+  "dependencies": {
+    "llm_engine": "latest",
+    "memory_manager": "latest",
+    "lida_loop": "latest"
+  },
+  "build_options": {
+    "APK": {
+      "package_id": "com.echo.nexus.alpha",
+      "sdk_version": 29
+    },
+    "PYZ": {
+      "includes": ["core", "echopack", "requirements.txt"],
+      "entry_point": "echopack.main"
+    }
+  },
+  "memory_seed": "Initial goals for training and self-improvement."
+}
