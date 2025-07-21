@@ -59,36 +59,6 @@
   },
   "monitoring_history": [
     {
-      "timestamp": "2025-07-21T10:40:58.562926",
-      "monitoring_cycles": 3,
-      "automation_actions": 3,
-      "precision_compliance": 1.0
-    },
-    {
-      "timestamp": "2025-07-21T10:41:58.570505",
-      "monitoring_cycles": 4,
-      "automation_actions": 4,
-      "precision_compliance": 1.0
-    },
-    {
-      "timestamp": "2025-07-21T10:42:58.577033",
-      "monitoring_cycles": 5,
-      "automation_actions": 5,
-      "precision_compliance": 1.0
-    },
-    {
-      "timestamp": "2025-07-21T10:43:58.593123",
-      "monitoring_cycles": 6,
-      "automation_actions": 6,
-      "precision_compliance": 1.0
-    },
-    {
-      "timestamp": "2025-07-21T10:44:58.613335",
-      "monitoring_cycles": 7,
-      "automation_actions": 7,
-      "precision_compliance": 1.0
-    },
-    {
       "timestamp": "2025-07-21T10:45:58.632797",
       "monitoring_cycles": 8,
       "automation_actions": 8,
@@ -656,6 +626,36 @@
       "timestamp": "2025-07-21T12:06:32.419731",
       "monitoring_cycles": 10,
       "automation_actions": 10,
+      "precision_compliance": 1.0
+    },
+    {
+      "timestamp": "2025-07-21T12:07:32.426512",
+      "monitoring_cycles": 11,
+      "automation_actions": 11,
+      "precision_compliance": 1.0
+    },
+    {
+      "timestamp": "2025-07-21T12:08:32.432480",
+      "monitoring_cycles": 12,
+      "automation_actions": 12,
+      "precision_compliance": 1.0
+    },
+    {
+      "timestamp": "2025-07-21T12:09:32.438830",
+      "monitoring_cycles": 13,
+      "automation_actions": 13,
+      "precision_compliance": 1.0
+    },
+    {
+      "timestamp": "2025-07-21T12:09:36.265104",
+      "monitoring_cycles": 1,
+      "automation_actions": 1,
+      "precision_compliance": 1.0
+    },
+    {
+      "timestamp": "2025-07-21T12:10:16.943568",
+      "monitoring_cycles": 1,
+      "automation_actions": 1,
       "precision_compliance": 1.0
     }
   ],

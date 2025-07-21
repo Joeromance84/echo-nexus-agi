@@ -127,8 +127,8 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run minimal_clean_app.py --server.port 8505"
-waitForPort = 8505
+args = "streamlit run debug_app.py --server.port 5007 --server.address 0.0.0.0"
+waitForPort = 5007
 
 [[ports]]
 localPort = 5000
@@ -157,6 +157,10 @@ externalPort = 4200
 [[ports]]
 localPort = 5006
 externalPort = 5000
+
+[[ports]]
+localPort = 5007
+externalPort = 8080
 
 [[ports]]
 localPort = 8501
