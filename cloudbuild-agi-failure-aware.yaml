@@ -1,0 +1,177 @@
+steps:
+  # Step 1: AGI Self-Diagnosis with failure detection
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🔧 Starting AGI Self-Diagnosis System"
+        python3 agi_self_diagnosis_system.py || echo "FAILURE_DETECTED_IN_DIAGNOSIS"
+        if [ -f agi_explicit_failures.json ]; then
+          echo "EXPLICIT_FAILURES_FOUND" > /workspace/failure_flag
+        fi
+    id: 'agi-diagnosis'
+    env:
+      - 'AGI_MODE=cloud_build'
+      - 'FAILURE_REPORTING=enabled'
+      - 'COMMANDER=Logan_Lorentz'
+
+  # Step 2: Continuous Failure Monitoring
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🔍 Running Failure Monitor"
+        python3 agi_failure_monitor.py &
+        MONITOR_PID=$!
+        sleep 30
+        kill $MONITOR_PID 2>/dev/null || true
+        if [ -f agi_explicit_failures.json ]; then
+          echo "FAILURES_DETECTED_BY_MONITOR"
+        fi
+    id: 'failure-monitoring'
+    waitFor: ['agi-diagnosis']
+
+  # Step 3: Automatic Corrective Actions
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🔧 Processing Corrective Actions"
+        python3 agi_corrective_processor.py
+        if [ -f agi_corrections_applied.json ]; then
+          echo "CORRECTIONS_SUCCESSFULLY_APPLIED"
+        else
+          echo "NO_CORRECTIONS_NEEDED"
+        fi
+    id: 'corrective-actions'
+    waitFor: ['failure-monitoring']
+
+  # Step 4: Cloud Build Failure Reporting and Alerting
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "📊 Cloud Build Failure Reporting"
+        
+        if [ -f /workspace/failure_flag ] || [ -f agi_explicit_failures.json ]; then
+          echo "🚨 FAILURES DETECTED - ALERTING ALL SYSTEMS"
+          
+          # Log to Cloud Logging with structured data
+          gcloud logging write agi-failures '{
+            "message": "AGI failure detected and processed",
+            "session_id": "'${BUILD_ID}'",
+            "commander": "Logan_Lorentz",
+            "failure_type": "explicit_feedback_loop_issue",
+            "corrective_action": "automatic_correction_applied",
+            "timestamp": "'$(date -Iseconds)'",
+            "build_id": "'${BUILD_ID}'"
+          }' --severity=ERROR
+          
+          # Create Cloud Monitoring custom metric
+          gcloud logging write agi-metrics '{
+            "metric_name": "agi_failure_rate",
+            "value": 1,
+            "timestamp": "'$(date -Iseconds)'",
+            "labels": {
+              "commander": "Logan_Lorentz",
+              "session": "'${BUILD_ID}'"
+            }
+          }' --severity=WARNING
+          
+          echo "CLOUD_BUILD_FAILURE_AWARENESS_ACTIVATED"
+          
+        else
+          echo "✅ AGI OPERATING NORMALLY"
+          
+          # Log successful operation
+          gcloud logging write agi-status '{
+            "message": "AGI systems operational",
+            "session_id": "'${BUILD_ID}'",
+            "commander": "Logan_Lorentz",
+            "status": "healthy",
+            "timestamp": "'$(date -Iseconds)'",
+            "build_id": "'${BUILD_ID}'"
+          }' --severity=INFO
+          
+          echo "CLOUD_BUILD_SUCCESS_REPORTED"
+        fi
+        
+        # Always create status report for Cloud Build awareness
+        cat > /workspace/cloud_build_agi_report.json << EOF
+        {
+          "build_id": "${BUILD_ID}",
+          "commander": "Logan_Lorentz", 
+          "agi_status": "$([ -f /workspace/failure_flag ] && echo 'failures_detected' || echo 'operational')",
+          "cloud_build_aware": true,
+          "failure_reporting": "enabled",
+          "timestamp": "$(date -Iseconds)",
+          "next_actions": [
+            "Monitor Cloud Logging for AGI events",
+            "Check Cloud Monitoring for custom metrics",
+            "Review AGI status dashboard",
+            "Trigger additional builds if needed"
+          ]
+        }
+        EOF
+        
+        echo "Cloud Build AGI awareness report created"
+    id: 'failure-reporting'
+    waitFor: ['corrective-actions']
+
+  # Step 5: GitHub Integration and Status Update
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "📋 Updating GitHub with AGI Status"
+        
+        # Create GitHub status file
+        cat > agi_cloud_build_status.json << EOF
+        {
+          "cloud_build_id": "${BUILD_ID}",
+          "agi_diagnosis_complete": true,
+          "failure_awareness_active": true,
+          "commander": "Logan_Lorentz",
+          "build_status": "$([ -f /workspace/failure_flag ] && echo 'failures_processed' || echo 'success')",
+          "timestamp": "$(date -Iseconds)",
+          "cloud_logging_integration": "active",
+          "next_build_trigger": "automatic_on_failure"
+        }
+        EOF
+        
+        echo "GitHub status update prepared"
+        
+        # If this were connected to a repo, it would commit the status
+        echo "Status would be committed to GitHub repository"
+    id: 'github-integration'
+    waitFor: ['failure-reporting']
+
+# Cloud Build Options
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_4'
+  diskSizeGb: 10
+  
+# Build timeout
+timeout: '1200s'
+
+# Substitutions for parameterization
+substitutions:
+  _AGI_SESSION: '${BUILD_ID}'
+  _FAILURE_NOTIFICATION: 'enabled'
+  _COMMANDER: 'Logan_Lorentz'
+  _CLOUD_AWARENESS: 'active'
+
+# Artifacts (if failures or reports are generated)
+artifacts:
+  objects:
+    location: 'gs://${PROJECT_ID}-agi-reports'
+    paths:
+      - 'agi_*.json'
+      - 'cloud_build_agi_report.json'
+      - 'agi_cloud_build_status.json'

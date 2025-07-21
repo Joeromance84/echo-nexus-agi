@@ -1,0 +1,7 @@
+{
+  "cloud_build": "configured",
+  "deployment_target": "feedback_loop_correction",
+  "build_config": "cloudbuild-feedback-loop.yaml",
+  "integration_level": "complete_system",
+  "configured_at": "2025-07-21T10:32:34.134991"
+}

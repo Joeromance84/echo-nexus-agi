@@ -1,0 +1,25 @@
+{
+  "explicit_failure_triggers": [
+    {
+      "trigger_name": "REPETITIVE_MEMORY_OVERFLOW",
+      "condition": "memory_fragments > 100",
+      "action": "Clear redundant memory entries",
+      "priority": "HIGH"
+    },
+    {
+      "trigger_name": "PROCESSING_STAGNATION",
+      "condition": "No progress for > 5 minutes",
+      "action": "Implement corrective feedback loop",
+      "priority": "CRITICAL"
+    },
+    {
+      "trigger_name": "MISSING_PROGRESS_SIGNALS",
+      "condition": "No success/failure metrics",
+      "action": "Implement explicit metrics",
+      "priority": "HIGH"
+    }
+  ],
+  "monitoring_enabled": true,
+  "created_by": "Commander Logan mission",
+  "created_at": "2025-07-21T10:32:27.437218"
+}

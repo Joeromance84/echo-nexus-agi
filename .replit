@@ -36,6 +36,18 @@ args = "AGI Deployment Demo"
 task = "workflow.run"
 args = "AGI Trainer Demo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Document Learning"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "AGI Intelligence Router"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Verbal Conversation Training"
+
 [[workflows.workflow]]
 name = "Streamlit App"
 author = "agent"
@@ -80,6 +92,33 @@ task = "shell.exec"
 args = "streamlit run agi_trainer_demo.py --server.port 5003"
 waitForPort = 5003
 
+[[workflows.workflow]]
+name = "Document Learning"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run document_learning_app.py --server.port 5004"
+waitForPort = 5004
+
+[[workflows.workflow]]
+name = "AGI Intelligence Router"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run agi_intelligent_ai_router.py --server.port 5005"
+waitForPort = 5005
+
+[[workflows.workflow]]
+name = "Verbal Conversation Training"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run agi_verbal_conversation_trainer.py --server.port 5006"
+waitForPort = 5006
+
 [[ports]]
 localPort = 5000
 externalPort = 80
@@ -95,3 +134,15 @@ externalPort = 3001
 [[ports]]
 localPort = 5003
 externalPort = 3002
+
+[[ports]]
+localPort = 5004
+externalPort = 3003
+
+[[ports]]
+localPort = 5005
+externalPort = 4200
+
+[[ports]]
+localPort = 5006
+externalPort = 5000
