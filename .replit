@@ -46,11 +46,11 @@ args = "AGI Real-Time Communication"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Document Learning"
+args = "Main AGI App"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Main AGI App"
+args = "Document Learning"
 
 [[workflows.workflow]]
 name = "APK Build Monitor"
@@ -113,15 +113,6 @@ task = "shell.exec"
 args = "python3 agi_realtime_communication.py"
 
 [[workflows.workflow]]
-name = "Document Learning"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run document_learning_app.py --server.port 5004"
-waitForPort = 5004
-
-[[workflows.workflow]]
 name = "Main AGI App"
 author = "agent"
 
@@ -129,6 +120,15 @@ author = "agent"
 task = "shell.exec"
 args = "streamlit run app_optimized.py --server.port 5000"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Document Learning"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "streamlit run document_learning_simple.py --server.port 5004"
+waitForPort = 5004
 
 [[ports]]
 localPort = 5000
