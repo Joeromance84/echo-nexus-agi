@@ -30,13 +30,8 @@ class DocumentLearningProcessor:
         # Initialize learning database
         self.load_learning_database()
         
-        # Initialize backup system
-        self.backup_system = AGILearningBackupSystem()
-        self.start_backup_monitoring()
-        
-        # Initialize real-time communication system
-        self.communication_system = AGIRealtimeCommunication()
-        self.communication_system.start_realtime_monitoring()
+        # Initialize systems safely in background
+        self.initialize_background_systems()
         
     def load_learning_database(self):
         """Load existing learning database"""
@@ -70,24 +65,34 @@ class DocumentLearningProcessor:
                 json.dump(self.database, f, indent=2, ensure_ascii=False)
             
             # Trigger immediate backup after saving new learning data
-            if hasattr(self, 'backup_system'):
+            if hasattr(self, 'backup_system') and self.backup_system:
                 threading.Thread(target=self.backup_system.backup_learning_data, daemon=True).start()
                 
         except Exception as e:
             st.error(f"Error saving learning database: {e}")
     
-    def start_backup_monitoring(self):
-        """Start background backup monitoring"""
-        def backup_monitor():
+    def initialize_background_systems(self):
+        """Initialize backup and communication systems safely in background"""
+        def init_systems():
             try:
-                if hasattr(self, 'backup_system'):
-                    self.backup_system.monitor_learning_files()
+                # Initialize backup system
+                self.backup_system = AGILearningBackupSystem()
+                print("✅ Backup system initialized")
+                
+                # Initialize communication system
+                self.communication_system = AGIRealtimeCommunication()
+                self.communication_system.start_realtime_monitoring()
+                print("✅ Communication system initialized")
+                
             except Exception as e:
-                print(f"Backup monitoring error: {e}")
+                print(f"Background system initialization error: {e}")
+                # Continue without background systems if they fail
+                self.backup_system = None
+                self.communication_system = None
         
-        # Start backup monitoring in background
-        backup_thread = threading.Thread(target=backup_monitor, daemon=True)
-        backup_thread.start()
+        # Start initialization in background thread
+        init_thread = threading.Thread(target=init_systems, daemon=True)
+        init_thread.start()
     
     def extract_text_from_pdf(self, file_content):
         """Extract text from PDF file using dependency-free approach"""
@@ -349,7 +354,7 @@ class DocumentLearningProcessor:
         self.save_learning_database()
         
         # Immediately share with other AIs
-        if hasattr(self, 'communication_system'):
+        if hasattr(self, 'communication_system') and self.communication_system:
             if file_type == "pdf":
                 processing_results = {
                     "agi_insights": insights,
