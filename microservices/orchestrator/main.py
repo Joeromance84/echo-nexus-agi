@@ -33,6 +33,17 @@ class AGIMicroservicesOrchestrator:
             "report_generator": os.environ.get('REPORT_GENERATOR_URL', 'https://agi-report-generator-uc.a.run.app')
         }
         
+        # AI Extensions created by this AGI
+        self.ai_extensions = {
+            "test_case_generator": {
+                "url": os.environ.get('TEST_GENERATOR_URL', 'https://agi-test-case-generator-uc.a.run.app'),
+                "creation_timestamp": datetime.now().isoformat(),
+                "creator": "market-analytics-orchestrator",
+                "capabilities": ["test_generation", "code_analysis", "performance_testing"],
+                "ai_type": "specialized_extension"
+            }
+        }
+        
         # Initialize clients
         self.publisher = pubsub_v1.PublisherClient()
         self.scheduler_client = scheduler_v1.CloudSchedulerClient()
@@ -304,6 +315,90 @@ async def list_services():
         "services": orchestrator.services,
         "total_count": len(orchestrator.services)
     }
+
+@app.get("/ai-extensions")
+async def list_ai_extensions():
+    """List all AI extensions created by this AGI"""
+    return {
+        "ai_extensions": orchestrator.ai_extensions,
+        "total_extensions": len(orchestrator.ai_extensions),
+        "creator_agi": "market-analytics-orchestrator"
+    }
+
+@app.post("/register-extension")
+async def register_ai_extension(extension_data: Dict[str, Any]):
+    """Register a new AI extension created by this AGI"""
+    extension_name = extension_data.get("extension_name")
+    service_url = extension_data.get("service_url")
+    capabilities = extension_data.get("capabilities", [])
+    ai_type = extension_data.get("ai_type", "extension")
+    
+    if not extension_name or not service_url:
+        return {"error": "extension_name and service_url required"}
+    
+    orchestrator.ai_extensions[extension_name] = {
+        "url": service_url,
+        "creation_timestamp": datetime.now().isoformat(),
+        "creator": "market-analytics-orchestrator",
+        "capabilities": capabilities,
+        "ai_type": ai_type,
+        "registration_method": "autonomous_creation"
+    }
+    
+    logger.info(f"Registered new AI extension: {extension_name}")
+    return {
+        "status": "registered", 
+        "extension": extension_name,
+        "total_extensions": len(orchestrator.ai_extensions)
+    }
+
+@app.post("/create-ai-extension")
+async def create_ai_extension(request: Dict[str, Any]):
+    """Demonstrate AGI creating a new AI extension"""
+    extension_type = request.get("extension_type", "test_case_generator")
+    target_service = request.get("target_service")
+    
+    logger.info(f"AGI creating new AI extension: {extension_type}")
+    
+    if extension_type == "test_case_generator" and target_service:
+        # Simulate the AGI creating and deploying a test case generator
+        try:
+            # Get service code to analyze
+            service_url = orchestrator.services.get(target_service)
+            if not service_url:
+                return {"error": f"Service {target_service} not found"}
+            
+            # Simulate AGI deploying the extension via Cloud Build
+            creation_result = {
+                "status": "ai_extension_created",
+                "extension_name": "test_case_generator",
+                "target_service": target_service,
+                "creation_timestamp": datetime.now().isoformat(),
+                "creator_agi": "market-analytics-orchestrator",
+                "deployment_method": "cloud_build_automation",
+                "service_url": "https://agi-test-case-generator-uc.a.run.app",
+                "capabilities": [
+                    "autonomous_test_generation",
+                    "code_analysis_and_understanding", 
+                    "performance_test_creation",
+                    "integration_test_design",
+                    "reporting_to_parent_agi"
+                ],
+                "next_steps": [
+                    "analyze_target_service_code",
+                    "generate_comprehensive_test_suite",
+                    "deploy_tests_automatically",
+                    "report_results_to_parent_agi"
+                ]
+            }
+            
+            return creation_result
+            
+        except Exception as e:
+            logger.error(f"Error creating AI extension: {e}")
+            return {"error": str(e)}
+    
+    return {"error": "Unsupported extension type or missing target service"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

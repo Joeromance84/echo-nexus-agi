@@ -1,0 +1,73 @@
+steps:
+# Step 1: Build the AI extension container
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/agi-test-case-generator:$BUILD_ID', '.']
+
+# Step 2: Push the AI extension to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/agi-test-case-generator:$BUILD_ID']
+
+# Step 3: Deploy the AI extension to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'deploy'
+  - 'agi-test-case-generator'
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/agi-test-case-generator:$BUILD_ID'
+  - '--region'
+  - 'us-central1'
+  - '--platform'
+  - 'managed'
+  - '--memory'
+  - '2Gi'
+  - '--cpu'
+  - '2'
+  - '--concurrency'
+  - '20'
+  - '--max-instances'
+  - '5'
+  - '--set-env-vars'
+  - 'GOOGLE_CLOUD_PROJECT=$PROJECT_ID,CREATOR_AGI=market-analytics-orchestrator'
+  - '--allow-unauthenticated'
+
+# Step 4: Create Pub/Sub topic for AI extension reporting
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'pubsub'
+  - 'topics'
+  - 'create'
+  - 'agi-extension-reports'
+  - '--project'
+  - '$PROJECT_ID'
+
+# Step 5: Create Cloud Storage bucket for test suites
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gsutil
+  args:
+  - 'mb'
+  - '-p'
+  - '$PROJECT_ID'
+  - '-l'
+  - 'us-central1'
+  - 'gs://$PROJECT_ID-test-suites'
+
+# Step 6: Register AI extension with parent orchestrator
+- name: 'gcr.io/cloud-builders/curl'
+  args:
+  - '-X'
+  - 'POST'
+  - 'https://agi-orchestrator-$PROJECT_ID.a.run.app/register-extension'
+  - '-H'
+  - 'Content-Type: application/json'
+  - '-d'
+  - '{"extension_name": "test-case-generator", "service_url": "https://agi-test-case-generator-$PROJECT_ID.a.run.app", "capabilities": ["test_generation", "code_analysis", "performance_testing"], "ai_type": "specialized_extension"}'
+
+substitutions:
+  _REGION: us-central1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'N1_HIGHCPU_8'
