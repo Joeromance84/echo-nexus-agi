@@ -1,0 +1,30 @@
+# Google Cloud dependencies
+google-cloud-storage>=2.10.0
+google-cloud-aiplatform>=1.38.0
+google-cloud-logging>=3.8.0
+functions-framework>=3.4.0
+
+# Vertex AI Language Models
+google-cloud-aiplatform[langchain]>=1.38.0
+
+# Document processing
+PyMuPDF>=1.23.0
+EbookLib>=0.18
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Text processing and utilities
+regex>=2023.10.3
+nltk>=3.8.1
+spacy>=3.7.0
+numpy>=1.24.0
+pandas>=2.1.0
+
+# HTTP and async
+requests>=2.31.0
+aiohttp>=3.9.0
+
+# Utilities
+python-dateutil>=2.8.2
+tqdm>=4.66.0
+colorama>=0.4.6
