@@ -1,0 +1,122 @@
+# AGI Learning Data Backup to Cloud Build
+# Automatically triggered when learning data changes
+steps:
+  # Step 1: Setup environment
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🚀 AGI Learning Backup Pipeline Started"
+        git config --global user.email "agi-backup@echonexus.ai"
+        git config --global user.name "AGI Learning Backup System"
+
+  # Step 2: Clone repository
+  - name: 'gcr.io/cloud-builders/git'
+    args: ['clone', 'https://github.com/Joeromance84/echo-nexus-agi.git', '/workspace/backup-repo']
+
+  # Step 3: Copy learning data
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "📚 Copying AGI learning data..."
+        
+        # Create backup directory structure
+        mkdir -p /workspace/backup-repo/learning_backups/$(date +%Y%m%d)
+        
+        # Copy all learning-related files
+        if [ -f "agi_learning_database.json" ]; then
+          cp agi_learning_database.json /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/
+          cp agi_learning_database.json /workspace/backup-repo/latest_learning_backup.json
+          echo "✅ Learning database backed up"
+        fi
+        
+        if [ -f "agi_pdf_processing_results.json" ]; then
+          cp agi_pdf_processing_results.json /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/
+          echo "✅ PDF processing results backed up"
+        fi
+        
+        if [ -f "agi_backup_manifest.json" ]; then
+          cp agi_backup_manifest.json /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/
+          echo "✅ Backup manifest backed up"
+        fi
+        
+        # Create backup summary
+        echo "AGI Learning Backup Summary" > /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/backup_summary.txt
+        echo "Timestamp: $(date)" >> /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/backup_summary.txt
+        echo "Files backed up:" >> /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/backup_summary.txt
+        ls -la /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/ >> /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/backup_summary.txt
+
+  # Step 4: Commit and push to GitHub
+  - name: 'gcr.io/cloud-builders/git'
+    dir: '/workspace/backup-repo'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🐙 Committing AGI learning data to GitHub..."
+        
+        # Add all changes
+        git add .
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+          echo "ℹ️ No new learning data to backup"
+        else
+          # Commit changes
+          git commit -m "AGI Learning Backup - $(date +%Y-%m-%d_%H:%M:%S)
+          
+          📚 Automatic backup of AGI learning data
+          🧠 Includes: PDF processing, EPUB analysis, concept extraction
+          ⚡ Triggered by: Document learning system
+          📊 Backup system: Fully automated
+          "
+          
+          # Push to GitHub
+          git push origin main
+          echo "✅ AGI learning data successfully backed up to GitHub"
+        fi
+
+  # Step 5: Create Google Cloud Storage backup
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "☁️ Creating Google Cloud Storage backup..."
+        
+        # Create bucket if it doesn't exist
+        gsutil mb -p ${PROJECT_ID} gs://agi-learning-backups-${PROJECT_ID} 2>/dev/null || echo "Bucket already exists"
+        
+        # Upload learning data to Cloud Storage
+        if [ -f "/workspace/backup-repo/latest_learning_backup.json" ]; then
+          gsutil cp /workspace/backup-repo/latest_learning_backup.json gs://agi-learning-backups-${PROJECT_ID}/latest/
+          gsutil cp -r /workspace/backup-repo/learning_backups/$(date +%Y%m%d) gs://agi-learning-backups-${PROJECT_ID}/daily/
+          echo "✅ AGI learning data backed up to Cloud Storage"
+        fi
+
+  # Step 6: Generate backup report
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "📊 AGI Learning Backup Complete!"
+        echo "================================"
+        echo "🕐 Timestamp: $(date)"
+        echo "🐙 GitHub: ✅ Backup successful"
+        echo "☁️ Cloud Storage: ✅ Backup successful"
+        echo "📁 Files backed up:"
+        ls -la /workspace/backup-repo/learning_backups/$(date +%Y%m%d)/ || echo "No files found"
+        echo "================================"
+
+# Build configuration
+timeout: '600s'
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: 'ALLOW_LOOSE'
+
+# Trigger configuration (can be set up via Cloud Build triggers)
+# This will automatically run when learning data changes

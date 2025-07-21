@@ -1,0 +1,18 @@
+steps:
+- args:
+  - -c
+  - "\n                            # Clone AGI repository\n                      \
+    \      git clone https://github.com/Joeromance84/echo-nexus-agi.git\n        \
+    \                    cd echo-nexus-agi\n                            \n       \
+    \                     # Copy learning data\n                            cp /workspace/agi_learning_database.json\
+    \ ./\n                            cp /workspace/agi_backup_manifest.json ./\n\
+    \                            \n                            # Commit and push\n\
+    \                            git config user.email \"agi-backup@echonexus.ai\"\
+    \n                            git config user.name \"AGI Backup System\"\n   \
+    \                         git add agi_learning_database.json agi_backup_manifest.json\n\
+    \                            git commit -m \"AGI Learning Backup - $(date)\"\n\
+    \                            git push origin main\n                          \
+    \  "
+  entrypoint: bash
+  name: gcr.io/cloud-builders/git
+timeout: 600s

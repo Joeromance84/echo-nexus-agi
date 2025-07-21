@@ -15,6 +15,9 @@ import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import re
+import threading
+from agi_learning_backup_system import AGILearningBackupSystem
+from agi_realtime_communication import AGIRealtimeCommunication
 
 class DocumentLearningProcessor:
     """Advanced document processing and learning system"""
@@ -26,6 +29,14 @@ class DocumentLearningProcessor:
         
         # Initialize learning database
         self.load_learning_database()
+        
+        # Initialize backup system
+        self.backup_system = AGILearningBackupSystem()
+        self.start_backup_monitoring()
+        
+        # Initialize real-time communication system
+        self.communication_system = AGIRealtimeCommunication()
+        self.communication_system.start_realtime_monitoring()
         
     def load_learning_database(self):
         """Load existing learning database"""
@@ -52,13 +63,31 @@ class DocumentLearningProcessor:
             }
     
     def save_learning_database(self):
-        """Save learning database"""
+        """Save learning database and trigger automatic backup"""
         try:
             self.database["last_updated"] = datetime.now().isoformat()
             with open(self.learning_database, 'w', encoding='utf-8') as f:
                 json.dump(self.database, f, indent=2, ensure_ascii=False)
+            
+            # Trigger immediate backup after saving new learning data
+            if hasattr(self, 'backup_system'):
+                threading.Thread(target=self.backup_system.backup_learning_data, daemon=True).start()
+                
         except Exception as e:
             st.error(f"Error saving learning database: {e}")
+    
+    def start_backup_monitoring(self):
+        """Start background backup monitoring"""
+        def backup_monitor():
+            try:
+                if hasattr(self, 'backup_system'):
+                    self.backup_system.monitor_learning_files()
+            except Exception as e:
+                print(f"Backup monitoring error: {e}")
+        
+        # Start backup monitoring in background
+        backup_thread = threading.Thread(target=backup_monitor, daemon=True)
+        backup_thread.start()
     
     def extract_text_from_pdf(self, file_content):
         """Extract text from PDF file using dependency-free approach"""
@@ -318,6 +347,21 @@ class DocumentLearningProcessor:
         
         # Save to file
         self.save_learning_database()
+        
+        # Immediately share with other AIs
+        if hasattr(self, 'communication_system'):
+            if file_type == "pdf":
+                processing_results = {
+                    "agi_insights": insights,
+                    "text_length": len(text_content),
+                    "word_count": len(text_content.split()),
+                    "processing_status": "successful"
+                }
+                threading.Thread(target=self.communication_system.share_pdf_learning, 
+                               args=(processing_results,), daemon=True).start()
+            elif file_type == "epub":
+                threading.Thread(target=self.communication_system.share_epub_learning, 
+                               args=(document_record,), daemon=True).start()
         
         return document_record
 

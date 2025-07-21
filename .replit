@@ -48,6 +48,14 @@ args = "AGI Intelligence Router"
 task = "workflow.run"
 args = "Verbal Conversation Training"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "AGI Learning Backup"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "AGI Real-Time Communication"
+
 [[workflows.workflow]]
 name = "Streamlit App"
 author = "agent"
@@ -118,6 +126,22 @@ author = "agent"
 task = "shell.exec"
 args = "streamlit run agi_verbal_conversation_trainer.py --server.port 5006"
 waitForPort = 5006
+
+[[workflows.workflow]]
+name = "AGI Learning Backup"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 agi_learning_backup_system.py"
+
+[[workflows.workflow]]
+name = "AGI Real-Time Communication"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 agi_realtime_communication.py"
 
 [[ports]]
 localPort = 5000
