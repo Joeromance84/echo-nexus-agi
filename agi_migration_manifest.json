@@ -1,0 +1,51 @@
+{
+  "migration_timestamp": "2025-07-21T09:05:37.402804",
+  "migration_trigger": "memory_threshold_exceeded",
+  "migration_purpose": "enable_continued_cloud_development",
+  "strategy": {
+    "memory_threshold_exceeded": true,
+    "strategy": "intelligent_migration",
+    "targets": [
+      "GitHub",
+      "Google Cloud Storage"
+    ],
+    "migration_type": "essential_files_for_continued_development",
+    "estimated_space_freed": "1.2 GB",
+    "continuation_enabled": true
+  },
+  "files_to_migrate": {
+    "critical_agi_files": [
+      "agi_memory_manager.py",
+      "autonomous_memory_system.py",
+      "agi_learning_database.json",
+      ".echo_brain.json",
+      "replit.md"
+    ],
+    "microservices": [
+      "microservices/orchestrator/main.py",
+      "microservices/test_case_generator/main.py",
+      "microservices/news_ingester/main.py",
+      "demonstrate_agi_self_extension.py"
+    ],
+    "deployment_config": [
+      "deploy_agi_platform.sh",
+      "cloudbuild.yaml",
+      "deployment_status.json"
+    ],
+    "project_essentials": [
+      "README.md",
+      "app.py"
+    ]
+  },
+  "cloud_targets": {
+    "github_repository": "github.com/Joeromance84/agi-memory-backup",
+    "cloud_storage": "gs://agi-memory-backup/essential_files",
+    "cloud_build": "cloudbuild-continued-development.yaml"
+  },
+  "continuation_capabilities": [
+    "Automated development environment setup",
+    "Scheduled AGI development cycles",
+    "Cross-platform intelligence preservation",
+    "Seamless Replit to cloud transition"
+  ]
+}

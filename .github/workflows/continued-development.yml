@@ -1,0 +1,19 @@
+name: AGI Continued Development
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  continue-agi-development:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    - name: Continue AGI Development
+      run: |
+        pip install -r requirements.txt
+        python autonomous_memory_system.py
+        python demonstrate_agi_self_extension.py
