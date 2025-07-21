@@ -59,12 +59,6 @@
   },
   "monitoring_history": [
     {
-      "timestamp": "2025-07-21T05:54:32.138825",
-      "monitoring_cycles": 10,
-      "automation_actions": 10,
-      "precision_compliance": 1.0
-    },
-    {
       "timestamp": "2025-07-21T05:55:32.142480",
       "monitoring_cycles": 11,
       "automation_actions": 11,
@@ -656,6 +650,12 @@
       "timestamp": "2025-07-21T07:30:29.601441",
       "monitoring_cycles": 4,
       "automation_actions": 4,
+      "precision_compliance": 1.0
+    },
+    {
+      "timestamp": "2025-07-21T07:31:29.607236",
+      "monitoring_cycles": 5,
+      "automation_actions": 5,
       "precision_compliance": 1.0
     }
   ],
