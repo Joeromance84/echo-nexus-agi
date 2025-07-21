@@ -357,10 +357,10 @@ def main():
         st.header("📤 Upload Documents")
         
         uploaded_files = st.file_uploader(
-            "Choose files to upload",
+            "Choose files to upload (up to 70 MB each)",
             type=['pdf', 'epub', 'txt', 'md'],
             accept_multiple_files=True,
-            help="Supported formats: PDF, EPUB, TXT, MD"
+            help="Supported formats: PDF, EPUB, TXT, MD - Maximum file size: 70 MB"
         )
         
         if uploaded_files:

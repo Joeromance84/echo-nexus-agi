@@ -1,0 +1,27 @@
+{
+  "total_documents": 3,
+  "processed_documents": {
+    "d10b2f308dacd260f5b7f965337b6f5957c6b17fae77ca10e2faccca4741376d": {
+      "filename": "Digital_Computers_Advanced_Coding_Techniques_Summer_1954 (1).pdf",
+      "text_length": 3659233,
+      "knowledge_extracted": 1,
+      "timestamp": "2025-07-21T11:08:08.279051",
+      "processing_method": "simple_text"
+    },
+    "7cc8c2e79d3c0bdf101f39b792528ad8950ec6793daa6cb55e389ceed1fa1bd6": {
+      "filename": "Android.pdf",
+      "text_length": 91225,
+      "knowledge_extracted": 0,
+      "timestamp": "2025-07-21T11:09:08.975515",
+      "processing_method": "simple_text"
+    },
+    "94db394f73d2835dd6c791ad31bae570e64e0b7ac055015e6b557ee4772bdf0c": {
+      "filename": "Curriculum_Development_in_Language_Teach.pdf",
+      "text_length": 263203,
+      "knowledge_extracted": 0,
+      "timestamp": "2025-07-21T11:09:30.452024",
+      "processing_method": "simple_text"
+    }
+  },
+  "last_updated": "2025-07-21T11:09:30.452037"
+}
