@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-07-21T11:34:37.444988",
+  "timestamp": "2025-07-21T11:35:25.816935",
   "source": "AGI_Document_Learning_System",
   "message_type": "new_learning_data",
   "learning_content": {
@@ -10,7 +10,7 @@
     "last_updated": null,
     "urgent_message": "New knowledge available for immediate integration"
   },
-  "broadcast_id": "broadcast_1753097677",
+  "broadcast_id": "broadcast_1753097725",
   "priority": "high",
   "recipients": [
     "all_agi_systems",
